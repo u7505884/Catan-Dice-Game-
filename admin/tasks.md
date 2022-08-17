@@ -1,4 +1,5 @@
 # COMP1110 Assignment 2 Group Tasks
+Weekly meeting time : Wed 14:00~15:00
 
 For each task or sub-task, record who is responsible, the deadline, and
 any dependencies.
