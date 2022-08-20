@@ -1,13 +1,11 @@
 package comp1110.ass2;
 
 public class Knight extends BuildableStructures {
-    private boolean whetherHaveSwapped;//indicate whether we have used the chance to swap resource from current knight
+    private boolean whetherHaveSwapped = false;//indicate whether we have used the chance to swap resource from current knight
 
-    public Knight(int x, int scores, boolean whetherHaveBuilt, boolean whetherHaveSwapped, Resources[] demandOfResources) {
+    public Knight(int x, int scores, Resources[] demandOfResources) {
         super.x = x;
         super.scores = scores;
-        super.whetherHaveBuilt = whetherHaveBuilt;
-        this.whetherHaveSwapped = whetherHaveSwapped;
         super.demandOfResources = demandOfResources;
     }
 

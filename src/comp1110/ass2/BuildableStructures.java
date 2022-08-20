@@ -3,7 +3,7 @@ package comp1110.ass2;
 public class BuildableStructures {
     protected int x;//basic building number (The word "basic" means there might be advanced no. in the inheritance class
     protected int scores;//the scores owned by current building
-    protected boolean whetherHaveBuilt;//indicate that whether we have already built this
+    protected boolean whetherHaveBuilt = false;//indicate that whether we have already built this
     protected Resources[] demandOfResources;//indicate that type and amount of resources we need to build current building
 
     /**
