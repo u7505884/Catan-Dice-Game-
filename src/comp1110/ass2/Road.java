@@ -16,6 +16,6 @@ public class Road extends BuildableStructures{
      * board efficiently.
      */
     public int getY() {
-        return y;
+        return 0;
     }
 }

@@ -12,7 +12,7 @@ public class BuildableStructures {
      * @return An integer x standing for basic building number.
      */
     public int getX(){
-        return x;
+        return 0;
     }
 
     /**
@@ -21,7 +21,7 @@ public class BuildableStructures {
      * @return An integer scores standing for the scores owned by current building.
      */
     public int getScores(){
-        return scores;
+        return 0;
     }
 
     /**
@@ -30,7 +30,7 @@ public class BuildableStructures {
      * @return A boolean value standing for whether we have already built current building.
      */
     public boolean isWhetherBuild() {
-        return whetherHaveBuilt;
+        return false;
     }
 
     /**
@@ -40,7 +40,7 @@ public class BuildableStructures {
      * @param whetherBuild: The class variable whetherBuild.
      */
     public void setWhetherBuild(boolean whetherBuild) {
-        this.whetherHaveBuilt = whetherBuild;
+
     }
 
     /**
@@ -50,6 +50,6 @@ public class BuildableStructures {
      * to build current building
      */
     public Resources[] getDemandOfResources() {
-        return demandOfResources;
+        return new Resources[0];
     }
 }

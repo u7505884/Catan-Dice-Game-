@@ -16,7 +16,7 @@ public class Knight extends BuildableStructures {
      * swap resource from current knight.
      */
     public boolean isWhetherHaveSwapped() {
-        return whetherHaveSwapped;
+        return false;
     }
 
     /**
@@ -26,6 +26,6 @@ public class Knight extends BuildableStructures {
      * @param whetherHaveSwapped: The class variable whetherHaveSwapped.
      */
     public void setWhetherHaveSwapped(boolean whetherHaveSwapped) {
-        this.whetherHaveSwapped = whetherHaveSwapped;
+
     }
 }
