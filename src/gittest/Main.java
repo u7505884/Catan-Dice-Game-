@@ -5,5 +5,7 @@ public class Main {
         B b=new B();
         System.out.println("AA");
         A a = new A();
+
+        C c = new C();
     }
 }
