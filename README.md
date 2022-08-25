@@ -160,7 +160,7 @@ available resource of the player's choice for one of any other resources
 The game ends after all players have had 15 turns. The winner is the player
 with the highest score.
 
-## Encoding Game State
+## Encoding the Game State
 
 The following text encoding is used by the `CatanDice` class to interface
 with the tests we provide for the various tasks.
