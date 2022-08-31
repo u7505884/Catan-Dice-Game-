@@ -268,6 +268,163 @@ and the wildcard Knight only when necessary.
 
 An action sequence is represented by an array of action strings.
 
+## Task list
+
+*   **Task 1: Setup and position constructors**
+
+	Fork the assignment 2 repo, clone it, explore the README.
+
+	More detailed instructions on this task [are under the course deliverables](https://cs.anu.edu.au/courses/comp1110/assessments/deliverables/#D2A).
+
+	- [ ] **One group member** should use GitLab to fork the assignment from the class account.  See [lab one](https://gitlab.cecs.anu.edu.au/comp1110/comp1110-labs/blob/master/src/comp1110/lab1/README.md) if you've forgotten how to do this.
+	- [ ] Establish your group name (your tutor will assign it to you) and [add it to your gitlab project description](https://cs.anu.edu.au/courses/comp1110/assessments/deliverables/#D2A).
+	- [ ] Add all group members as *maintainers* of the project.
+	- [ ] Verify your repo project description and membership with your tutor.
+	- [ ] Edit, commit, and push the `admin/members.yml` file.
+	- [ ] Each group member should clone the repo.
+	- [ ] Set up the repo for [upstream pulls](https://gitlab.cecs.anu.edu.au/comp1110/comp1110-labs/blob/master/src/comp1110/lab4/README.md#gitlab-upstream-pulls-for-assignment).
+	- [ ] Exchange contact information among group members.
+	- [ ] Set a regular meeting time.
+
+*   **Task 2: Design**
+
+	Make an initial *design* for your code, including skeleton code.
+
+	- [ ] Read the description for [D2B](https://cs.anu.edu.au/courses/comp1110/assessments/deliverables/#D2B)
+	- [ ] Create a sketch of your design and save it as a pdf admin/B-design.pdf, commit, and push.  You may use any tool you like to create the sketch (including a photo of a paper sketch).  What is important is that file is a pdf file, and it is named correctly.
+	- [ ] Create a design **skeleton**.   This means creating classes, methods, and java doc, **without writing any functional code.**  This skeleton should convey the overall approach you think you will take without actually providing a working solution (which is why you will not write any working code).
+	- [ ] Make sure to update your originality and contribution statements in `admin/B-originality.yml` and `admin/B-contribution.yml`.
+
+*   **Task 3: Check Board State is Well Formed**
+
+	Check that the string encoding of a board state is well formed.
+
+	Hint: You can use the `String.split` method to transform the input string
+	into an array of Strings (one per structure that is mentioned).
+
+	- [ ] Implement the `isBoardStateWellFormed(String[] board_state)` method
+in the `CatanDice` class.
+	- [ ] When done, make sure to update your originality and contribution
+statements, commit and push, and close this issue.
+
+*   **Task 4: Check Action is Well Formed**
+
+	Check that the string encoding of a player action is well formed.
+
+	- [ ] Implement the `isActionWellFormed(String action)` method in the
+`CatanDice` class.
+	- [ ] When done, make sure to update your originality and contribution
+statements, commit and push, and close this issue.
+
+
+*   **Task 5: Visualise Game States**
+
+	Complete the `Viewer` class so that it displays the board state specified in
+	the string input via the text box. Note that your display does not have to
+	look like the original board game: it must only show the state of the board
+	in a clear and easy-to-understand manner.
+	You may want to look at the code for the `Game` class of assignment one to
+	get some ideas.
+
+	- [ ] Show the map structures, and their relationships (e.g., how Roads
+connect).
+	- [ ] Show the state of each structure (unbuilt or built, and unused or used
+for Knights).
+	- [ ] Implement the `displayState()` method of the `Viewer` class so that it
+displays an entire state visually, according to the string input via the text
+box.
+	- [ ] When done, make sure to update your originality and contribution
+statements, commit and push, and close this issue.
+
+
+*   **Task 6: Roll dice**
+
+	Implement dice rolling.
+
+	Hint: The `java.util.random` package provides functions for generating
+	(pseudo-)random numbers.
+
+	- [ ] Implement the `rollDice(int n_dice, int[] resource_state)` method in the `CatanDice` class.
+	- [ ] When done, make sure to update your originality and contribution statements, commit and push, and close this issue.
+
+
+*   **Task 7: Check Resource Availability**
+
+	Check if a given structure can be built with available resources.
+
+	- [ ] Implement the `checkResources(String structure, int[] resource_state)` method in the `CatanDice` class.
+	- [ ] When done, make sure to update your originality and contribution statements, commit and push, and close this issue.
+
+
+*   **Task 8: Check Build Constraints**
+
+	Check if given structure is a possible next build, given a board state.
+
+	- [ ] Implement the `checkBuildConstraints(String structure, String board_state)` method in the `CatanDice` class.
+	- [ ] When done, make sure to update your originality and contribution statements, commit and push, and close this issue.
+
+*   **Task 9: Check Action Validity**
+
+	Check if a given action can be performed in the given board and resource state.
+
+	- [ ] Implement the `canDoAction(String action, String board_state, int[] resource_state)` method in the `CatanDice` class.
+	- [ ] When done, make sure to update your originality and contribution statements, commit and push, and close this issue.
+
+
+*   **Task 10: Implement a playable game for one player.**
+
+	The game GUI must fit in a 1200x700 window, and must be built with JavaFX 17.
+	Apart from that, the design of the GUI is up to you.
+
+	- [ ] Extend the `Game` class in `src/gui` to a playable single-player game.
+	- [ ] The game GUI should be intuitive and easy to use. You can assume that the player is familiar with the concepts and rules of CatanDice (you do not need to document them) but if you expect the player will need some instructions on how to use your GUI to play, you may write those in the "Player instructions" section of the file `admin/F-features.md`.
+	- [ ] When done, make sure to update your originality and contribution statements, commit and push, and close this issue.
+
+*   **Task 11: Check Action Sequence Validity**
+
+	Check if a sequence of actions can be executed, starting from the given board and resource state.
+
+	- [ ] Implement the `canDoSequence(String[] actions, String board_state, int[] resource_state)` method in the `CatanDice` class.
+	- [ ] When done, make sure to update your originality and contribution statements, commit and push, and close this issue.
+
+*   **Task 12: Check Resource Availability, with Trades and Swaps**
+
+	Check if a given structure can be built with available resources, considering possible trades and swaps.
+
+	- [ ] Implement the `checkResourcesWithTradeAndSwap(String structure, int[] String board_state, resource_state)` method in the `CatanDice` class.
+	- [ ] When done, make sure to update your originality and contribution statements, commit and push, and close this issue.
+
+
+*   **Task 13: Find path to target structure.**
+
+	Find the path of roads that must be built to reach a specified structure in a given board state.
+
+	- [ ] Implement the `pathTo(String structure, String board_state)` method in the `CatanDice` class.
+	- [ ] When done, make sure to update your originality and contribution statements, commit and push, and close this issue.
+
+*   **Task 14: Generate Build Plans**
+
+	Generate an action sequence to build a specified structure, starting from the given board and resource state.
+
+	- [ ] Implement the `buildPlan(String target_structure, int[] resource_state, String board_state)` method in the `CatanDice` class.
+	- [ ] When done, make sure to update your originality and contribution statements, commit and push, and close this issue.
+
+
+*   **Task 15: AI player**
+
+	Implement an AI player.
+
+	An AI player has to make two kinds of decisions: what dice to re-roll,
+	and what actions to take after rolling is done.
+
+	The `buildPlan` method can be used as the basis for a simple AI player:
+	iterate over unbuilt structures, find which can be built, and select the
+	highest scoring. Repeat until nothing more can be done.
+
+	- [ ] Extend your game implementation to include a computer opponent. The game should still be playable by a single human player. It is up to you how you represent the board state of and actions taken by the AI player in the game GUI.
+	- [ ] When done, make sure to update your originality and contribution statements, commit and push, and close this issue.
+
+
 ## Evaluation Criteria
 
 It is essential that you refer to the
