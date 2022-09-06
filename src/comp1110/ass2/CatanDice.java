@@ -1,5 +1,8 @@
 package comp1110.ass2;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class CatanDice {
 
     /**
@@ -13,8 +16,80 @@ public class CatanDice {
      *         a board state, false otherwise.
      */
     public static boolean isBoardStateWellFormed(String board_state) {
-	 return false; // FIXME: Task #3
+        //FIXME: Task #3
+        String[] ArrayR = new String[]{"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
+        ArrayList<String> R = new ArrayList<String>(Arrays.asList(ArrayR));
+        String[] ArrayS = new String[]{"3","4","5","7","9","11"};
+        ArrayList<String> S = new ArrayList<String>(Arrays.asList(ArrayS));
+        String[] ArrayC = new String[]{"7","12","20","30"};
+        ArrayList<String> C = new ArrayList<String>(Arrays.asList(ArrayC));
+        String[] ArrayK = new String[]{"1","2","3","4","5","6"};
+        ArrayList<String> K = new ArrayList<String>(Arrays.asList(ArrayK));
+        String[] ArrayJ = new String[]{"1","2","3","4","5","6"};
+        ArrayList<String> J = new ArrayList<String>(Arrays.asList(ArrayJ));
+        String[] board_state_collections = board_state.split(",");
+
+        int indicator = 1;
+        try{
+            for(String board_state_element:board_state_collections){
+                switch(board_state_element.charAt(0)){
+                    case('R'):
+                        if( R.contains(board_state_element.substring(1))){
+                            indicator *= 1;
+                        }else{
+                            indicator *= 0;
+                        }
+                        break;
+                    case('S'):
+                        if( S.contains(board_state_element.substring(1))){
+                            indicator *= 1;
+                        }else{
+                            indicator *= 0;
+                        }
+                        break;
+                    case('C'):
+                        System.out.println(board_state_element.substring(1));
+                        if( C.contains(board_state_element.substring(1))){
+                            indicator *= 1;
+                        }else{
+                            indicator *= 0;
+                        }
+                        break;
+                    case('K'):
+                        if( K.contains(board_state_element.substring(1))){
+                            indicator *= 1;
+                            J.remove(board_state_element.substring(1));
+                        }else{
+                            indicator *= 0;
+                        }
+                        break;
+                    case('J'):
+                        if( J.contains(board_state_element.substring(1))){
+                            indicator *= 1;
+                            K.remove(board_state_element.substring(1));
+                        }else{
+                            indicator *= 0;
+                        }
+                        break;
+                    default:
+                        return false;
+                }
+            }
+        }catch(StringIndexOutOfBoundsException ex){
+            return true;
+        }
+
+        if(indicator == 1){
+            return true;
+        }else{
+            return false;
+        }
     }
+
+    public static void main(String[] args) {
+        System.out.println(isBoardStateWellFormed(""));
+    }
+
 
     /**
      * Check if the string encoding of a player action is well formed.
