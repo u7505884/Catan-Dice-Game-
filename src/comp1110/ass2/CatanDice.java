@@ -30,54 +30,57 @@ public class CatanDice {
         String[] board_state_collections = board_state.split(",");
 
         int indicator = 1;
-        try{
+
             for(String board_state_element:board_state_collections){
-                switch(board_state_element.charAt(0)){
-                    case('R'):
-                        if( R.contains(board_state_element.substring(1))){
-                            indicator *= 1;
-                        }else{
-                            indicator *= 0;
-                        }
-                        break;
-                    case('S'):
-                        if( S.contains(board_state_element.substring(1))){
-                            indicator *= 1;
-                        }else{
-                            indicator *= 0;
-                        }
-                        break;
-                    case('C'):
-                        System.out.println(board_state_element.substring(1));
-                        if( C.contains(board_state_element.substring(1))){
-                            indicator *= 1;
-                        }else{
-                            indicator *= 0;
-                        }
-                        break;
-                    case('K'):
-                        if( K.contains(board_state_element.substring(1))){
-                            indicator *= 1;
-                            J.remove(board_state_element.substring(1));
-                        }else{
-                            indicator *= 0;
-                        }
-                        break;
-                    case('J'):
-                        if( J.contains(board_state_element.substring(1))){
-                            indicator *= 1;
-                            K.remove(board_state_element.substring(1));
-                        }else{
-                            indicator *= 0;
-                        }
-                        break;
-                    default:
-                        return false;
+                board_state_element = board_state_element.strip();
+                try{
+                    switch(board_state_element.charAt(0)) {
+                        case ('R'):
+                            if (R.contains(board_state_element.substring(1))) {
+                                indicator *= 1;
+                            } else {
+                                indicator *= 0;
+                            }
+                            break;
+                        case ('S'):
+                            if (S.contains(board_state_element.substring(1))) {
+                                indicator *= 1;
+                            } else {
+                                indicator *= 0;
+                            }
+                            break;
+                        case ('C'):
+                            System.out.println(board_state_element.substring(1));
+                            if (C.contains(board_state_element.substring(1))) {
+                                indicator *= 1;
+                            } else {
+                                indicator *= 0;
+                            }
+                            break;
+                        case ('K'):
+                            if (K.contains(board_state_element.substring(1))) {
+                                indicator *= 1;
+                                J.remove(board_state_element.substring(1));
+                            } else {
+                                indicator *= 0;
+                            }
+                            break;
+                        case ('J'):
+                            if (J.contains(board_state_element.substring(1))) {
+                                indicator *= 1;
+                                K.remove(board_state_element.substring(1));
+                            } else {
+                                indicator *= 0;
+                            }
+                            break;
+                        default:
+                            return false;
+                    }
+                }catch(StringIndexOutOfBoundsException ex){
+                    continue;
                 }
             }
-        }catch(StringIndexOutOfBoundsException ex){
-            return true;
-        }
+
 
         if(indicator == 1){
             return true;
@@ -86,9 +89,6 @@ public class CatanDice {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(isBoardStateWellFormed(""));
-    }
 
 
     /**
