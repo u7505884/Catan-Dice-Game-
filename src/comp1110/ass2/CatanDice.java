@@ -2,6 +2,7 @@ package comp1110.ass2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class CatanDice {
 
@@ -50,7 +51,6 @@ public class CatanDice {
                             }
                             break;
                         case ('C'):
-                            System.out.println(board_state_element.substring(1));
                             if (C.contains(board_state_element.substring(1))) {
                                 indicator *= 1;
                             } else {
@@ -99,6 +99,7 @@ public class CatanDice {
      *         a board state, false otherwise.
      */
     public static boolean isActionWellFormed(String action) {
+        // FIXME: Task #4
         String[] s = action.split(" ");
         ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
         switch (argument.get(0)) {
@@ -120,7 +121,7 @@ public class CatanDice {
                     return false;
             default:
                 return false;
-        }// FIXME: Task #4
+        }
     }
 
     /**
@@ -170,9 +171,58 @@ public class CatanDice {
      * @return true iff the structure can be built with the available
      *         resources, false otherwise.
      */
-    public static boolean checkResources(String structure,
-					 int[] resource_state) {
-	 return false; // FIXME: Task #7
+    public static boolean checkResources(String structure, int[] resource_state) {
+	// FIXME: Task #7
+        int[] roadResources = new int[]{0,0,0,1,1,0};
+        int[] KnightResources = new int[]{1,1,1,0,0,0};
+        int[] SettlementResources = new int[]{0,1,1,1,1,0};
+        int[] CityResources = new int[]{3,2,0,0,0,0};
+        int indicator = 1;
+        switch(structure.charAt(0)) {
+            case ('R'):
+                for(int i = 0; i < 6; i++){
+                    if(resource_state[i]>=roadResources[i]){
+                        indicator *= 1;
+                    }else{
+                        indicator *= 0;
+                    }
+                }
+                break;
+            case ('J'):
+                for(int i = 0; i < 6; i++){
+                    if(resource_state[i]>=KnightResources[i]){
+                        indicator *= 1;
+                    }else{
+                        indicator *= 0;
+                    }
+                }
+                break;
+            case ('S'):
+                for(int i = 0; i < 6; i++){
+                    if(resource_state[i]>=SettlementResources[i]){
+                        indicator *= 1;
+                    }else{
+                        indicator *= 0;
+                    }
+                }
+                break;
+            case ('C'):
+                for(int i = 0; i < 6; i++){
+                    if(resource_state[i]>=CityResources[i]){
+                        indicator *= 1;
+                    }else{
+                        indicator *= 0;
+                    }
+                }
+                break;
+            default:
+                return false;
+        }
+        if(indicator == 1){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
