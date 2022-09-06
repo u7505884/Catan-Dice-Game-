@@ -156,9 +156,9 @@ public class CatanDice {
      * @return true iff the structure is a possible next build, false
      *         otherwise.
      */
-    public static boolean checkBuildConstraints(String structure,
-						String board_state) {
-	 return false; // FIXME: Task #8
+    public static boolean checkBuildConstraints(String structure, String board_state) {
+	// FIXME: Task #8
+        return false;
     }
 
     /**
@@ -177,52 +177,39 @@ public class CatanDice {
         int[] KnightResources = new int[]{1,1,1,0,0,0};
         int[] SettlementResources = new int[]{0,1,1,1,1,0};
         int[] CityResources = new int[]{3,2,0,0,0,0};
-        int indicator = 1;
         switch(structure.charAt(0)) {
             case ('R'):
                 for(int i = 0; i < 6; i++){
-                    if(resource_state[i]>=roadResources[i]){
-                        indicator *= 1;
-                    }else{
-                        indicator *= 0;
+                    if(resource_state[i]<roadResources[i]){
+                        return false;
                     }
                 }
                 break;
             case ('J'):
                 for(int i = 0; i < 6; i++){
-                    if(resource_state[i]>=KnightResources[i]){
-                        indicator *= 1;
-                    }else{
-                        indicator *= 0;
+                    if(resource_state[i]<KnightResources[i]){
+                        return false;
                     }
                 }
                 break;
             case ('S'):
                 for(int i = 0; i < 6; i++){
-                    if(resource_state[i]>=SettlementResources[i]){
-                        indicator *= 1;
-                    }else{
-                        indicator *= 0;
+                    if(resource_state[i]<SettlementResources[i]){
+                        return false;
                     }
                 }
                 break;
             case ('C'):
                 for(int i = 0; i < 6; i++){
-                    if(resource_state[i]>=CityResources[i]){
-                        indicator *= 1;
-                    }else{
-                        indicator *= 0;
+                    if(resource_state[i]<CityResources[i]){
+                        return false;
                     }
                 }
                 break;
             default:
                 return false;
         }
-        if(indicator == 1){
-            return true;
-        }else{
-            return false;
-        }
+        return true;
     }
 
     /**
