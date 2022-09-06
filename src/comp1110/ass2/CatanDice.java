@@ -99,7 +99,28 @@ public class CatanDice {
      *         a board state, false otherwise.
      */
     public static boolean isActionWellFormed(String action) {
-	 return false; // FIXME: Task #4
+        String[] s = action.split(" ");
+        ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
+        switch (argument.get(0)) {
+            case ("build"):
+                if (argument.size() == 2)
+                    return isBoardStateWellFormed(argument.get(1));
+                else
+                    return false;
+            case ("trade"):
+                if (argument.size() == 2)
+                    return Integer.parseInt(argument.get(1)) >= 0 & Integer.parseInt(argument.get(1)) <= 5;
+                else
+                    return false;
+            case ("swap"):
+                if (argument.size() == 3)
+                    return (Integer.parseInt(argument.get(1)) >= 0 & Integer.parseInt(argument.get(1)) <= 5)
+                            & (Integer.parseInt(argument.get(2)) >= 0 & Integer.parseInt(argument.get(2)) <= 5);
+                else
+                    return false;
+            default:
+                return false;
+        }// FIXME: Task #4
     }
 
     /**
