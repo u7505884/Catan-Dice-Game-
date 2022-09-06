@@ -142,6 +142,35 @@ public class CatanDice {
      */
     public static void rollDice(int n_dice, int[] resource_state) {
 	// FIXME: Task #6
+
+        Random random = new Random();
+        int number = random.nextInt(1,7);
+
+
+        int k=0;
+        while(k < n_dice) {
+            switch(number){
+                case 1:
+                    resource_state[0]+=1;
+                    break;
+                case 2:
+                    resource_state[1]+=1;
+                    break;
+                case 3:
+                    resource_state[2]+=1;
+                    break;
+                case 4:
+                    resource_state[3]+=1;
+                    break;
+                case 5:
+                    resource_state[4]+=1;
+                    break;
+                case 6:
+                    resource_state[5]+=1;
+                    break;
+            }
+            k++;
+        }
     }
 
     /**
