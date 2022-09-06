@@ -158,7 +158,41 @@ public class CatanDice {
      */
     public static boolean checkBuildConstraints(String structure, String board_state) {
 	// FIXME: Task #8
-        return false;
+        String[] ArrayR = new String[]{"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
+        ArrayList<String> R = new ArrayList<String>(Arrays.asList(ArrayR));
+        String[] ArrayS = new String[]{"3","4","5","7","9","11"};
+        ArrayList<String> S = new ArrayList<String>(Arrays.asList(ArrayS));
+        String[] ArrayC = new String[]{"7","12","20","30"};
+        ArrayList<String> C = new ArrayList<String>(Arrays.asList(ArrayC));
+        String[] ArrayJ = new String[]{"1","2","3","4","5","6"};
+        ArrayList<String> J = new ArrayList<String>(Arrays.asList(ArrayJ));
+        String[] board_state_collection = board_state.split(",");
+        ArrayList<String> board_state_collections = new ArrayList<String>(Arrays.asList(board_state_collection));
+        switch(structure.charAt(0)){
+            case('R'):
+
+            case('S'):
+
+            case('C'):
+
+            case('J'):
+//                int max = Integer.MIN_VALUE;
+//                for(String board_state_element:board_state_collections){
+//                    if(board_state_element.charAt(0) == 'J'){
+//                        int currentJ = Integer.valueOf(board_state_element.substring(1));
+//                        if(max<currentJ){
+//                            max = currentJ;
+//                        }
+//                    }
+//                }
+//                if(Integer.valueOf(structure.substring(1))==max+1){
+//                    return true;
+//                }else{
+//                    return false;
+//                }
+            default:
+                return false;
+        }
     }
 
     /**
