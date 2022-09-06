@@ -1,8 +1,6 @@
 package comp1110.ass2;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 public class CatanDice {
 
@@ -187,6 +185,92 @@ public class CatanDice {
      */
     public static boolean checkBuildConstraints(String structure, String board_state) {
 	// FIXME: Task #8
+        //roads needed for cities, settlements and roads
+        String[] ArrayS3 = new String[]{};
+        ArrayList<String> S3 = new ArrayList<String>(Arrays.asList(ArrayS3));
+        String[] ArrayS4 = new String[]{"R0","R2"};
+        ArrayList<String> S4 = new ArrayList<String>(Arrays.asList(ArrayS4));
+        String[] ArrayS5 = new String[]{"R0","R2","R3","R5"};
+        ArrayList<String> S5 = new ArrayList<String>(Arrays.asList(ArrayS5));
+        String[] ArrayS7 = new String[]{"R0","R2","R3","R5","R6","R7"};
+        ArrayList<String> S7 = new ArrayList<String>(Arrays.asList(ArrayS7));
+        String[] ArrayS9 = new String[]{"R0","R2","R3","R5","R6","R7","R8","R9"};
+        ArrayList<String> S9 = new ArrayList<String>(Arrays.asList(ArrayS9));
+        String[] ArrayS11 = new String[]{"R0","R2","R3","R5","R6","R7","R8","R9","R10","R11"};
+        ArrayList<String> S11 = new ArrayList<String>(Arrays.asList(ArrayS11));
+        Map<Integer, ArrayList<String> > settlementsDemandRoads= new HashMap<>();
+        settlementsDemandRoads.put(3,S3);
+        settlementsDemandRoads.put(4,S4);
+        settlementsDemandRoads.put(5,S5);
+        settlementsDemandRoads.put(7,S7);
+        settlementsDemandRoads.put(9,S9);
+        settlementsDemandRoads.put(11,S11);
+
+        String[] ArrayC7 = new String[]{"R0","R1"};
+        ArrayList<String> C7 = new ArrayList<String>(Arrays.asList(ArrayC7));
+        String[] ArrayC12 = new String[]{"R0","R2","R3","R4"};
+        ArrayList<String> C12 = new ArrayList<String>(Arrays.asList(ArrayC12));
+        String[] ArrayC20 = new String[]{"R0","R2","R3","R5","R6","R7","R12","R13"};
+        ArrayList<String> C20 = new ArrayList<String>(Arrays.asList(ArrayC20));
+        String[] ArrayC30 = new String[]{"R0","R2","R3","R5","R6","R7","R12","R13","R14","R15"};
+        ArrayList<String> C30 = new ArrayList<String>(Arrays.asList(ArrayC30));
+        Map<Integer, ArrayList<String> > citiesDemandRoads= new HashMap<>();
+        citiesDemandRoads.put(7,C7);
+        citiesDemandRoads.put(12,C12);
+        citiesDemandRoads.put(20,C20);
+        citiesDemandRoads.put(30,C30);
+
+        String[] ArrayR0 = new String[]{};
+        ArrayList<String> R0 = new ArrayList<String>(Arrays.asList(ArrayR0));
+        String[] ArrayR1 = new String[]{"R0"};
+        ArrayList<String> R1 = new ArrayList<String>(Arrays.asList(ArrayR1));
+        String[] ArrayR2 = new String[]{"R0"};
+        ArrayList<String> R2 = new ArrayList<String>(Arrays.asList(ArrayR2));
+        String[] ArrayR3 = new String[]{"R0","R2"};
+        ArrayList<String> R3 = new ArrayList<String>(Arrays.asList(ArrayR3));
+        String[] ArrayR4 = new String[]{"R0","R2","R3"};
+        ArrayList<String> R4 = new ArrayList<String>(Arrays.asList(ArrayR4));
+        String[] ArrayR5 = new String[]{"R0","R2","R3"};
+        ArrayList<String> R5 = new ArrayList<String>(Arrays.asList(ArrayR5));
+        String[] ArrayR6 = new String[]{"R0","R2","R3","R5"};
+        ArrayList<String> R6 = new ArrayList<String>(Arrays.asList(ArrayR6));
+        String[] ArrayR7 = new String[]{"R0","R2","R3","R5","R6"};
+        ArrayList<String> R7 = new ArrayList<String>(Arrays.asList(ArrayR7));
+        String[] ArrayR8 = new String[]{"R0","R2","R3","R5","R6","R7"};
+        ArrayList<String> R8 = new ArrayList<String>(Arrays.asList(ArrayR8));
+        String[] ArrayR9 = new String[]{"R0","R2","R3","R5","R6","R7","R8"};
+        ArrayList<String> R9 = new ArrayList<String>(Arrays.asList(ArrayR9));
+        String[] ArrayR10 = new String[]{"R0","R2","R3","R5","R6","R7","R8","R9"};
+        ArrayList<String> R10 = new ArrayList<String>(Arrays.asList(ArrayR10));
+        String[] ArrayR11 = new String[]{"R0","R2","R3","R5","R6","R7","R8","R9","R10"};
+        ArrayList<String> R11 = new ArrayList<String>(Arrays.asList(ArrayR11));
+        String[] ArrayR12 = new String[]{"R0","R2","R3","R5","R6","R7",};
+        ArrayList<String> R12 = new ArrayList<String>(Arrays.asList(ArrayR12));
+        String[] ArrayR13 = new String[]{"R0","R2","R3","R5","R6","R7","R12"};
+        ArrayList<String> R13 = new ArrayList<String>(Arrays.asList(ArrayR13));
+        String[] ArrayR14 = new String[]{"R0","R2","R3","R5","R6","R7","R12","R13"};
+        ArrayList<String> R14 = new ArrayList<String>(Arrays.asList(ArrayR14));
+        String[] ArrayR15 = new String[]{"R0","R2","R3","R5","R6","R7","R12","R13","R14","R15"};
+        ArrayList<String> R15 = new ArrayList<String>(Arrays.asList(ArrayR15));
+        Map<Integer, ArrayList<String> > roadsDemandRoads= new HashMap<>();
+        roadsDemandRoads.put(0,R0);
+        roadsDemandRoads.put(1,R1);
+        roadsDemandRoads.put(2,R2);
+        roadsDemandRoads.put(3,R3);
+        roadsDemandRoads.put(4,R4);
+        roadsDemandRoads.put(5,R5);
+        roadsDemandRoads.put(6,R6);
+        roadsDemandRoads.put(7,R7);
+        roadsDemandRoads.put(8,R8);
+        roadsDemandRoads.put(9,R9);
+        roadsDemandRoads.put(10,R10);
+        roadsDemandRoads.put(11,R11);
+        roadsDemandRoads.put(12,R12);
+        roadsDemandRoads.put(13,R13);
+        roadsDemandRoads.put(14,R14);
+        roadsDemandRoads.put(15,R15);
+
+
         String[] ArrayR = new String[]{"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
         ArrayList<String> R = new ArrayList<String>(Arrays.asList(ArrayR));
         String[] ArrayS = new String[]{"3","4","5","7","9","11"};
@@ -195,30 +279,82 @@ public class CatanDice {
         ArrayList<String> C = new ArrayList<String>(Arrays.asList(ArrayC));
         String[] ArrayJ = new String[]{"1","2","3","4","5","6"};
         ArrayList<String> J = new ArrayList<String>(Arrays.asList(ArrayJ));
+
         String[] board_state_collection = board_state.split(",");
+
         ArrayList<String> board_state_collections = new ArrayList<String>(Arrays.asList(board_state_collection));
+        ArrayList<String> board_state_R = new ArrayList<>();
+        ArrayList<String> board_state_S = new ArrayList<>();
+        ArrayList<String> board_state_C = new ArrayList<>();
+        ArrayList<String> board_state_J = new ArrayList<>();
+        ArrayList<String> trash = new ArrayList<>();
+
+        for(String board_state_element:board_state_collections){
+            board_state_element = board_state_element.strip();
+            switch(board_state_element.charAt(0)){
+                case('R')->board_state_R.add(board_state_element.substring(1));
+                case('S')->board_state_S.add(board_state_element.substring(1));
+                case('C')->board_state_C.add(board_state_element.substring(1));
+                case('J'), ('K') ->board_state_J.add(board_state_element.substring(1));
+                default->trash.add(board_state_element.substring(1));
+            }
+        }
+
+        ArrayList<String> board_state_R_left = R;
+        ArrayList<String> board_state_S_left = S;
+        ArrayList<String> board_state_C_left = C;
+        ArrayList<String> board_state_J_left = J;
+
+        board_state_R_left.removeAll(board_state_R);
+        board_state_S_left.removeAll(board_state_S);
+        board_state_C_left.removeAll(board_state_C);
+        board_state_J_left.removeAll(board_state_J);
+        int min = Integer.MAX_VALUE;
         switch(structure.charAt(0)){
             case('R'):
+                return board_state_collections.containsAll(roadsDemandRoads.get(Integer.valueOf(structure.substring(1))));
 
             case('S'):
+                for(String element :board_state_S_left){
+                    int currentValue = Integer.valueOf(element);
+                    if(currentValue < min){
+                        min = currentValue;
+                    }
+                }
+                if(Integer.valueOf(structure.substring(1)) == min&&board_state_collections.containsAll(settlementsDemandRoads.get(Integer.valueOf(structure.substring(1))))){
+                    return true;
+                }else{
+                    return false;
+                }
 
             case('C'):
+                for(String element :board_state_C_left){
+                    int currentValue = Integer.valueOf(element);
+                    if(currentValue < min){
+                        min = currentValue;
+                    }
+                }
+
+                if(Integer.valueOf(structure.substring(1)) == min && board_state_collections.containsAll(citiesDemandRoads.get(Integer.valueOf(structure.substring(1))))) {
+                    return true;
+                }else {
+                    return false;
+                }
 
             case('J'):
-//                int max = Integer.MIN_VALUE;
-//                for(String board_state_element:board_state_collections){
-//                    if(board_state_element.charAt(0) == 'J'){
-//                        int currentJ = Integer.valueOf(board_state_element.substring(1));
-//                        if(max<currentJ){
-//                            max = currentJ;
-//                        }
-//                    }
-//                }
-//                if(Integer.valueOf(structure.substring(1))==max+1){
-//                    return true;
-//                }else{
-//                    return false;
-//                }
+                for(String element :board_state_J_left){
+                    int currentValue = Integer.valueOf(element);
+                    if(currentValue < min){
+                        min = currentValue;
+                    }
+                }
+                if(Integer.valueOf(structure.substring(1)) == min){
+                    return true;
+                }else{
+                    return false;
+                }
+
+
             default:
                 return false;
         }
