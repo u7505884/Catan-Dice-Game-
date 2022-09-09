@@ -144,7 +144,6 @@ public class CatanDice {
         Random random = new Random();
         int number = random.nextInt(1,7);
 
-
         int k=0;
         while(k < n_dice) {
             switch(number){
