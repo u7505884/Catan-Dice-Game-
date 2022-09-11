@@ -20,7 +20,8 @@ declaration: >-
 # (or remove it altogether if you haven't collaborated with anyone)
 collaboration:
   - name: Haoxiang Wang
-    comment: >- Task 6 : Haoxiang Wang gave me a hint - Random random = new Random(); int number = random.nextInt(1,7); (a,b) inclusive of a, exclusive of b.
+    comment: >- Task 6 : Haoxiang Wang gave me a hint - Random random = new Random();
+    int number = random.nextInt(1,7); (a,b) inclusive of a, exclusive of b.
 
 # Use this to list any code that you used that you did not write,
 # aside from code provided by the lecturer.  Provide a comment
