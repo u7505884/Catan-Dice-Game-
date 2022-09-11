@@ -15,6 +15,14 @@ public class CatanDice {
      *         a board state, false otherwise.
      */
     public static boolean isBoardStateWellFormed(String board_state) {
+        if(board_state.strip() == ""){
+            return true;
+        }
+        for(int i = 0; i<board_state.length()-1; i++){//return false when there is ",,"
+            if(board_state.charAt(i)==','&&board_state.charAt(i+1)==','){
+                return false;
+            }
+        }
         //FIXME: Task #3
         String[] ArrayR = new String[]{"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
         ArrayList<String> R = new ArrayList<String>(Arrays.asList(ArrayR));
@@ -32,6 +40,9 @@ public class CatanDice {
 
             for(String board_state_element:board_state_collections){
                 board_state_element = board_state_element.strip();
+                if(board_state_element == null){
+                    return false;
+                }
                 try{
                     switch(board_state_element.charAt(0)) {
                         case ('R'):
@@ -75,7 +86,7 @@ public class CatanDice {
                             return false;
                     }
                 }catch(StringIndexOutOfBoundsException ex){
-                    continue;
+                    return false;
                 }
             }
 
