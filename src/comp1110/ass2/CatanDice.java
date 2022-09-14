@@ -150,7 +150,7 @@ public class CatanDice {
      * resource_state.
      */
     public static void rollDice(int n_dice, int[] resource_state) {
-	// FIXME: Task #6
+	    // FIXME: Task #6
 
         Random random = new Random();
 
