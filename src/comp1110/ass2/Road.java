@@ -1,11 +1,11 @@
 package comp1110.ass2;
 
 public class Road extends BuildableStructures{
-    private int y;//this is an advanced building number to indicate its position in the board efficiently.
+    private Road lastRoad;
 
-    public Road(int x, int y, int scores, Resources[] demandOfResources) {
+    public Road(int x, Road lastRoad, int scores, Resources[] demandOfResources) {
         super.x = x;
-        this.y = y;
+        this.lastRoad = lastRoad;
         super.scores = scores;
         super.demandOfResources = demandOfResources;
     }
