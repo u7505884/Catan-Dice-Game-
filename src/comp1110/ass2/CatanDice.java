@@ -152,6 +152,12 @@ public class CatanDice {
     public static void rollDice(int n_dice, int[] resource_state) {
 	// FIXME: Task #6
 
+//        Random random = new Random();
+//        for(int i = 0; i < n_dice; i++){
+//            int result = random.nextInt(6);
+//            resource_state[result]++;
+//        }
+
         Random random = new Random();
 
         for (int i = 0; i < n_dice; i++) {
