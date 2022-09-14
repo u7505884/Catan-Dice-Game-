@@ -1,19 +1,22 @@
 package comp1110.ass2;
 
+import java.util.LinkedList;
+
 public class Board {
-    private final Road[] roads; //All roads contained in the board
-    private final Knight[] knights;//All knights contained in the board
-    private final Settlement[] settlements;//All settlements contained in the board
-    private final City[] cities;//All cities contained in the board
+    private final LinkedList<Road> roads; //All roads contained in the board
+    private final LinkedList<Knight> knights;//All knights contained in the board
+    private final LinkedList<Settlement> settlements;//All settlements contained in the board
+    private final LinkedList<City> cities;//All cities contained in the board
     private int round;//indicate which turn we are in
     private int[] scoresRecorder;//record scores we have gotten or lost in each previous round
 
-    public Board(Road[] roads, Knight[] knights, Settlement[] settlements, City[] cities) {
+    public Board(LinkedList<Road> roads, LinkedList<Knight> knights, LinkedList<Settlement> settlements, LinkedList<City> cities) {
         this.roads = roads;
         this.knights = knights;
         this.settlements = settlements;
         this.cities = cities;
     }
+
     /**
      * Check if the building we input can be built. This method should meet
      * the building constraints including building order and resources demand.
