@@ -153,31 +153,31 @@ public class CatanDice {
 	// FIXME: Task #6
 
         Random random = new Random();
-        int number = random.nextInt(1,7);
 
-        int k=0;
-        while(k < n_dice) {
-            switch(number){
+        for (int i = 0; i < n_dice; i++) {
+
+            int number = random.nextInt(1, 7);
+
+            switch (number) {
                 case 1:
-                    resource_state[0]+=1;
+                    resource_state[0] += 1;
                     break;
                 case 2:
-                    resource_state[1]+=1;
+                    resource_state[1] += 1;
                     break;
                 case 3:
-                    resource_state[2]+=1;
+                    resource_state[2] += 1;
                     break;
                 case 4:
-                    resource_state[3]+=1;
+                    resource_state[3] += 1;
                     break;
                 case 5:
-                    resource_state[4]+=1;
+                    resource_state[4] += 1;
                     break;
                 case 6:
-                    resource_state[5]+=1;
+                    resource_state[5] += 1;
                     break;
             }
-            k++;
         }
     }
 
