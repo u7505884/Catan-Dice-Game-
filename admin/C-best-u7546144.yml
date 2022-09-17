@@ -8,15 +8,12 @@
 # For information on how to fill this out correctly, see
 # https://cs.anu.edu.au/courses/comp1110/help/faq/09-originality/
 #
-the code that I am most proud of: >-
-  Task 6: I used to use "if & else if" frequently in the past. This is my first time trying "switch".
-  I think I have done a good job with "switch".
-
 
 declaration: >-
   I submit the work below for assessment as my best work. I declare that this
   is entirely my own work, with the following documented exceptions:
 
+the code that I am most proud of: https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/CatanDice.java#L130
 
 # sign *your* name and uid here
 name: Ta-Wei Chen
