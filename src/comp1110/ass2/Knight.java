@@ -1,12 +1,23 @@
 package comp1110.ass2;
 
 public class Knight extends BuildableStructures {
-    private boolean whetherHaveSwapped = false;//indicate whether we have used the chance to swap resource from current knight
+    private boolean whetherHaveSwapped ;//indicate whether we have used the chance to swap resource from current knight
 
-    public Knight(int x, int scores, Resources[] demandOfResources) {
-        super.x = x;
-        super.scores = scores;
-        super.demandOfResources = demandOfResources;
+    public Knight(int index) {//only used for K1
+        super.index = index;
+        super.scores = index;
+        super.demandOfResources = new int[]{1,1,1,0,0,0};
+        this.whetherHaveSwapped = false;
+        super.whetherHaveBuilt = false;
+    }
+
+    public Knight(int index, Knight lastKnight) {
+        super.index = index;
+        super.scores = index;
+        super.demandOfResources = new int[]{1,1,1,0,0,0};
+        super.lastBuildableStructure = lastKnight;
+        this.whetherHaveSwapped = false;
+        super.whetherHaveBuilt = false;
     }
 
     /**
@@ -16,7 +27,7 @@ public class Knight extends BuildableStructures {
      * swap resource from current knight.
      */
     public boolean isWhetherHaveSwapped() {
-        return false;
+        return whetherHaveSwapped;
     }
 
     /**
@@ -26,6 +37,11 @@ public class Knight extends BuildableStructures {
      * @param whetherHaveSwapped: The class variable whetherHaveSwapped.
      */
     public void setWhetherHaveSwapped(boolean whetherHaveSwapped) {
+        this.whetherHaveSwapped = whetherHaveSwapped;
+    }
 
+    @Override
+    public String toString(){
+        return "Knight" + super.index;
     }
 }
