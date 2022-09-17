@@ -126,36 +126,11 @@ public class CatanDice {
      */
     public static void rollDice(int n_dice, int[] resource_state) {
         // FIXME: Task #6
-
-        Random random = new Random();
-
-        for (int i = 0; i < n_dice; i++) {
-
-            int number = random.nextInt(1, 7);
-
-            switch (number) {
-                case 1:
-                    resource_state[0] += 1;
-                    break;
-                case 2:
-                    resource_state[1] += 1;
-                    break;
-                case 3:
-                    resource_state[2] += 1;
-                    break;
-                case 4:
-                    resource_state[3] += 1;
-                    break;
-                case 5:
-                    resource_state[4] += 1;
-                    break;
-                case 6:
-                    resource_state[5] += 1;
-                    break;
-            }
-        }
+        Dice dice = new Dice();
+        int[] randomRes = dice.rollDice(n_dice);
+        for (int i = 0; i < 6; i++) {
+            resource_state[i] += randomRes[i];}
     }
-
     /**
      * Check if the specified structure can be built next, given the
      * current board state. This method should check that the build
