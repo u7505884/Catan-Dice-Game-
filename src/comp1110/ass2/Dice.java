@@ -9,10 +9,11 @@ public class Dice {
      * @return An array which contains all random results.
      */
     public int[] rollDice(int numberOfDice){
-        int[] result = new int[numberOfDice];
+        int[] result = new int[]{0,0,0,0,0,0};
         Random random = new Random();
-        for(int i =0; i < result.length; i++){
-            result[i] = random.nextInt(1,7);
+        for(int i =0; i < numberOfDice; i++){
+            int resource = random.nextInt(6);
+            result[resource]++;
         }
         return result;
     }
