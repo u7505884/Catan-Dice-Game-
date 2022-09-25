@@ -31,9 +31,9 @@ collaboration:
 # Add as many "url+licence+comment" entries as necessary
 # (or remove it altogether if you haven't used any external code)
 code:
-  - comment:
-    url:
-    licence:
+  - comment: I imitated the skeleton of Q4BridgesTest within comp1110-mse-2020s2.
+    url: https://gitlab.cecs.anu.edu.au/comp1110/extra/comp1110-mse-2020s2/-/blob/master/tests/comp1110/mse/Q4BridgesTest.java
+    licence: Steve Blackburn.
 
 # Use this to list any assets (artwork, sound, etc) that you used.
 # Provide a comment explaining your use of that asset and the URL
@@ -48,5 +48,5 @@ assets:
 
 
 # sign *your* name and uid here
-name:
-uid:
+name: Ta-Wei Chen
+uid: u7546144
