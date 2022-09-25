@@ -8,9 +8,9 @@ public class City extends BuildableStructures{
         super.whetherHaveBuilt = false;
     }
 
-    public City(int x, City lastCity) {
-        super.index = x;
-        super.scores = x;
+    public City(int index, City lastCity) {
+        super.index = index;
+        super.scores = index;
         super.demandOfResources = new int[]{3,2,0,0,0,0};
         super.lastBuildableStructure = lastCity;
         super.whetherHaveBuilt = false;
