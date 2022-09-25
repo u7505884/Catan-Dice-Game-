@@ -14,15 +14,6 @@ declaration: >-
   and all stages before it is entirely my own work, with the following
   exceptions:
 
-# Use this to list names of people who you collaborated with, and a
-# comment about what you collaborated on.
-#
-# Add as many "name+comment" entries as necessary
-# (or remove it altogether if you haven't collaborated with anyone)
-collaboration:
-  - name:
-    comment: >-
-
 # Use this to list any code that you used that you did not write,
 # aside from code provided by the lecturer.  Provide a comment
 # explaining your use and the URL to that code and the licence for
@@ -34,18 +25,6 @@ code:
   - comment: I imitated the skeleton of Q4BridgesTest within comp1110-mse-2020s2.
     url: https://gitlab.cecs.anu.edu.au/comp1110/extra/comp1110-mse-2020s2/-/blob/master/tests/comp1110/mse/Q4BridgesTest.java
     licence: Steve Blackburn.
-
-# Use this to list any assets (artwork, sound, etc) that you used.
-# Provide a comment explaining your use of that asset and the URL
-# and license for the asset
-#
-# Add as many "url+licence+comment" entries as necessary
-# (or remove it altogether if you haven't used any external assets)
-assets:
-  - comment:
-    url:
-    licence:
-
 
 # sign *your* name and uid here
 name: Ta-Wei Chen
