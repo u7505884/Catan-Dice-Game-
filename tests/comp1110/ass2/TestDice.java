@@ -22,7 +22,7 @@ public class TestDice {
         else {y = false;}
 
         assertEquals(y, true, Arrays.toString(k)+" is a Wrong consequence");
-        System.out.println("random "+numberOfDice+" dices: "+Arrays.toString(k));
+        System.out.println("random "+numberOfDice+" dice: "+Arrays.toString(k));
     }
 
     @Test
