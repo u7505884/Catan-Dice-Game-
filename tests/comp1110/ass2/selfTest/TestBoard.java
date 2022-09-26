@@ -1,4 +1,4 @@
-package comp1110.ass2.selfTest;
+package comp1110.ass2;
 
 import comp1110.ass2.Board;
 import org.junit.jupiter.api.Test;
@@ -16,6 +16,51 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class TestBoard {
     private void constructorTest(Board board) {
         assertNotNull(board,"Expected non-null object, but got null.");
+        for(int iRoad =0; iRoad <= 15; iRoad++){
+            assertNotNull(board.roads.get(iRoad),"Roads initialization has not be finished normally");
+        }
+        assertNull(board.roads.get(16),"Roads initialization has not be finished normally");
+        assertNull(board.roads.get(17),"Roads initialization has not be finished normally");
+        assertNull(board.roads.get(18),"Roads initialization has not be finished normally");
+        assertNull(board.roads.get(19),"Roads initialization has not be finished normally");
+        assertNull(board.roads.get(20),"Roads initialization has not be finished normally");
+        assertNull(board.roads.get(21),"Roads initialization has not be finished normally");
+        assertNull(board.roads.get(22),"Roads initialization has not be finished normally");
+
+        for(int iKnight =1; iKnight <= 6; iKnight++){
+            assertNotNull(board.knights.get(iKnight),"Knights initialization has not be finished normally");
+        }
+        assertNotNull(board.knights.get(0),"Knights initialization has not be finished normally");
+        assertNotNull(board.knights.get(7),"Knights initialization has not be finished normally");
+        assertNotNull(board.knights.get(8),"Knights initialization has not be finished normally");
+        assertNotNull(board.knights.get(9),"Knights initialization has not be finished normally");
+        assertNotNull(board.knights.get(10),"Knights initialization has not be finished normally");
+        assertNotNull(board.knights.get(11),"Knights initialization has not be finished normally");
+
+        assertNotNull(board.settlements.get(3),"Settlements initialization has not be finished normally");
+        assertNotNull(board.settlements.get(4),"Settlements initialization has not be finished normally");
+        assertNotNull(board.settlements.get(5),"Settlements initialization has not be finished normally");
+        assertNotNull(board.settlements.get(7),"Settlements initialization has not be finished normally");
+        assertNotNull(board.settlements.get(9),"Settlements initialization has not be finished normally");
+        assertNotNull(board.settlements.get(11),"Settlements initialization has not be finished normally");
+        assertNull(board.settlements.get(6),"Settlements initialization has not be finished normally");
+        assertNull(board.settlements.get(8),"Settlements initialization has not be finished normally");
+        assertNull(board.settlements.get(10),"Settlements initialization has not be finished normally");
+        assertNull(board.settlements.get(12),"Settlements initialization has not be finished normally");
+        assertNull(board.settlements.get(13),"Settlements initialization has not be finished normally");
+        assertNull(board.settlements.get(0),"Settlements initialization has not be finished normally");
+
+        assertNotNull(board.cities.get(7),"Cities initialization has not be finished normally");
+        assertNotNull(board.cities.get(12),"Cities initialization has not be finished normally");
+        assertNotNull(board.cities.get(20),"Cities initialization has not be finished normally");
+        assertNotNull(board.cities.get(30),"Cities initialization has not be finished normally");
+        assertNull(board.cities.get(0),"Cities initialization has not be finished normally");
+        assertNull(board.cities.get(1),"Cities initialization has not be finished normally");
+        assertNull(board.cities.get(6),"Cities initialization has not be finished normally");
+        assertNull(board.cities.get(10),"Cities initialization has not be finished normally");
+        assertNull(board.cities.get(19),"Cities initialization has not be finished normally");
+        assertNull(board.cities.get(31),"Cities initialization has not be finished normally");
+
     }
 
     private void buildingConstraintTest(){
