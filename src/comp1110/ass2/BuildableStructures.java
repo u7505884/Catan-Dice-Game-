@@ -41,7 +41,7 @@ public class BuildableStructures {
      * to build current building
      */
     public int[] getDemandOfResources() {
-        return new int[0];
+        return demandOfResources;
     }
 
     /**
@@ -69,7 +69,7 @@ public class BuildableStructures {
      * @return A boolean value standing for whether it can pass the resources constraint
      */
 
-    public  boolean resourcesConstraint(int[] currentResources){
+    public  boolean resourcesConstraint(int[] currentResources ){
         if(getWhetherHaveBuilt()){
             return false;
         }
