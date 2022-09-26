@@ -21,7 +21,7 @@ public class TestDice {
         if(k[0]+k[1]+k[2]+k[3]+k[4]+k[5]==numberOfDice) {y = true;}
         else {y = false;}
 
-        assertEquals(y, true, Arrays.toString(k)+" is a Wrong consequence");
+        assertEquals(true, y, Arrays.toString(k)+" is a Wrong consequence");
         System.out.println("random "+numberOfDice+" dice: "+Arrays.toString(k));
     }
 
