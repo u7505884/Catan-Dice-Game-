@@ -1,13 +1,12 @@
 package comp1110.ass2;
 
-import comp1110.ass2.BuildableStructures;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BuildableStructuresTest {
+class TestBuildableStructures {
     private void setterTest(BuildableStructures b, boolean whetherBuild)
     {
         b.setWhetherBuild(whetherBuild);

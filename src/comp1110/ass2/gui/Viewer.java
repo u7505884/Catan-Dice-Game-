@@ -257,8 +257,8 @@ public class Viewer extends Application {
             knight.getChildren().addAll(this,circle,text);
         }
         public void highlightJ(){
-            this.circle.setFill(Color.LIGHTGREEN);
-            this.setFill(Color.LIGHTGREEN);
+            this.circle.setFill(Color.GREEN);
+            this.setFill(Color.GREEN);
             FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),knight);
             fadeTransition.setFromValue(1);
             fadeTransition.setToValue(0.3);

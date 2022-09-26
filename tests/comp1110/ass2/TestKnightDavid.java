@@ -1,4 +1,4 @@
-package comp1110.ass2.selfTest;
+package comp1110.ass2;
 
 import comp1110.ass2.KnightDavid;
 import org.junit.jupiter.api.Test;

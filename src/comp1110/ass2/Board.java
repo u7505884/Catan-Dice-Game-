@@ -7,12 +7,19 @@ public class Board {
     protected final HashMap<Integer, Knight> knights = new HashMap<>();//All knights contained in the board
     protected final HashMap<Integer, Settlement> settlements = new HashMap<>();//All settlements contained in the board
     protected final HashMap<Integer, City> cities = new HashMap<>();//All cities contained in the board
-    private int round = 0;//indicate which turn we are in
-    private int[] scoresRecorder;//record scores we have gotten or lost in each previous round
+    protected int round = 0;//indicate which turn we are in
+    protected int[] scoresRecorder;//record scores we have gotten or lost in each previous round
 
+    /**
+     * Constructor
+     */
     public Board(){
         this.initializeBoard();
     }
+
+    /**
+     * Initialize the board, including create all roads, settlements, cities and knights
+     */
     public void initializeBoard(){
         Road R0 = new Road(0);
         Road R1 = new Road(1,R0);
@@ -83,6 +90,7 @@ public class Board {
         knights.put(6,J6);
 
     }
+
     /**
      * Identify whether we can build current structure by the limit of building constraint
      *
@@ -138,6 +146,7 @@ public class Board {
         }
         return true;
     }
+
     /**
      * Identify whether we can build current structure by building constraint and resources constraint
      *
@@ -154,9 +163,11 @@ public class Board {
      * should only be used after we have check the validity of the construction by
      * method tryToBuild().
      *
-     * @param whatWeWantToBuild: The buildable structure we want to build.
+     * @param whatWeWantToBuild: The buildable structure we want to build
      */
-    public void build(BuildableStructures whatWeWantToBuild){}
+    public void build(BuildableStructures whatWeWantToBuild){
+        whatWeWantToBuild.setWhetherBuild(true);
+    }
 
     /**
      * Check if it is time to finish the whole game. This method should be implemented
@@ -182,26 +193,6 @@ public class Board {
         return sum;
     }
 
-    /**
-     * To process the first roll in each round.
-     *
-     * @return An array of Resources gotten randomly.
-     */
-    public Resources[] firstRoll(){
-        return new Resources[]{};
-    }
-
-    /**
-     * To process the second or third roll in each round after the first one.
-     * We need to replace certain random results gotten in first roll.
-     *
-     * @param positionOfResourcesWantToReplace: An array of the positions in
-     * the array of Resources we got in first roll.
-     * @return New array of Resources after replacement.
-     */
-    public Resources[] rollAgain(int[] positionOfResourcesWantToReplace){
-        return new Resources[]{};
-    }
 
     /**
      * Trade new resource with gold. In this method we should check whether we
@@ -210,8 +201,8 @@ public class Board {
      * @param resourceWanted: The resource we want to trade with our gold
      * @return New array of Resources after replacement.
      */
-    public Resources[] tradeByGold(Resources resourceWanted){
-        return new Resources[]{};
+    public int[] tradeByGold(Resources resourceWanted){
+        return new int[]{};
     }
 
     /**
@@ -223,7 +214,7 @@ public class Board {
      * @param resourcePaid: The resource we want to pay in this swap.
      * @return New array of Resources after swap.
      */
-    public Resources[] tradeWithKnight(Knight knight, Resources resourcePaid){
-        return  new Resources[]{};
+    public int[] tradeWithKnight(Knight knight, Resources resourcePaid){
+        return  new int[]{};
     }
 }
