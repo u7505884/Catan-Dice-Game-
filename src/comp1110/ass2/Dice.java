@@ -8,7 +8,7 @@ public class Dice {
      *
      * @return An array which contains all random results.
      */
-    public int[] rollDice(int numberOfDice){
+    public static int[] rollDice(int numberOfDice){
         int[] result = new int[]{0,0,0,0,0,0};
         Random random = new Random();
         for(int i =0; i < numberOfDice; i++){
