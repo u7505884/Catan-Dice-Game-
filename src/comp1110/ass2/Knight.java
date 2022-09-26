@@ -1,7 +1,7 @@
 package comp1110.ass2;
 
 public class Knight extends BuildableStructures {
-    private boolean whetherHaveSwapped ;//indicate whether we have used the chance to swap resource from current knight
+    protected boolean whetherHaveSwapped ;//indicate whether we have used the chance to swap resource from current knight
 
     public Knight(int index) {//only used for K1
         super.index = index;

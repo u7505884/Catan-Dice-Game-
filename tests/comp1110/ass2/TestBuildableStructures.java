@@ -89,18 +89,8 @@ class TestBuildableStructures {
     }
 
     @Test
-    void getLastBuildableStructure() {
-        GetterIndex() ;
-        getScores();
-        setgetWhetherBuild();
-        getDemandOfResources();
-        }
-
-
-    @Test
     void resourcesConstraint() {
         BuildableStructures b = new BuildableStructures();
-
         int[] a=new int[]{1,1,1,0,0,0};
         int[] c=new int[]{1,1,1,-2,3,0};
         int[] d=new int[]{1,3,1,2,5,2};
