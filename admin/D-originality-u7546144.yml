@@ -14,6 +14,15 @@ declaration: >-
   and all stages before it is entirely my own work, with the following
   exceptions:
 
+# Use this to list names of people who you collaborated with, and a
+# comment about what you collaborated on.
+#
+# Add as many "name+comment" entries as necessary
+# (or remove it altogether if you haven't collaborated with anyone)
+collaboration:
+  - name: Haoxiang Wang (u7544188)
+    comment: He, to a considerable extent, gave me guidance in creating src-Dice.
+
 # Use this to list any code that you used that you did not write,
 # aside from code provided by the lecturer.  Provide a comment
 # explaining your use and the URL to that code and the licence for
