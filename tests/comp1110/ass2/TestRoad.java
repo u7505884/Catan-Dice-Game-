@@ -1,7 +1,5 @@
 package comp1110.ass2;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import java.util.LinkedList;
@@ -10,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 @Timeout(value = 1000, unit = TimeUnit.MILLISECONDS)
-class RoadTest {
+class TestRoad {
     private void constructorTest(Road road, int values) {
         assertNotNull(road,"Expected non-null object, but got null.");
         assertEquals(values, road.index, "Incorrect index");

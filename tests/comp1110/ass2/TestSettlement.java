@@ -12,7 +12,7 @@ class TestSettlement {
 
         private void constructorTest(Settlement settlement, int values) {
             assertNotNull(settlement,"Expected non-null object, but got null.");
-            assertEquals(values, settlement.index, "Incorrect settlement");
+            assertEquals(values, settlement.index, "Incorrect index");
         }
         private void constructorTest2(Settlement settlement, int values, Settlement se){
             assertNotNull(settlement,"Expected non-null object, but got null.");
@@ -34,6 +34,9 @@ class TestSettlement {
         @Test
         public void testConstructor2() {
             LinkedList<Settlement> site = new LinkedList<>();
+            for (int i=1; i < r.length; i++) {
+                Settlement settlement = new Settlement(r[i-1]);
+                site.add(settlement);}
             Settlement settlement = new Settlement(r[1], site.get(0));
             constructorTest2(settlement, r[1],site.get(0));
             constructorTest2(settlement, r[1],site.get(1));
