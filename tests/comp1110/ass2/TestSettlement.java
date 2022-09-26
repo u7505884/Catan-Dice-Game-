@@ -31,8 +31,7 @@ class TestSettlement {
         public void testConstructor() {
             Settlement settlement = new Settlement(r[1]);
             constructorTest(settlement, r[1]);
-            constructorTest(settlement, r[2]);
-            constructorTest(settlement, r[3]);
+
         }
 
         @Test
@@ -43,7 +42,6 @@ class TestSettlement {
                 site.add(settlement);}
             Settlement settlement = new Settlement(r[1], site.get(0));
             constructorTest2(settlement, r[1],site.get(0));
-            constructorTest2(settlement, r[1],site.get(1));
         }
 
     @Test

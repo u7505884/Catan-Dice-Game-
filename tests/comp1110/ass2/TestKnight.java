@@ -19,9 +19,8 @@ class TestKnight {
         assertEquals(values, knight.index, "Incorrect index");
         assertEquals(lr, knight.lastBuildableStructure, "Incorrect lastBuildableStructure");
     }
-    private void isWhetherHaveSwapped(Knight k,  boolean w) {
-        k.whetherHaveSwapped = w;
-        assertEquals(w, k.getWhetherHaveBuilt(), "Getter method did not return value correctly.");
+    private void isWhetherHaveSwapped(Knight knight, boolean w) {
+        assertEquals(w, knight.whetherHaveSwapped, "Getter method did not return value correctly.");
 
     }
     private void setterTest(Knight k,  boolean w)
@@ -41,8 +40,7 @@ class TestKnight {
     public void testConstructor() {
         Knight knight = new Knight(r[1]);
         constructorTest(knight, r[1]);
-        constructorTest(knight, r[2]);
-        constructorTest(knight, r[3]);
+
     }
 
     @Test
@@ -53,7 +51,7 @@ class TestKnight {
             site.add(knight);}
         Knight knight = new Knight(r[1],site.get(0));
         constructorTest2(knight, r[1],site.get(0));
-        constructorTest2(knight, r[1],site.get(1));
+
     }
 
 

@@ -31,8 +31,7 @@ class TestRoad {
     public void testConstructor() {
         Road road = new Road(r[1]);
         constructorTest(road, r[1]);
-        constructorTest(road, r[2]);
-        constructorTest(road, r[3]);
+
     }
 
     @Test
@@ -43,7 +42,6 @@ class TestRoad {
             site.add(road);}
         Road road = new Road(r[1],site.get(0));
         constructorTest2(road, r[1],site.get(0));
-        constructorTest2(road, r[1],site.get(1));
     }
 
     @Test

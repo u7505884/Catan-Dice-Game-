@@ -32,19 +32,18 @@ class TestCity {
     public void testConstructor() {
         City city = new City(r[1]);
         constructorTest(city, r[1]);
-        constructorTest(city, r[2]);
-        constructorTest(city, r[3]);
+
     }
 
     @Test
     public void testConstructor2() {
         LinkedList<City> site = new LinkedList<>();
-        for (int i=1; i < r.length; i++) {
-            City city = new City(r[i-1]);
-            site.add(city);}
-        City city = new City(r[1],site.get(0));
-        constructorTest2(city, r[1],site.get(0));
-        constructorTest2(city, r[1],site.get(1));
+        for (int i = 1; i < r.length; i++) {
+            City city = new City(r[i - 1]);
+            site.add(city);
+        }
+        City city = new City(r[1], site.get(0));
+        constructorTest2(city, r[1], site.get(0));
     }
     @Test
     public void testgetLastBuildableStructurer() {
