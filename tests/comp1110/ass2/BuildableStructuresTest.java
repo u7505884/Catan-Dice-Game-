@@ -36,8 +36,10 @@ class BuildableStructuresTest {
 
     }
 
-    private void testResConstraint(BuildableStructures b, int[] currentResources, boolean expected) {
+    private void testResConstraint(BuildableStructures b, boolean w,int[] currentResources, boolean expected) {
+        b.whetherHaveBuilt=w;
         assertNotNull(currentResources,"Expected non-null object, but got null.");
+        assertNotEquals(expected, b.getWhetherHaveBuilt() , "Unexpected result for '" + currentResources+ "'");
         boolean out = b.resourcesConstraint(currentResources);
         assertEquals(expected, out, "Unexpected result for '" + currentResources+ "'");
     }
@@ -99,13 +101,14 @@ class BuildableStructuresTest {
     @Test
     void resourcesConstraint() {
         BuildableStructures b = new BuildableStructures();
+
         int[] a=new int[]{1,1,1,0,0,0};
         int[] c=new int[]{1,1,1,-2,3,0};
         int[] d=new int[]{1,3,1,2,5,2};
         int[] e=new int[]{3,2,0,-1,1,1};
-        testResConstraint(b,a,true);
-        testResConstraint(b,c,false);
-        testResConstraint(b,d,true);
-        testResConstraint(b,e,false);
+        testResConstraint(b,true,a,true);
+        testResConstraint(b,true,c,false);
+        testResConstraint(b,false, d,true);
+        testResConstraint(b,false,e,false);
     }
 }
