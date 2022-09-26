@@ -1,13 +1,12 @@
 package comp1110.ass2;
 
-import comp1110.ass2.BuildableStructures;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BuildableStructuresTest {
+class TestBuildableStructures {
     private void setterTest(BuildableStructures b, boolean whetherBuild)
     {
         b.setWhetherBuild(whetherBuild);
@@ -90,18 +89,8 @@ class BuildableStructuresTest {
     }
 
     @Test
-    void getLastBuildableStructure() {
-        GetterIndex() ;
-        getScores();
-        setgetWhetherBuild();
-        getDemandOfResources();
-        }
-
-
-    @Test
     void resourcesConstraint() {
         BuildableStructures b = new BuildableStructures();
-
         int[] a=new int[]{1,1,1,0,0,0};
         int[] c=new int[]{1,1,1,-2,3,0};
         int[] d=new int[]{1,3,1,2,5,2};

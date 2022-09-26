@@ -68,6 +68,7 @@ public class BuildableStructures {
      * @param currentResources:  an integer array stand for the current resources we have
      * @return A boolean value standing for whether it can pass the resources constraint
      */
+
     public  boolean resourcesConstraint(int[] currentResources){
         if(getWhetherHaveBuilt()){
             return false;
