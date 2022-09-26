@@ -2,6 +2,8 @@ package comp1110.ass2;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,10 +27,7 @@ class TestBuildableStructures {
         b.demandOfResources = demandOfResources;
         assertEquals(demandOfResources, b.getDemandOfResources(), "Getter method did not return value correctly.");
     }
-    private void getterLBSTest(BuildableStructures b, BuildableStructures lastBuildableStructure) {
-        b.lastBuildableStructure = lastBuildableStructure;
-        assertEquals(lastBuildableStructure, b.getLastBuildableStructure(), "Getter method did not return value correctly.");
-    }
+
     private void getterWHBTest(BuildableStructures b,  boolean whetherHaveBuilt) {
         b.whetherHaveBuilt = whetherHaveBuilt;
         assertEquals(whetherHaveBuilt, b.getWhetherHaveBuilt(), "Getter method did not return value correctly.");

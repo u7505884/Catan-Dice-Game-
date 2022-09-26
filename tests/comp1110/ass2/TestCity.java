@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +18,11 @@ class TestCity {
         assertNotNull(city,"Expected non-null object, but got null.");
         assertEquals(values, city.index, "Incorrect index");
         assertEquals(lr, city.lastBuildableStructure, "Incorrect lastBuildableStructure");
+    }
+
+    private void getterLBSTest(City city, City lastBuildableStructure) {
+        city.lastBuildableStructure = lastBuildableStructure;
+        assertEquals(lastBuildableStructure, city.getLastBuildableStructure(), "Getter method did not return value correctly.");
     }
 
 
@@ -40,5 +46,20 @@ class TestCity {
         constructorTest2(city, r[1],site.get(0));
         constructorTest2(city, r[1],site.get(1));
     }
+    @Test
+    public void testgetLastBuildableStructurer() {
+        LinkedList<City> site = new LinkedList<>();
+        for (int i = 1; i < r.length; i++) {
+            City city = new City(r[i - 1]);
+            site.add(city);
+        }
+        City k = new City(r[1], site.get(0));
+        constructorTest2(k, r[1], site.get(0));
+        Random r = new Random();
+        for (int i = 0; i < 10; i++) {
+            City c = site.get((int) (Math.random()));
+            getterLBSTest(k, c);
 
+        }
+    }
 }
