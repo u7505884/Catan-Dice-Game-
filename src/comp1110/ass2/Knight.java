@@ -3,7 +3,7 @@ package comp1110.ass2;
 public class Knight extends BuildableStructures {
     protected boolean whetherHaveSwapped ;//indicate whether we have used the chance to swap resource from current knight
 
-    public Knight(int index) {//only used for K1
+    public Knight(int index) {//only used for the first knight K1
         super.index = index;
         super.scores = index;
         super.demandOfResources = new int[]{1,1,1,0,0,0};
@@ -15,7 +15,7 @@ public class Knight extends BuildableStructures {
         super.index = index;
         super.scores = index;
         super.demandOfResources = new int[]{1,1,1,0,0,0};
-        super.lastBuildableStructure = lastKnight;
+        super.lastBuildableStructure = lastKnight;//lastnode
         this.whetherHaveSwapped = false;
         super.whetherHaveBuilt = false;
     }

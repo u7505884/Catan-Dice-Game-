@@ -69,20 +69,21 @@ public class BuildableStructures {
      * @return A boolean value standing for whether it can pass the resources constraint
      */
 
-    public  boolean resourcesConstraint(int[] currentResources ){
-        if(getWhetherHaveBuilt()){
+    public  boolean resourcesConstraint(int[] currentResources ) {
+        if (getWhetherHaveBuilt()) {
             return false;
+        } else {
+            //Subtract the resources consumed for construction from the current resources
+            for (int i = 0; i < currentResources.length; i++) {
+                currentResources[i] -= demandOfResources[i];
+            }
+            //check whether there is negative number after assumption of deduction
+            for (int resource : currentResources) {
+                if (resource < 0)
+                    return false;
+            }
+            return true;
         }
-        //assumption of deduction
-        for(int i = 0; i<currentResources.length; i++){
-            currentResources[i] -= demandOfResources[i];
-        }
-        //check whether there is negative number after assumption of deduction
-        for(int resource: currentResources){
-            if(resource<0)
-                return false;
-        }
-        return true;
     }
 
 }

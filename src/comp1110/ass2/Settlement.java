@@ -2,7 +2,7 @@ package comp1110.ass2;
 
 public class Settlement extends BuildableStructures{
 
-    public Settlement(int index) {//only used for S3
+    public Settlement(int index) {//only used for the first settlement S3
         super.index = index;
         super.scores = index;
         super.demandOfResources = new int[] {0,1,1,1,1,0};
@@ -12,7 +12,7 @@ public class Settlement extends BuildableStructures{
         super.index = index;
         super.scores = index;
         super.demandOfResources = new int[] {0,1,1,1,1,0};
-        super.lastBuildableStructure = lastSettlement;
+        super.lastBuildableStructure = lastSettlement;//lastnode
         super.whetherHaveBuilt = false;
     }
 

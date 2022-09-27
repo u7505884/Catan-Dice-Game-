@@ -1,7 +1,7 @@
 package comp1110.ass2;
 
 public class City extends BuildableStructures{
-    public City(int index) {//only used for C7
+    public City(int index) {//only used for the first city C7
         super.index = index;
         super.scores = index;
         super.demandOfResources = new int[]{3,2,0,0,0,0};
@@ -12,7 +12,7 @@ public class City extends BuildableStructures{
         super.index = index;
         super.scores = index;
         super.demandOfResources = new int[]{3,2,0,0,0,0};
-        super.lastBuildableStructure = lastCity;
+        super.lastBuildableStructure = lastCity;//lastnode
         super.whetherHaveBuilt = false;
     }
 
