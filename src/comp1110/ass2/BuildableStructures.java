@@ -73,6 +73,10 @@ public class BuildableStructures {
         if (getWhetherHaveBuilt()) {
             return false;
         } else {
+            for (int resource : currentResources) {
+                if (resource < 0)
+                    return false;
+            }
             //Subtract the resources consumed for construction from the current resources
             for (int i = 0; i < currentResources.length; i++) {
                 currentResources[i] -= demandOfResources[i];
