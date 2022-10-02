@@ -24,18 +24,7 @@ declaration: >-
 code:
   - comment: We got stuck at "Error JavaFX runtime components are missing and are required to run this application" for days. Thanks so much to "Judy Xie" who answered our question patiently and posted an effective solution on Piazza.
     url: https://piazza.com/class/l5i01amboa04cz/post/847
-    licence: Judy Xie 
-
-# Use this to list any assets (artwork, sound, etc) that you used.
-# Provide a comment explaining your use of that asset and the URL
-# and license for the asset
-#
-# Add as many "url+licence+comment" entries as necessary
-# (or remove it altogether if you haven't used any external assets)
-assets:
-  - comment:
-    url:
-    licence:
+    licence: Judy Xie
 
 # Sign *your* name and uids here. (Remove entries if you have fewer
 # than three members.)
