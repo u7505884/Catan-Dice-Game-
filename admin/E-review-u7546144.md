@@ -11,12 +11,10 @@ To
 https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/CatanDice.java#L109
 
 ### Comments:
-Q1: What are the best features of this code?  n/
-A1: Generally speaking, Josie uses "switch" as the main skeleton of her code, and I think it's a pretty elegant way.
-  - 
-    
+  - _**Q1: What are the best features of this code?**_  <br>
+    A1: Generally speaking, Josie uses "switch" as the main skeleton of her code, and I think it's a pretty elegant way.
 
-  - _**Q2、Is the code well-documented?**_  <br>
+  - _**Q2、Is the code well-documented?**_<br>
     A2：YES, it starts at line 85 and ends at line 109 in class CantanDice. The code is well-documented, concise, highly readable, sufficient and complete.
   
   - _**Q3、Is the program decomposition (class and method structure) appropriate?**_
