@@ -1,8 +1,10 @@
 ## Code Review
 
-Reviewed by: Ta-Wei Chen, u7546144
+Reviewed by:<br>
+Ta-Wei Chen, u7546144
 
-Reviewing code written by: Ziling Ruan, u7505884
+Reviewing code written by:<br>
+Ziling Ruan, u7505884
 
 Component:  <FIXME: Task #4>
 <br>From<br>
