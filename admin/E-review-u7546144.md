@@ -13,6 +13,8 @@ https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/a
 ### Comments:
   - Q1: What are the best features of this code?
     A1: Generally speaking, Josie uses "switch" as the main skeleton of her code, and I think it's a pretty elegant way.
+  - 
+    
 
   - _**Q2、Is the code well-documented?**_
     A2：YES, it starts at line 85 and ends at line 109 in class CantanDice. The code is well-documented, concise, highly readable, sufficient and complete.
