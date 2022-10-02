@@ -31,9 +31,9 @@ collaboration:
 # Add as many "url+licence+comment" entries as necessary
 # (or remove it altogether if you haven't used any external code)
 code:
-  - comment:
-    url:
-    licence:
+  - comment: We got stuck at "Error: JavaFX runtime components are missing and are required to run this application" for days. Thanks so much to "Judy Xie" who answered our question patiently and posted an effective solution on Piazza.
+    url: https://piazza.com/class/l5i01amboa04cz/post/847
+    licence: Judy Xie
 
 # Use this to list any assets (artwork, sound, etc) that you used.
 # Provide a comment explaining your use of that asset and the URL
@@ -50,9 +50,9 @@ assets:
 # Sign *your* name and uids here. (Remove entries if you have fewer
 # than three members.)
 signatures:
-  - name:
-    uid:
-  - name:
-    uid:
-  - name:
-    uid:
+  - name: Haoxiang Wang
+    uid: u7544188
+  - name: Ziling Ruan
+    uid: u7505884
+  - name: Ta-Wei Chen
+    uid: u7546144
