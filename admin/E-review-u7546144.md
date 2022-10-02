@@ -16,7 +16,7 @@ A1: Generally speaking, Josie uses "switch" as the main skeleton of her code, an
   - 
     
 
-  - _**Q2、Is the code well-documented?**_
+  - _**Q2、Is the code well-documented?**_  n/
     A2：YES, it starts at line 85 and ends at line 109 in class CantanDice. The code is well-documented, concise, highly readable, sufficient and complete.
   
   - _**Q3、Is the program decomposition (class and method structure) appropriate?**_
