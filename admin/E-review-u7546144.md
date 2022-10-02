@@ -5,9 +5,9 @@ Reviewed by: Ta-Wei Chen, u7546144
 Reviewing code written by: Ziling Ruan, u7505884
 
 Component:  <FIXME: Task #4>
-<br>From
+<br>From<br>
 https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/CatanDice.java#L85
-<br>To
+<br>To<br>
 https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/CatanDice.java#L109
 
 ### Comments:
