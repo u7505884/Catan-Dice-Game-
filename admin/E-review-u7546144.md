@@ -12,11 +12,11 @@ https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/a
 
 ### Comments:
   - _**Q1、What are the best features of this code?**_
-  A1：Generally speaking, Josie uses "switch" as the main skeleton of her code, and I think it's a pretty elegant way.
+    A1：Generally speaking, Josie uses "switch" as the main skeleton of her code, and I think it's a pretty elegant way.
 
   - _**Q2、Is the code well-documented?**_
     A2：YES, it starts at line 85 and ends at line 109 in class CantanDice. The code is well-documented, concise, highly readable, sufficient and complete.
-
+  
   - _**Q3、Is the program decomposition (class and method structure) appropriate?**_
     A3：YES, the program is appropriate. Let me explain it as follows.
     
@@ -28,6 +28,6 @@ https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/a
 
   - _**Q4、Does it follow Java code conventions (for example, are methods and variables properly named), and is the style consistent throughout?**_
     A4：YES, it follows Java code conventions, and its style is consistent throughout.
-
+  
   - _**Q5、If you suspect an error in the code, suggest a particular situation in which the program will not function correctly.**_
     A5：NO, I don’t suspect any error in the code.
