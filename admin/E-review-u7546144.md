@@ -7,7 +7,7 @@ Ta-Wei Chen, u7546144
 Ziling Ruan, u7505884
 
 ### Component:
-<FIXME: Task #4><br>
+<FIXME: Task #4, isActionWellFormed><br>
 From<br>
 https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/CatanDice.java#L85
 <br>To<br>
