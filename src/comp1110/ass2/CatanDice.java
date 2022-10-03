@@ -256,7 +256,8 @@ public class CatanDice {
             }
 
         } else if (playaction.equals("swap")) {
-            if (s.length != 3 || !(KnightDavidSwap(action, board_state))) {
+            KnightDavid k=new KnightDavid();
+            if (s.length != 3 || !(k.KnightDavidSwap(action, board_state))) {
                 return false;
             }
         } else {
@@ -265,38 +266,6 @@ public class CatanDice {
         return true; // FIXME: Task #9
     }
 
-    public static boolean KnightDavidSwap(String action, String board_state) {
-        if(!action.contains("swap")){
-            return false;
-        }
-        if(action.contains("swap")){
-            if(action.charAt(7)=='0'){
-                if(board_state.contains("J1")|| board_state.contains("J6")){return true;}
-                else{return false;}
-            }
-            if(action.charAt(7)=='1'){
-                if(board_state.contains("J2") || board_state.contains("J6")){return true;}
-                else{return false;}
-            }
-            if(action.charAt(7)=='2'){
-                if(board_state.contains("J3") || board_state.contains("J6")){return true;}
-                else{return false;}
-            }
-            if(action.charAt(7)=='3'){
-                if(board_state.contains("J4") || board_state.contains("J6")){return true;}
-                else{return false;}
-            }
-            if(action.charAt(7)=='4'){
-                if(board_state.contains("J5") || board_state.contains("J6")){return true;}
-                else{return false;}
-            }
-            if(action.charAt(7)=='5'){
-                if(board_state.contains("J6")){return true;}
-                else{return false;}
-            }
-        }
-        return false;
-    }
     /**
      * Check if the specified sequence of player actions is executable
      * from the given board and resource state.
@@ -309,6 +278,7 @@ public class CatanDice {
     public static boolean canDoSequence(String[] actions,
 					String board_state,
 					int[] resource_state) {
+
 	 return false; // FIXME: Task #11
     }
 
