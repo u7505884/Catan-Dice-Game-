@@ -14,15 +14,6 @@ declaration: >-
   and all stages before it is entirely our own work, with the following
   exceptions:
 
-# Use this to list names of people who you collaborated with, and a
-# comment about what you collaborated on.
-#
-# Add as many "name+comment" entries as necessary
-# (or remove it altogether if you haven't collaborated with anyone)
-collaboration:
-  - name:
-    comment: >-
-
 # Use this to list any code that you used that you did not write,
 # aside from code provided by the lecturer.  Provide a comment
 # explaining your use and the URL to that code and the licence for
@@ -31,28 +22,16 @@ collaboration:
 # Add as many "url+licence+comment" entries as necessary
 # (or remove it altogether if you haven't used any external code)
 code:
-  - comment:
-    url:
-    licence:
-
-# Use this to list any assets (artwork, sound, etc) that you used.
-# Provide a comment explaining your use of that asset and the URL
-# and license for the asset
-#
-# Add as many "url+licence+comment" entries as necessary
-# (or remove it altogether if you haven't used any external assets)
-assets:
-  - comment:
-    url:
-    licence:
-
+  - comment: We got stuck at "Error JavaFX runtime components are missing and are required to run this application" for days. Thanks so much to "Judy Xie" who answered our question patiently and posted an effective solution on Piazza.
+    url: https://piazza.com/class/l5i01amboa04cz/post/847
+    licence: Judy Xie
 
 # Sign *your* name and uids here. (Remove entries if you have fewer
 # than three members.)
 signatures:
-  - name:
-    uid:
-  - name:
-    uid:
-  - name:
-    uid:
+  - name: Haoxiang Wang
+    uid: u7544188
+  - name: Ziling Ruan
+    uid: u7505884
+  - name: Ta-Wei Chen
+    uid: u7546144
