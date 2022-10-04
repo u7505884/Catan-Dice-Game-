@@ -55,7 +55,9 @@ public class Game extends Application {
     Map<Integer, city> citiesMap = new HashMap<>();
     Map<Integer, knight> knightsMap = new HashMap<>();
 
-
+    /**
+     * use for create elements of boundary
+     */
     class hexagon extends Polygon {
         private double x;
         private double y;
@@ -81,6 +83,9 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * use for create roads in map
+     */
     class road extends Polygon{
         Group road = new Group();
         private double x;
@@ -113,6 +118,9 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * use for create settlements in map
+     */
     class settlement extends Polygon{
         Group settlement = new Group();
         private double x;
@@ -146,6 +154,9 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * use for create cities in map
+     */
     class city extends Polygon{
         Group city = new Group();
         private double x;
@@ -181,6 +192,9 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * use for create knights in map
+     */
     class knight extends Ellipse {
         Group knight = new Group();
         private double x;
@@ -224,6 +238,9 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * use for create the start sign in map
+     */
     class startSign extends Polygon{
         private double x;
         private double y;
@@ -248,6 +265,9 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * use for combined hexagon and startSign components into board group
+     */
     private void makeBasicBoard() {
         //set background
         Image backgroundImage = new Image(Viewer.class.getResource(URI_BASE + "background.JPG").toString());
@@ -285,6 +305,9 @@ public class Game extends Application {
         this.board.getChildren().addAll(specialUseOfRoad, startSign);
     }
 
+    /**
+     * use for combined all road components into roads group
+     */
     private void makeRoads(){
         road road0 = new road(600-37.5*Math.sqrt(3), 350-37.5,-60);
         road road1 = new road(600-75*Math.sqrt(3), 350.0,0);
@@ -325,6 +348,9 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * use for combined all settlement components into settlements group
+     */
     private void makeSettlements(){
         settlement settlement3 = new settlement(600-75/Math.sqrt(3), 350-75, 3);
         settlement settlement4 = new settlement(600-75/Math.sqrt(3), 500-75,4);
@@ -345,6 +371,9 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * use for combined all city components into cities group
+     */
     private void makeCities(){
         city city7 = new city(600-100*Math.sqrt(3), 350,7);
         city city12 = new city(600-100*Math.sqrt(3), 500, 12);
@@ -361,6 +390,9 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * use for combined all knight components into knights group
+     */
     private void makeKnights(){
         knight knight1 = new knight(600-75*Math.sqrt(3), 275-35, 10, 15,1);
         knight knight2 = new knight(600-75*Math.sqrt(3), 425-35, 10, 15,2);
@@ -380,7 +412,32 @@ public class Game extends Application {
 
     }
 
+    /**
+     * Create a basic text field for input and a refresh button.
+     */
+    private void makeControls() {
+        Label boardLabel = new Label("Board State:");
+        boardTextField = new TextField();
+        boardTextField.setPrefWidth(500);
+        Button button = new Button("Show");
+//        button.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent e) {
+//                displayState(boardTextField.getText());
+//            }
+//        });
+        HBox hb = new HBox();
+        hb.getChildren().addAll(boardLabel, boardTextField, button);
+        hb.setSpacing(10);
+        controls.getChildren().add(hb);
+    }
+    /**
+     * highlight the selected component in Group roads, settlements, cities, knights
+     *
+     * @param board_state represent the component we selected
+     */
     public void highlight(String board_state){
+        //FIXME: need to modify its parameter, so that it will be more suitable here.
         String[] board_state_collections = board_state.split(",");
         for(String board_state_element:board_state_collections){
             board_state_element = board_state_element.strip();
@@ -400,10 +457,14 @@ public class Game extends Application {
     }
 
     /**
-     * Show the initialized board on stage
-     *
+     * add Group board, roads, settlements, cities, knights to Group root and show the initialized board on stage
      */
     void initializeBoard() {
+        root.getChildren().add(board);
+        root.getChildren().add(roads);
+        root.getChildren().add(settlements);
+        root.getChildren().add(cities);
+        root.getChildren().add(knights);
         this.makeBasicBoard();
         this.makeRoads();
         this.makeSettlements();
@@ -412,40 +473,23 @@ public class Game extends Application {
     }
 
     /**
-     * Create a basic text field for input and a refresh button.
+     * add Group controls to Group root and show the initialized controls on stage
      */
-    private void initializeControls() {
-        Label boardLabel = new Label("Board State:");
-        boardTextField = new TextField();
-        boardTextField.setPrefWidth(500);
-        Button button = new Button("Show");
-//        button.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent e) {
-//                displayState(boardTextField.getText());
-//            }
-//        });
-        HBox hb = new HBox();
-        hb.getChildren().addAll(boardLabel, boardTextField, button);
-        hb.setSpacing(10);
-        controls.getChildren().add(hb);
+    void initializeControls() {
+        root.getChildren().add(controls);
+        this.makeControls();
     }
-
     @Override
     public void start(Stage stage) throws Exception {
+        //set basic configuration of stage
         stage.setTitle("Game");
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        root.getChildren().add(controls);
-        root.getChildren().add(board);
-        root.getChildren().add(roads);
-        root.getChildren().add(settlements);
-        root.getChildren().add(cities);
-        root.getChildren().add(knights);
-
+        //add different part of the game into stage
         initializeBoard();
-     //   initializeControls();
+        initializeControls();
 
+        //show stage
         stage.setScene(scene);
         stage.show();
     }

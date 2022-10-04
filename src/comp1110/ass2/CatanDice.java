@@ -254,8 +254,8 @@ public class CatanDice {
                 return (s.length == 2 && resource_state[5] >= 2)? true:false;
 
             case ("swap"):
-                KnightDavid k = new KnightDavid();
-                return (s.length == 3 && (k.KnightDavidSwap(action, board_state)))? true:false;
+                Knight k = new Knight(-1);
+                return (s.length == 3 && (k.Swap(action, board_state)))? true:false;
 
             default:
                 return false;
@@ -280,32 +280,32 @@ public class CatanDice {
             ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
             String playaction = argument.get(0);
             if (canDoAction(action, board_state, resource_state)) {
-                if (playaction == "build") {
+                if (playaction.equals("build")) {
                     String structure = argument.get(1);
                     board_state = board_state + ',' + structure;
                     String b = (argument.get(1)).substring(0, 1);
-                    if (b == "R") {
+                    if (b.equals("R")) {
                         resource_state[3]--;
                         resource_state[4]--;
                         q = true;
-                    } else if (b == "S") {
+                    } else if (b.equals("S")) {
                         resource_state[1]--;
                         resource_state[2]--;
                         resource_state[3]--;
                         resource_state[4]--;
                         q = true;
-                    } else if (b == "C") {
+                    } else if (b.equals("C")) {
                         resource_state[0] -= 3;
                         resource_state[1] -= 2;
                         q = true;
-                    } else if (b == "J") {
+                    } else if (b.equals("J")) {
                         resource_state[0]--;
                         resource_state[1]--;
                         resource_state[2]--;
                         q = true;
                     } else
                         q = false;
-                } else if (playaction == "trade")
+                } else if (playaction.equals("trade"))
                     if (resource_state[5] >= 2) {
                         int n = Integer.parseInt(argument.get(1));
                         resource_state[5] -= 2;
@@ -321,6 +321,11 @@ public class CatanDice {
         // FIXME: Task #11
     }
 
+    public static void main(String[] args) {
+        System.out.println(canDoSequence( new String[]{"build R7"},
+                "R0,S3,R1,C7,R2,S4,R3,R4,R5,R6",
+                new int[] {0,0,1,-1,-1,0}));
+    }
 
     /**
      * Find the path of roads that need to be built to reach a specified

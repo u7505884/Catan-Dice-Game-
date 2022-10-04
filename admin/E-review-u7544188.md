@@ -1,13 +1,33 @@
 ## Code Review
 
-Reviewed by: <Haoxiang Wang>, <u7544188>
+### Reviewed by:<br>
+Haoxiang Wang, u7544188
 
-Reviewing code written by: <Ta-Wei Chen> <u7546144>
+### Reviewing code written by:<br>
+Ta-Wei Chen, u7546144
 
-Component: <Dice Class>
+### Component:
+1. [Dice Class] and [Task 6] in CatanDice
+2. Method [Swap] in Knight class
 
 ### Comments 
 
-<write your comments here>
+Q1. What are the best features of this code?
 
+&emsp; In Dice class, Ta-Wei used Random class to generate random results, which showed his ability to import predefined classes. Correspondingly, he instantiated this class in task 5 and called the method defined in Dice class to realize the function of task5. This needs compiler to be familiar to basic concepts of objected-oriented programming. And after regarding method Swap in Knight class, I can see that Ta-Wei has good comprehension in loop. And the only flaw I can detect at my level is that "switch" seems to be more suitable here. By the way, we can simplify the code by extracting common condition and return "switch statement" directly.
 
+Q2. Is the code well-documented?
+
+&emsp; Yes, the code was well-documented. We can see their function basic logic quickly after checking JavaDoc.
+
+Q3. Is the program decomposition (class and method structure) appropriate?
+
+&emsp; Yes, a separated Dice class will be helpful when we need to work on JavaFX part. And method Swap has been classified as a part of knight class.
+
+Q4. Does it follow Java code conventions (for example, are methods and variables properly named), and is the style consistent throughout?
+
+&emsp; Yes, all methods and variables are properly named and their style are consistent throughout. I believed all codes here follow Java code conventions.
+
+Q5. If you suspect an error in the code, suggest a particular situation in which the program will not function correctly.
+
+&emsp; No, I think all codes perform well.

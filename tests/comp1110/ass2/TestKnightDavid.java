@@ -1,6 +1,5 @@
 package comp1110.ass2;
 
-import comp1110.ass2.KnightDavid;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -11,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestKnightDavid {
     private void directTest(String action, String board_state, boolean expected) {
-        boolean out = KnightDavid.KnightDavidSwap(action, board_state);
+        boolean out = Knight.Swap(action, board_state);
         assertEquals(expected, out, "Expected '" + expected + "' but got '" + out + "' for '" + action + "' on board '" + board_state);
     }
 
