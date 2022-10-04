@@ -23,14 +23,18 @@ A2：Yes, each method and definition coded by Haoxiang is well-documented.
 _Q3、Is the program decomposition (class and method structure) appropriate?_
 
 A3：Yes, the plan is appropriate. Let me explain as follows.
+
 Firstly, Haoxiang uses HashMap to build a collection, and inserts the key and value mapping relationship into the HashMap through the put method to initialize the board, including creating all roads, settlements, cities and knights.
+
 Secondly, each building can only be built after the previous one is completed. For example, to build R0, you must first build R1. Haoxiang wisely determines whether we can build the current structure by building constraints。
 
 _Q4、Does it follow Java code conventions (for example, are methods and variables properly named), and is the style consistent throughout?_
+
 A4：YES, it follows Java code conventions, and its style is consistent throughout.
 
 
 _Q5、If you suspect an error in the code, suggest a particular situation in which the program will nolyt function correctly._
+
 A5：NO.
 
 
