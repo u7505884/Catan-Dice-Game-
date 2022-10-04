@@ -84,7 +84,7 @@ public class CatanDice {
      */
     public static boolean isActionWellFormed(String action) {
         // FIXME: Task #4
-        String[] s = action.split(" ");
+        String[] s = action.split(" ");//Split the string according to " "
         ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
         switch (argument.get(0)) {
             case ("build"):
@@ -327,7 +327,7 @@ public class CatanDice {
                     board_state = board_state.replaceAll("J6", "K6");
                     q = true;
                 } else {
-                    return false;
+                    q=false;
 
                 }
             }
