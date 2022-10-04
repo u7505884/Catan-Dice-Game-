@@ -274,50 +274,50 @@ public class CatanDice {
     public static boolean canDoSequence(String[] actions,
 					String board_state,
 					int[] resource_state) {
-        for (String action : actions) {
-            String[] s = action.split(" ");
-            ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
-            String playaction = argument.get(0);
-            if (canDoAction(action, board_state, resource_state)) {
-                switch (playaction) {
-                    case ("build"):
-                        String structure = argument.get(1);
-                        board_state = board_state + "," + structure;
-                        String b = (argument.get(1)).substring(0, 1);
-                        if (b == "R") {
-                            resource_state[3]--;
-                            resource_state[4]--;
-                        } else if (b == "S") {
-                            resource_state[1]--;
-                            resource_state[2]--;
-                            resource_state[3]--;
-                            resource_state[4]--;
-                        } else if (b == "C") {
-                            resource_state[0] -= 3;
-                            resource_state[1] -= 2;
-                        } else if (b == "J") {
-                            resource_state[0]--;
-                            resource_state[1]--;
-                            resource_state[2]--;
-                        }
-                    case ("trade"):
-                        if (resource_state[5] >= 2) {
-                            int n = Integer.parseInt(argument.get(1));
-                            resource_state[5] -= 2;
-                            resource_state[n] = resource_state[n] + 1;
-                        }
-                    case ("swap"):
-
-                    default:
-                        return false;
-                }
-
-            }else
-                return false;
-        }
-        return true;
-
-/ // FIXME: Task #11
+//        for (String action : actions) {
+//            String[] s = action.split(" ");
+//            ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
+//            String playaction = argument.get(0);
+//            if (canDoAction(action, board_state, resource_state)) {
+//                switch (playaction) {
+//                    case ("build"):
+//                        String structure = argument.get(1);
+//                        board_state = board_state + "," + structure;
+//                        String b = (argument.get(1)).substring(0, 1);
+//                        if (b == "R") {
+//                            resource_state[3]--;
+//                            resource_state[4]--;
+//                        } else if (b == "S") {
+//                            resource_state[1]--;
+//                            resource_state[2]--;
+//                            resource_state[3]--;
+//                            resource_state[4]--;
+//                        } else if (b == "C") {
+//                            resource_state[0] -= 3;
+//                            resource_state[1] -= 2;
+//                        } else if (b == "J") {
+//                            resource_state[0]--;
+//                            resource_state[1]--;
+//                            resource_state[2]--;
+//                        }
+//                    case ("trade"):
+//                        if (resource_state[5] >= 2) {
+//                            int n = Integer.parseInt(argument.get(1));
+//                            resource_state[5] -= 2;
+//                            resource_state[n] = resource_state[n] + 1;
+//                        }
+//                    case ("swap"):
+//
+//                    default:
+//                        return false;
+//                }
+//
+//            }else
+//                return false;
+//        }
+//        return true;
+return false;
+ // FIXME: Task #11
     }
 
 

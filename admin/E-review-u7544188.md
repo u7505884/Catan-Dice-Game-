@@ -1,10 +1,10 @@
 ## Code Review
 
-Reviewed by: <your full name>, <your uid>
+Reviewed by: <Haoxiang Wang>, <u7544188>
 
-Reviewing code written by: <the other person's full name> <other uid>
+Reviewing code written by: <Ta-Wei Chen> <u7546144>
 
-Component: <the component being reviewed>
+Component: <Dice Class>
 
 ### Comments 
 
