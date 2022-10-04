@@ -255,7 +255,7 @@ public class CatanDice {
 
             case ("swap"):
                 Knight k = new Knight(-1);
-                return (s.length == 3 && (k.Swap(action, board_state)))? true:false;
+                return (s.length == 3 && (k.swap(action, board_state)))? true:false;
 
             default:
                 return false;

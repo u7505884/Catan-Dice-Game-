@@ -49,7 +49,7 @@ public class Knight extends BuildableStructures {
      * @param board_state: The string representation of the board state.
      * @return true iff we can realize the swap action based on board_state, false otherwise.
      */
-    public static boolean Swap(String action, String board_state) {
+    public static boolean swap(String action, String board_state) {
         if(!action.contains("swap")){
             return false;
         }

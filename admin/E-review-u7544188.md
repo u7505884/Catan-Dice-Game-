@@ -7,8 +7,8 @@ Haoxiang Wang, u7544188
 Ta-Wei Chen, u7546144
 
 ### Component:
-1. [Dice Class] and [Task 6] in CatanDice
-2. Method [Swap] in Knight class
+1. [Dice Class](https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/Dice.java#L5) and [Task 6](https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/CatanDice.java#L127) in CatanDice
+2. Method [Swap](https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/Knight.java#L52) in Knight class
 
 ### Comments 
 
