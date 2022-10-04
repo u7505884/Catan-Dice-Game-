@@ -8,13 +8,13 @@ Ta-Wei Chen, u7546144
 
 ### Component:
 1. [Dice Class](https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/Dice.java#L5) and [Task 6](https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/CatanDice.java#L127) in CatanDice
-2. Method [Swap](https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/Knight.java#L52) in Knight class
+2. Method [swap](https://gitlab.cecs.anu.edu.au/u7546144/comp1110-ass2/-/blob/main/src/comp1110/ass2/Knight.java#L52) in Knight class
 
 ### Comments 
 
 Q1. What are the best features of this code?
 
-&emsp; In Dice class, Ta-Wei used Random class to generate random results, which showed his ability to import predefined classes. Correspondingly, he instantiated this class in task 5 and called the method defined in Dice class to realize the function of task5. This needs compiler to be familiar to basic concepts of objected-oriented programming. And after regarding method Swap in Knight class, I can see that Ta-Wei has good comprehension in loop. And the only flaw I can detect at my level is that "switch" seems to be more suitable here. By the way, we can simplify the code by extracting common condition and return "switch statement" directly.
+&emsp; In Dice class, Ta-Wei used Random class to generate random results, which showed his ability to import predefined classes. Correspondingly, he instantiated this class in task 5 and called the method defined in Dice class to realize the function of task5. This needs compiler to be familiar to basic concepts of objected-oriented programming. And after regarding method swap in Knight class, I can see that Ta-Wei has good comprehension in loop. And the only flaw I can detect at my level is that "switch" seems to be more suitable here. By the way, we can simplify the code by extracting common condition and return "switch statement" directly.
 
 Q2. Is the code well-documented?
 
