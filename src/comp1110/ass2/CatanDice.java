@@ -316,7 +316,7 @@ public class CatanDice {
             } else if (playaction.equals("swap")) {
                 int s1 = Integer.parseInt(argument.get(1));
                 int s2 = Integer.parseInt(argument.get(2));
-                if (board_state.contains("J" + (s2 + 1)) && (resource_state[s1] >0)) {
+                if (board_state.contains("J" + (s2 + 1)) && (resource_state[s1] >=1)) {
                     resource_state[s1] = resource_state[s1] - 1;
                     resource_state[s2] = resource_state[s2] + 1;
                     String j = "J" + (s1 + 1);
@@ -335,11 +335,6 @@ public class CatanDice {
         return q;
     }// FIXME: Task #11
 
-    public static void main(String[] args) {
-        System.out.println(canDoSequence( new String[]{"build R7"},
-                "R0,S3,R1,C7,R2,S4,R3,R4,R5,R6",
-                new int[] {0,0,1,-1,-1,0}));
-    }
 
     /**
      * Find the path of roads that need to be built to reach a specified
