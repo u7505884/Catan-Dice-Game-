@@ -274,38 +274,38 @@ public class CatanDice {
     public static boolean canDoSequence(String[] actions,
 					String board_state,
 					int[] resource_state) {
-        Boolean q=false;
+        Boolean q = false;
         for (String action : actions) {
             String[] s = action.split(" ");
             ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
             String playaction = argument.get(0);
             if (canDoAction(action, board_state, resource_state)) {
-                if (playaction == "build") {
+                if (playaction.equals("build")) {
                     String structure = argument.get(1);
                     board_state = board_state + ',' + structure;
                     String b = (argument.get(1)).substring(0, 1);
-                    if (b == "R") {
+                    if (b.equals("R")) {
                         resource_state[3]--;
                         resource_state[4]--;
                         q = true;
-                    } else if (b == "S") {
+                    } else if (b.equals("S")) {
                         resource_state[1]--;
                         resource_state[2]--;
                         resource_state[3]--;
                         resource_state[4]--;
                         q = true;
-                    } else if (b == "C") {
+                    } else if (b.equals("C")) {
                         resource_state[0] -= 3;
                         resource_state[1] -= 2;
                         q = true;
-                    } else if (b == "J") {
+                    } else if (b.equals("J")) {
                         resource_state[0]--;
                         resource_state[1]--;
                         resource_state[2]--;
                         q = true;
                     } else
                         q = false;
-                } else if (playaction == "trade")
+                } else if (playaction.equals("trade"))
                     if (resource_state[5] >= 2) {
                         int n = Integer.parseInt(argument.get(1));
                         resource_state[5] -= 2;
@@ -313,12 +313,28 @@ public class CatanDice {
                         q = true;
                     } else
                         q = false;
+            } else if (playaction.equals("swap")) {
+                int s1 = Integer.parseInt(argument.get(1));
+                int s2 = Integer.parseInt(argument.get(2));
+                if (board_state.contains("J" + (s2 + 1)) && (resource_state[s1] >0)) {
+                    resource_state[s1] = resource_state[s1] - 1;
+                    resource_state[s2] = resource_state[s2] + 1;
+                    String j = "J" + (s1 + 1);
+                    String k = "K" + (s2 + 1);
+                    board_state = board_state.replaceAll(j, k);
+                    q = true;
+                } else if (board_state.contains("J6") && (resource_state[s1] >= 1)) {
+                    board_state = board_state.replaceAll("J6", "K6");
+                    q = true;
+                } else {
+                    return false;
+
+                }
             }
 
-
+            // FIXME: Task #11
         }
         return q;
-        // FIXME: Task #11
     }
 
 
