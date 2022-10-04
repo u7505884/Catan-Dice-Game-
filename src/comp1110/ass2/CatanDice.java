@@ -2,6 +2,8 @@ package comp1110.ass2;
 
 import java.util.*;
 
+import static comp1110.ass2.Order.rightOrder;
+
 public class CatanDice {
 
     /**
@@ -12,17 +14,17 @@ public class CatanDice {
      *
      * @param board_state: The string representation of the board state.
      * @return true iff the string is a well-formed representation of
-     *         a board state, false otherwise.
+     * a board state, false otherwise.
      */
     public static boolean isBoardStateWellFormed(String board_state) {
         //FIXME: Task #3
 
         //initial modification on board_state
-        if(board_state.strip() == ""){
+        if (board_state.strip() == "") {
             return true;
         }
-        for(int i = 0; i<board_state.length()-1; i++){//return false when there is ",,"
-            if(board_state.charAt(i)==','&&board_state.charAt(i+1)==','){
+        for (int i = 0; i < board_state.length() - 1; i++) {//return false when there is ",,"
+            if (board_state.charAt(i) == ',' && board_state.charAt(i + 1) == ',') {
                 return false;
             }
         }
@@ -32,33 +34,33 @@ public class CatanDice {
         Board board = new Board();
 
         //check the String board_state
-        for(String board_state_element:board_state_collections){
+        for (String board_state_element : board_state_collections) {
             board_state_element = board_state_element.strip();
-            if(board_state_element == null){
+            if (board_state_element == null) {
                 return false;
             }
-            try{
-                switch(board_state_element.charAt(0)) {
+            try {
+                switch (board_state_element.charAt(0)) {
                     case ('R'):
-                        if (board.roads.get(Integer.valueOf(board_state_element.substring(1)))==null){
+                        if (board.roads.get(Integer.valueOf(board_state_element.substring(1))) == null) {
                             return false;
                         }
                         board.roads.remove(Integer.valueOf(board_state_element.substring(1)));
                         break;
                     case ('S'):
-                        if (board.settlements.get(Integer.valueOf(board_state_element.substring(1)))==null){
+                        if (board.settlements.get(Integer.valueOf(board_state_element.substring(1))) == null) {
                             return false;
                         }
                         board.settlements.remove(Integer.valueOf(board_state_element.substring(1)));
                         break;
                     case ('C'):
-                        if (board.cities.get(Integer.valueOf(board_state_element.substring(1)))==null){
+                        if (board.cities.get(Integer.valueOf(board_state_element.substring(1))) == null) {
                             return false;
                         }
                         board.cities.remove(Integer.valueOf(board_state_element.substring(1)));
                         break;
-                    case ('K'),('J'):
-                        if (board.knights.get(Integer.valueOf(board_state_element.substring(1)))==null) {
+                    case ('K'), ('J'):
+                        if (board.knights.get(Integer.valueOf(board_state_element.substring(1))) == null) {
                             return false;
                         }
                         board.knights.remove(Integer.valueOf(board_state_element.substring(1)));
@@ -66,7 +68,7 @@ public class CatanDice {
                     default:
                         return false;
                 }
-            }catch(NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 return false;
             }
         }
@@ -74,13 +76,12 @@ public class CatanDice {
     }
 
 
-
     /**
      * Check if the string encoding of a player action is well formed.
      *
      * @param action: The string representation of the action.
      * @return true iff the string is a well-formed representation of
-     *         a board state, false otherwise.
+     * a board state, false otherwise.
      */
     public static boolean isActionWellFormed(String action) {
         // FIXME: Task #4
@@ -111,37 +112,39 @@ public class CatanDice {
     /**
      * Roll the specified number of dice and add the result to the
      * resource state.
-     *
+     * <p>
      * The resource state on input is not necessarily empty. This
      * method should only _add_ the outcome of the dice rolled to
      * the resource state, not remove or clear the resources already
      * represented in it.
      *
-     * @param n_dice: The number of dice to roll (>= 0).
+     * @param n_dice:         The number of dice to roll (>= 0).
      * @param resource_state: The available resources that the dice
-     *        roll will be added to.
-     *
-     * This method does not return any value. It should update the given
-     * resource_state.
+     *                        roll will be added to.
+     *                        <p>
+     *                        This method does not return any value. It should update the given
+     *                        resource_state.
      */
     public static void rollDice(int n_dice, int[] resource_state) {
         // FIXME: Task #6
         Dice dice = new Dice();
         int[] randomRes = dice.rollDice(n_dice);
         for (int i = 0; i < 6; i++) {
-            resource_state[i] += randomRes[i];}
+            resource_state[i] += randomRes[i];
+        }
     }
+
     /**
      * Check if the specified structure can be built next, given the
      * current board state. This method should check that the build
      * meets the constraints described in section "Building Constraints"
      * of the README file.
      *
-     * @param structure: The string representation of the structure to
-     *        be built.
+     * @param structure:   The string representation of the structure to
+     *                     be built.
      * @param board_state: The string representation of the board state.
      * @return true iff the structure is a possible next build, false
-     *         otherwise.
+     * otherwise.
      */
     public static boolean checkBuildConstraints(String structure, String board_state) {
         // FIXME: Task #8
@@ -182,19 +185,19 @@ public class CatanDice {
      * Check if the available resources are sufficient to build the
      * specified structure, without considering trades or swaps.
      *
-     * @param structure: The string representation of the structure to
-     *        be built.
+     * @param structure:      The string representation of the structure to
+     *                        be built.
      * @param resource_state: The available resources.
      * @return true iff the structure can be built with the available
-     *         resources, false otherwise.
+     * resources, false otherwise.
      */
     public static boolean checkResources(String structure, int[] resource_state) {
-	// FIXME: Task #7
+        // FIXME: Task #7
         //initialize a new board
         Board board = new Board();
         //check resources
         int indexOfStructure;
-        switch(structure.charAt(0)) {
+        switch (structure.charAt(0)) {
             case ('R'):
                 indexOfStructure = Integer.valueOf(structure.substring(1));
                 return board.roads.get(indexOfStructure).resourcesConstraint(resource_state);
@@ -218,44 +221,44 @@ public class CatanDice {
      * This method needs access to the current board state because the
      * board state encodes which Knights are available to perform swaps.
      *
-     * @param structure: The string representation of the structure to
-     *        be built.
-     * @param board_state: The string representation of the board state.
+     * @param structure:      The string representation of the structure to
+     *                        be built.
+     * @param board_state:    The string representation of the board state.
      * @param resource_state: The available resources.
      * @return true iff the structure can be built with the available
-     *         resources, false otherwise.
+     * resources, false otherwise.
      */
     public static boolean checkResourcesWithTradeAndSwap(String structure,
-							 String board_state,
-							 int[] resource_state) {
-	return false; // FIXME: Task #12
+                                                         String board_state,
+                                                         int[] resource_state) {
+        return false; // FIXME: Task #12
     }
 
     /**
      * Check if a player action (build, trade or swap) is executable in the
      * given board and resource state.
      *
-     * @param action: String representatiion of the action to check.
-     * @param board_state: The string representation of the board state.
+     * @param action:         String representatiion of the action to check.
+     * @param board_state:    The string representation of the board state.
      * @param resource_state: The available resources.
      * @return true iff the action is applicable, false otherwise.
      */
     public static boolean canDoAction(String action,
-				      String board_state,
-				      int[] resource_state) {
+                                      String board_state,
+                                      int[] resource_state) {
         String[] s = action.split(" ");
         ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
-        String playaction=argument.get(0);
-        switch(playaction) {
+        String playaction = argument.get(0);
+        switch (playaction) {
             case ("build"):
-                return (s.length == 2 && checkBuildConstraints(argument.get(1), board_state) && checkResources(argument.get(1), resource_state) ) ? true:false;
+                return (s.length == 2 && checkBuildConstraints(argument.get(1), board_state) && checkResources(argument.get(1), resource_state)) ? true : false;
 
             case ("trade"):
-                return (s.length == 2 && resource_state[5] >= 2)? true:false;
+                return (s.length == 2 && resource_state[5] >= 2) ? true : false;
 
             case ("swap"):
                 Knight k = new Knight(-1);
-                return (s.length == 3 && (k.swap(action, board_state)))? true:false;
+                return (s.length == 3 && (k.swap(action, board_state))) ? true : false;
 
             default:
                 return false;
@@ -266,80 +269,109 @@ public class CatanDice {
      * Check if the specified sequence of player actions is executable
      * from the given board and resource state.
      *
-     * @param actions: The sequence of (string representatins of) actions.
-     * @param board_state: The string representation of the board state.
+     * @param actions:        The sequence of (string representatins of) actions.
+     * @param board_state:    The string representation of the board state.
      * @param resource_state: The available resources.
      * @return true iff the action sequence is executable, false otherwise.
      */
     public static boolean canDoSequence(String[] actions,
-					String board_state,
-					int[] resource_state) {
-        Boolean q = false;
-        for (String action : actions) {
-            String[] s = action.split(" ");
-            ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
-            String playaction = argument.get(0);
-            if (canDoAction(action, board_state, resource_state)) {
-                if (playaction.equals("build")) {
-                    String structure = argument.get(1);
-                    board_state = board_state + ',' + structure;
-                    String b = (argument.get(1)).substring(0, 1);
-                    if (b.equals("R")) {
-                        resource_state[3]--;
-                        resource_state[4]--;
-                        q = true;
-                    } else if (b.equals("S")) {
-                        resource_state[1]--;
-                        resource_state[2]--;
-                        resource_state[3]--;
-                        resource_state[4]--;
-                        q = true;
-                    } else if (b.equals("C")) {
-                        resource_state[0] -= 3;
-                        resource_state[1] -= 2;
-                        q = true;
-                    } else if (b.equals("J")) {
-                        resource_state[0]--;
-                        resource_state[1]--;
-                        resource_state[2]--;
-                        q = true;
-                    } else
-                        q = false;
-                } else if (playaction.equals("trade"))
-                    if (resource_state[5] >= 2) {
-                        int n = Integer.parseInt(argument.get(1));
-                        resource_state[5] -= 2;
-                        resource_state[n] = resource_state[n] + 1;
-                        q = true;
-                    } else
-                        q = false;
-            } else if (playaction.equals("swap")) {
-                int s1 = Integer.parseInt(argument.get(1));
-                int s2 = Integer.parseInt(argument.get(2));
-                if (board_state.contains("J" + (s2 + 1)) && (resource_state[s1] >0)) {
-                    resource_state[s1] = resource_state[s1] - 1;
-                    resource_state[s2] = resource_state[s2] + 1;
-                    String j = "J" + (s1 + 1);
-                    String k = "K" + (s2 + 1);
-                    board_state = board_state.replaceAll(j, k);
-                    q = true;
-                } else if (board_state.contains("J6") && (resource_state[s1] >= 1)) {
-                    board_state = board_state.replaceAll("J6", "K6");
-                    q = true;
-                } else {
-                    q=false;
+                                        String board_state,
+                                        int[] resource_state) {
+        int[] r = resource_state.clone();
+        String b = board_state;
 
-                }
+        for (int i = 0; i < actions.length; i++) {
+            System.out.println("i = "+i);
+            System.out.println("Resource : "+Arrays.toString(r));
+            System.out.println("Board : "+b);
+            System.out.println("Action : "+actions[i]);
+
+            if (actions[i].contains("R")) {
+                System.out.println("BUILD R");
+                b = b +","+ actions[i].replace("build","");
+                b = b.replace(" ", "");
+                r[3]--;
+                r[4]--;
+            }
+
+            else if (actions[i].contains("S")) {
+                System.out.println("BUILD S");
+                b = b +","+ actions[i].replace("build","");
+                b = b.replace(" ", "");
+                r[1]--;
+                r[2]--;
+                r[3]--;
+                r[4]--;
+            }
+
+            else if (actions[i].contains("C")) {
+                System.out.println("BUILD C");
+                b = b +","+ actions[i].replace("build","");
+                b = b.replace(" ", "");
+                r[0] -= 3;
+                r[1] -= 2;
+            }
+
+            else if (actions[i].contains("J")) {
+                System.out.println("BUILD J");
+                b = b +","+ actions[i].replace("build","");
+                b = b.replace(" ", "");
+                r[0] -= 1;
+                r[1] -= 1;
+                r[2] -= 1;
+
+            }
+
+            else if (actions[i].contains("trade")) {
+                System.out.println("TRADE");
+                r[5] -= 2;
+                r[Character.getNumericValue(actions[i].charAt(6))] += 1;
+
+            }
+            else if (actions[i].contains("swap")) {
+                System.out.println("SWAP");
+
+                if(b.contains("J"+(Character.getNumericValue(actions[i].charAt(7))+ 1)) || b.contains("J6"));
+                else{
+                    System.out.println("Final Conclusion : False (Swap Knight Not Enough)");
+                    System.out.println("\n");
+                    System.out.println("《 FINISH , NEXT TEST EXAMPLE 》");
+                    System.out.println("\n");
+                    return false;}
+
+                r[Character.getNumericValue(actions[i].charAt(5))] -= 1;
+                r[Character.getNumericValue(actions[i].charAt(7))] += 1;
+                String j = "J" + (Character.getNumericValue(actions[i].charAt(7))+ 1);
+                String k = "K" + (Character.getNumericValue(actions[i].charAt(7))+ 1);
+                b = b.replaceAll(j, k);
             }
         }
-        return q;
-    }// FIXME: Task #11
+        System.out.println("Final Resource : "+Arrays.toString(r));
+        System.out.println("Final Board : "+b);
 
-    public static void main(String[] args) {
-        System.out.println(canDoSequence( new String[]{"build R7"},
-                "R0,S3,R1,C7,R2,S4,R3,R4,R5,R6",
-                new int[] {0,0,1,-1,-1,0}));
-    }
+        if(rightOrder(b)==false){
+            System.out.println("Final Conclusion : False (Wrong Construction Order)");
+            System.out.println("\n");
+            System.out.println("《 FINISH , NEXT TEST EXAMPLE 》");
+            System.out.println("\n");
+            return false;}
+
+        if(r[0]<0 || r[1]<0 || r[2]<0 || r[3]<0 || r[4]<0 || r[5]<0){
+            System.out.println("Final Conclusion : False (Resources, Dice Points Not Enough)");
+            System.out.println("\n");
+            System.out.println("《 FINISH , NEXT TEST EXAMPLE 》");
+            System.out.println("\n");
+            return false;}
+
+        System.out.println("Final Conclusion : True");
+        System.out.println("\n");
+        System.out.println("《 FINISH , NEXT TEST EXAMPLE 》");
+        System.out.println("\n");
+        return true;
+
+}
+// FIXME: Task #11
+
 
     /**
      * Find the path of roads that need to be built to reach a specified
@@ -360,9 +392,9 @@ public class CatanDice {
      *         path.
      */
     public static String[] pathTo(String target_structure,
-				  String board_state) {
-	String[] result = {};
-	return result; // FIXME: Task #13
+                                  String board_state) {
+        String[] result = {};
+        return result; // FIXME: Task #13
     }
 
     /**
@@ -389,9 +421,10 @@ public class CatanDice {
      *         the method should return null.
      */
     public static String[] buildPlan(String target_structure,
-				     String board_state,
-				     int[] resource_state) {
-	 return null; // FIXME: Task #14
+                                     String board_state,
+                                     int[] resource_state) {
+        return null; // FIXME: Task #14
     }
 
 }
+
