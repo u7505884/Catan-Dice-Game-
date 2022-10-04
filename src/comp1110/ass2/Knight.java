@@ -40,6 +40,48 @@ public class Knight extends BuildableStructures {
         this.whetherHaveSwapped = whetherHaveSwapped;
     }
 
+    /**
+     * Check if we can realize the swap action based on board_state
+     * "swap": followed by two digits 0-5 specifying the resource swapped out and the
+     * one it is exchanged for. For example, "swap 1 4" means exchanging 1 Grain for 1 Brick.
+     *
+     * @param action: The string representation of the structure to be built.
+     * @param board_state: The string representation of the board state.
+     * @return true iff we can realize the swap action based on board_state, false otherwise.
+     */
+    public static boolean swap(String action, String board_state) {
+        if(!action.contains("swap")){
+            return false;
+        }
+        if(action.contains("swap")){
+            if(action.charAt(7)=='0'){
+                if(board_state.contains("J1")|| board_state.contains("J6")){return true;}
+                else{return false;}
+            }
+            if(action.charAt(7)=='1'){
+                if(board_state.contains("J2") || board_state.contains("J6")){return true;}
+                else{return false;}
+            }
+            if(action.charAt(7)=='2'){
+                if(board_state.contains("J3") || board_state.contains("J6")){return true;}
+                else{return false;}
+            }
+            if(action.charAt(7)=='3'){
+                if(board_state.contains("J4") || board_state.contains("J6")){return true;}
+                else{return false;}
+            }
+            if(action.charAt(7)=='4'){
+                if(board_state.contains("J5") || board_state.contains("J6")){return true;}
+                else{return false;}
+            }
+            if(action.charAt(7)=='5'){
+                if(board_state.contains("J6")){return true;}
+                else{return false;}
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString(){
         return "Knight" + super.index;

@@ -254,8 +254,8 @@ public class CatanDice {
                 return (s.length == 2 && resource_state[5] >= 2)? true:false;
 
             case ("swap"):
-                KnightDavid k = new KnightDavid();
-                return (s.length == 3 && (k.KnightDavidSwap(action, board_state)))? true:false;
+                Knight k = new Knight(-1);
+                return (s.length == 3 && (k.swap(action, board_state)))? true:false;
 
             default:
                 return false;
@@ -337,6 +337,11 @@ public class CatanDice {
         return q;
     }
 
+    public static void main(String[] args) {
+        System.out.println(canDoSequence( new String[]{"build R7"},
+                "R0,S3,R1,C7,R2,S4,R3,R4,R5,R6",
+                new int[] {0,0,1,-1,-1,0}));
+    }
 
     /**
      * Find the path of roads that need to be built to reach a specified
