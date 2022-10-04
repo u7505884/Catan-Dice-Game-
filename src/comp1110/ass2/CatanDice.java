@@ -331,11 +331,9 @@ public class CatanDice {
 
                 }
             }
-
-            // FIXME: Task #11
         }
         return q;
-    }
+    }// FIXME: Task #11
 
     public static void main(String[] args) {
         System.out.println(canDoSequence( new String[]{"build R7"},
