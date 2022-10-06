@@ -256,7 +256,7 @@ public class CatanDice {
                     }
                     for (Integer r : lack_re.keySet()) {
                         if (lack_re.get(r) == 1) {
-                            if (!Knight_State(r, board_state))
+                            if (!(board_state.contains("J"+(r+1))))
                                 return false;
                         } else if (lack_re.get(r) == 2 && !board_state.contains("J6")) {
                             return false;
@@ -267,7 +267,7 @@ public class CatanDice {
             } else {
                 for (Integer r : lack_re.keySet()) {
                     if (lack_re.get(r) == 1) {
-                        if (!(Knight_State(r, board_state))) {
+                        if (!(board_state.contains("J"+(r+1)))) {
                             return false;
                         }
                     } else if (lack_re.get(r) == 2 && !board_state.contains("J6")) {
@@ -321,22 +321,6 @@ public class CatanDice {
         return re_lack;
     }
 
-    public static boolean Knight_State(int r, String board_state) {
-        if (r == 0 && board_state.contains("J1")) {
-            return true;
-        } else if (r == 1 && board_state.contains("J2")) {
-            return true;
-        } else if (r == 2 && board_state.contains("J3")) {
-            return true;
-        } else if (r == 3 && board_state.contains("J4")) {
-            return true;
-        } else if (r == 4 && board_state.contains("J5")) {
-            return true;
-        } else if (r == 5 && board_state.contains("J6")) {
-           return true;
-        }
-        return false;
-    }
 
 
     /**
