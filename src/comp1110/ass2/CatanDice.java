@@ -76,7 +76,6 @@ public class CatanDice {
     }
 
 
-
     /**
      * Check if the string encoding of a player action is well formed.
      *
@@ -113,18 +112,18 @@ public class CatanDice {
     /**
      * Roll the specified number of dice and add the result to the
      * resource state.
-     *
+     * <p>
      * The resource state on input is not necessarily empty. This
      * method should only _add_ the outcome of the dice rolled to
      * the resource state, not remove or clear the resources already
      * represented in it.
      *
-     * @param n_dice: The number of dice to roll (>= 0).
+     * @param n_dice:         The number of dice to roll (>= 0).
      * @param resource_state: The available resources that the dice
-     *        roll will be added to.
-     *
-     * This method does not return any value. It should update the given
-     * resource_state.
+     *                        roll will be added to.
+     *                        <p>
+     *                        This method does not return any value. It should update the given
+     *                        resource_state.
      */
     public static void rollDice(int n_dice, int[] resource_state) {
         // FIXME: Task #6
@@ -256,7 +255,7 @@ public class CatanDice {
                     }
                     for (Integer r : lack_re.keySet()) {
                         if (lack_re.get(r) == 1) {
-                            if (!Knight_State(r, board_state))
+                            if (!(board_state.contains("J"+(r+1))))
                                 return false;
                         } else if (lack_re.get(r) == 2 && !board_state.contains("J6")) {
                             return false;
@@ -267,7 +266,7 @@ public class CatanDice {
             } else {
                 for (Integer r : lack_re.keySet()) {
                     if (lack_re.get(r) == 1) {
-                        if (!(Knight_State(r, board_state))) {
+                        if (!(board_state.contains("J"+(r+1)))) {
                             return false;
                         }
                     } else if (lack_re.get(r) == 2 && !board_state.contains("J6")) {
@@ -281,12 +280,12 @@ public class CatanDice {
         }
         return true;
     }
-        // FIXME: Task #12
+    // FIXME: Task #12
 
 
     public static HashMap<Integer, Integer> re_lack(String structure, int[] resource_state) {
         HashMap<Integer, Integer> re_lack = new HashMap<>();
-        switch(structure.charAt(0) ){
+        switch (structure.charAt(0)) {
             case ('R'):
                 for (int i = 3; i <= 4; i++) {
                     if (1 - resource_state[i] > 0) {
@@ -321,22 +320,6 @@ public class CatanDice {
         return re_lack;
     }
 
-    public static boolean Knight_State(int r, String board_state) {
-        if (r == 0 && board_state.contains("J1")) {
-            return true;
-        } else if (r == 1 && board_state.contains("J2")) {
-            return true;
-        } else if (r == 2 && board_state.contains("J3")) {
-            return true;
-        } else if (r == 3 && board_state.contains("J4")) {
-            return true;
-        } else if (r == 4 && board_state.contains("J5")) {
-            return true;
-        } else if (r == 5 && board_state.contains("J6")) {
-           return true;
-        }
-        return false;
-    }
 
 
     /**
@@ -470,21 +453,66 @@ public class CatanDice {
      * the target structure (even if it is a road). If the target structure
      * is reachable via the already built roads, the method should return
      * an empty array.
-     *
+     * <p>
      * Note that on the Island One map, there is a unique path to every
      * structure.
      *
      * @param target_structure: The string representation of the structure
-     *        to reach.
-     * @param board_state: The string representation of the board state.
+     *                          to reach.
+     * @param board_state:      The string representation of the board state.
      * @return An array of string representations of the roads along the
-     *         path.
+     * path.
      */
     public static String[] pathTo(String target_structure,
                                   String board_state) {
-        String[] result = {};
-        return result; // FIXME: Task #13
+        String a1 = "";
+        if (target_structure == "RO") {a1 = "";}
+        else if (target_structure == "R1") {a1 = "R0";}
+        else if (target_structure == "R2") {a1 = "R0";}
+        else if (target_structure == "R3") {a1 = "R0,R2";}
+        else if (target_structure == "R4") {a1 = "R0,R2,R3";}
+        else if (target_structure == "R5") {a1 = "R0,R2,R3";}
+        else if (target_structure == "R6") {a1 = "R0,R2,R3,R5";}
+        else if (target_structure == "R7") {a1 = "R0,R2,R3,R5,R6";}
+        else if (target_structure == "R8") {a1 = "R0,R2,R3,R5,R6,R7";}
+        else if (target_structure == "R9") {a1 = "R0,R2,R3,R5,R6,R7,R8";}
+        else if (target_structure == "R10") {a1 = "R0,R2,R3,R5,R6,R7,R8,R9";}
+        else if (target_structure == "R11") {a1 = "R0,R2,R3,R5,R6,R7,R8,R9,R10";}
+        else if (target_structure == "R12") {a1 = "R0,R2,R3,R5,R6,R7";}
+        else if (target_structure == "R13") {a1 = "R0,R2,R3,R5,R6,R7,R12";}
+        else if (target_structure == "R14") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13";}
+        else if (target_structure == "R15") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
+
+        else if (target_structure == "S3") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
+        else if (target_structure == "S4") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
+        else if (target_structure == "S5") {a1 = "R0,R2,R3,R5";}
+        else if (target_structure == "S7") {a1 = "R0,R2,R3,R5,R6,R7";}
+        else if (target_structure == "S9") {a1 = "R0,R2,R3,R5,R6,R7,R9";}
+        else if (target_structure == "S11") {a1 = "R0,R2,R3,R5,R6,R7,R8,R9,R10,R11";}
+
+        else if (target_structure == "C7") {a1 = "R0,R1";}
+        else if (target_structure == "C12") {a1 = "R0,R2,R3,R4";}
+        else if (target_structure == "C20") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13";}
+        else if (target_structure == "C30") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14,R15";}
+
+        String[] a2 = a1.split(",");
+        List<String> a3 = Arrays.asList(a2);
+        List<String> a4 = new ArrayList<>(a3);
+
+        String[] b = board_state.split(",");
+        List<String> b3 = Arrays.asList(b);
+
+        for (int i = 0; i < a3.size(); i++) {
+            for (int j = 0; j < b3.size(); j++) {
+                if (a3.get(i).equals(b3.get(j))) {a4.remove(a3.get(i));}
+            }
+        }
+        String[] a5 = new String[a4.size()];
+        a5 = a4.toArray(a5);
+        return a5;
+        // FIXME: Task #13
     }
+
 
     /**
      * Generate a plan (sequence of player actions) to build the target
