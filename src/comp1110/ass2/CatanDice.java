@@ -76,6 +76,7 @@ public class CatanDice {
     }
 
 
+
     /**
      * Check if the string encoding of a player action is well formed.
      *
@@ -112,18 +113,18 @@ public class CatanDice {
     /**
      * Roll the specified number of dice and add the result to the
      * resource state.
-     * <p>
+     *
      * The resource state on input is not necessarily empty. This
      * method should only _add_ the outcome of the dice rolled to
      * the resource state, not remove or clear the resources already
      * represented in it.
      *
-     * @param n_dice:         The number of dice to roll (>= 0).
+     * @param n_dice: The number of dice to roll (>= 0).
      * @param resource_state: The available resources that the dice
-     *                        roll will be added to.
-     *                        <p>
-     *                        This method does not return any value. It should update the given
-     *                        resource_state.
+     *        roll will be added to.
+     *
+     * This method does not return any value. It should update the given
+     * resource_state.
      */
     public static void rollDice(int n_dice, int[] resource_state) {
         // FIXME: Task #6
@@ -231,8 +232,112 @@ public class CatanDice {
     public static boolean checkResourcesWithTradeAndSwap(String structure,
                                                          String board_state,
                                                          int[] resource_state) {
-        return false; // FIXME: Task #12
+        if (checkResources(structure, resource_state)) {
+            return true;
+        } else {
+            HashMap<Integer, Integer> lack_re = re_lack(structure, resource_state);
+            if (resource_state[5] >= 2) {
+                int total_miss = 0;
+                for (Integer r : lack_re.keySet()) {
+                    total_miss += lack_re.get(r);
+                }
+                int trade_number = (int) Math.floor(resource_state[5] / 2);
+                if (trade_number >= total_miss) {
+                    return true;
+                } else {
+                    int[] resource2 = resource_state.clone();
+                    for (Integer r : lack_re.keySet()) {
+                        if (lack_re.get(r) > 0 && trade_number > 0) {
+                            lack_re.put(r, lack_re.get(r) - 1);
+                            trade_number--;
+                            resource2[r]++;
+                            resource2[5] -= 2;
+                        }
+                    }
+                    for (Integer r : lack_re.keySet()) {
+                        if (lack_re.get(r) == 1) {
+                            if (!Knight_State(r, board_state))
+                                return false;
+                        } else if (lack_re.get(r) == 2 && !board_state.contains("J6")) {
+                            return false;
+                        } else
+                            return false;
+                    }
+                }
+            } else {
+                for (Integer r : lack_re.keySet()) {
+                    if (lack_re.get(r) == 1) {
+                        if (!(Knight_State(r, board_state))) {
+                            return false;
+                        }
+                    } else if (lack_re.get(r) == 2 && !board_state.contains("J6")) {
+                        return false;
+                    } else {
+                        return false;
+                    }
+                }
+
+            }
+        }
+        return true;
     }
+        // FIXME: Task #12
+
+
+    public static HashMap<Integer, Integer> re_lack(String structure, int[] resource_state) {
+        HashMap<Integer, Integer> re_lack = new HashMap<>();
+        switch(structure.charAt(0) ){
+            case ('R'):
+                for (int i = 3; i <= 4; i++) {
+                    if (1 - resource_state[i] > 0) {
+                        re_lack.put(i, 1 - resource_state[i]);
+                    }
+                }
+                break;
+            case ('C'):
+                if (3 - resource_state[0] > 0) {
+                    re_lack.put(0, 3 - resource_state[0]);
+                }
+                if (2 - resource_state[1] > 0) {
+                    re_lack.put(1, 2 - resource_state[1]);
+                }
+                break;
+            case ('S'):
+                for (int i = 1; i <= 4; i++) {
+                    if (1 - resource_state[i] > 0) {
+                        re_lack.put(i, 1 - resource_state[i]);
+                    }
+                }
+                break;
+
+            case ('J'):
+                for (int i = 0; i <= 2; i++) {
+                    if (1 - resource_state[i] > 0) {
+                        re_lack.put(i, 1 - resource_state[i]);
+                    }
+                }
+                break;
+        }
+        return re_lack;
+    }
+
+    public static boolean Knight_State(int r, String board_state) {
+        if (r == 0 && board_state.contains("J1")) {
+            return true;
+        } else if (r == 1 && board_state.contains("J2")) {
+            return true;
+        } else if (r == 2 && board_state.contains("J3")) {
+            return true;
+        } else if (r == 3 && board_state.contains("J4")) {
+            return true;
+        } else if (r == 4 && board_state.contains("J5")) {
+            return true;
+        } else if (r == 5 && board_state.contains("J6")) {
+           return true;
+        }
+        return false;
+    }
+
 
     /**
      * Check if a player action (build, trade or swap) is executable in the
@@ -277,99 +382,83 @@ public class CatanDice {
     public static boolean canDoSequence(String[] actions,
                                         String board_state,
                                         int[] resource_state) {
-        int[] r = resource_state.clone();
-        String b = board_state;
-
-        for (int i = 0; i < actions.length; i++) {
-            System.out.println("i = "+i);
-            System.out.println("Resource : "+Arrays.toString(r));
-            System.out.println("Board : "+b);
-            System.out.println("Action : "+actions[i]);
-
-            if (actions[i].contains("R")) {
-                System.out.println("BUILD R");
-                b = b +","+ actions[i].replace("build","");
-                b = b.replace(" ", "");
-                r[3]--;
-                r[4]--;
-            }
-
-            else if (actions[i].contains("S")) {
-                System.out.println("BUILD S");
-                b = b +","+ actions[i].replace("build","");
-                b = b.replace(" ", "");
-                r[1]--;
-                r[2]--;
-                r[3]--;
-                r[4]--;
-            }
-
-            else if (actions[i].contains("C")) {
-                System.out.println("BUILD C");
-                b = b +","+ actions[i].replace("build","");
-                b = b.replace(" ", "");
-                r[0] -= 3;
-                r[1] -= 2;
-            }
-
-            else if (actions[i].contains("J")) {
-                System.out.println("BUILD J");
-                b = b +","+ actions[i].replace("build","");
-                b = b.replace(" ", "");
-                r[0] -= 1;
-                r[1] -= 1;
-                r[2] -= 1;
-
-            }
-
-            else if (actions[i].contains("trade")) {
-                System.out.println("TRADE");
-                r[5] -= 2;
-                r[Character.getNumericValue(actions[i].charAt(6))] += 1;
-
-            }
-            else if (actions[i].contains("swap")) {
-                System.out.println("SWAP");
-
-                if(b.contains("J"+(Character.getNumericValue(actions[i].charAt(7))+ 1)) || b.contains("J6"));
-                else{
-                    System.out.println("Final Conclusion : False (Swap Knight Not Enough)");
-                    System.out.println("\n");
-                    System.out.println("《 FINISH , NEXT TEST EXAMPLE 》");
-                    System.out.println("\n");
-                    return false;}
-
-                r[Character.getNumericValue(actions[i].charAt(5))] -= 1;
-                r[Character.getNumericValue(actions[i].charAt(7))] += 1;
-                String j = "J" + (Character.getNumericValue(actions[i].charAt(7))+ 1);
-                String k = "K" + (Character.getNumericValue(actions[i].charAt(7))+ 1);
-                b = b.replaceAll(j, k);
+        int[] temp = resource_state.clone();
+        for (int resource : resource_state) {
+            System.out.println(resource);
+        }
+        System.out.println("-----------------------");
+        Boolean q = true;
+        for (String action : actions) {
+            String[] s = action.split(" ");
+            ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
+            String playaction = argument.get(0);
+            System.out.println(canDoAction(action, board_state, temp));
+            if (canDoAction(action, board_state, temp)) {
+                switch (playaction) {
+                    case ("build"):
+                        String structure = argument.get(1);
+                        board_state = board_state + ',' + structure;
+                        String b = (argument.get(1)).substring(0, 1);
+                        if (b.equals("R")) {
+                            temp[3]--;
+                            temp[4]--;
+                        } else if (b.equals("S")) {
+                            temp[1]--;
+                            temp[2]--;
+                            temp[3]--;
+                            temp[4]--;
+                        } else if (b.equals("C")) {
+                            temp[0] -= 3;
+                            temp[1] -= 2;
+                        } else if (b.equals("J")) {
+                            temp[0]--;
+                            temp[1]--;
+                            temp[2]--;
+                        }
+                        for (int resource : temp) {
+                            if (resource < 0)
+                                q = false;
+                        }
+                        break;
+                    case ("trade"):
+                        if (temp[5] >= 2) {
+                            int n = Integer.parseInt(argument.get(1));
+                            temp[5] -= 2;
+                            temp[n] = temp[n] + 1;
+                        }
+                        for (int resource : temp) {
+                            if (resource < 0)
+                                q = false;
+                        }
+                        break;
+                    case ("swap"):
+                        int s1 = Integer.parseInt(argument.get(1));
+                        int s2 = Integer.parseInt(argument.get(2));
+                        if (board_state.contains("J" + (s2 + 1)) && (temp[s1] > 0)) {
+                            temp[s1] = temp[s1] - 1;
+                            temp[s2] = temp[s2] + 1;
+                            String j = "J" + (s2 + 1);
+                            String k = "K" + (s2 + 1);
+                            board_state = board_state.replaceAll(j, k);
+                        } else if (board_state.contains("J6") && (resource_state[s1] >= 1)) {
+                            board_state = board_state.replaceAll("J6", "K6");
+                        }
+                        for (int resource : temp) {
+                            if (resource < 0)
+                                q = false;
+                        }
+                        break;
+                    default:
+                        q = false;
+                }
+            } else {
+                q = false;
             }
         }
-        System.out.println("Final Resource : "+Arrays.toString(r));
-        System.out.println("Final Board : "+b);
+        return q;
 
-        if(rightOrder(b)==false){
-            System.out.println("Final Conclusion : False (Wrong Construction Order)");
-            System.out.println("\n");
-            System.out.println("《 FINISH , NEXT TEST EXAMPLE 》");
-            System.out.println("\n");
-            return false;}
 
-        if(r[0]<0 || r[1]<0 || r[2]<0 || r[3]<0 || r[4]<0 || r[5]<0){
-            System.out.println("Final Conclusion : False (Resources, Dice Points Not Enough)");
-            System.out.println("\n");
-            System.out.println("《 FINISH , NEXT TEST EXAMPLE 》");
-            System.out.println("\n");
-            return false;}
-
-        System.out.println("Final Conclusion : True");
-        System.out.println("\n");
-        System.out.println("《 FINISH , NEXT TEST EXAMPLE 》");
-        System.out.println("\n");
-        return true;
-
-}
+    }
 // FIXME: Task #11
 
 
