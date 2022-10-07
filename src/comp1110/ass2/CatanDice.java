@@ -466,34 +466,34 @@ public class CatanDice {
     public static String[] pathTo(String target_structure,
                                   String board_state) {
         String a1 = "";
-        if (target_structure == "RO") {a1 = "";}
-        else if (target_structure == "R1") {a1 = "R0";}
-        else if (target_structure == "R2") {a1 = "R0";}
-        else if (target_structure == "R3") {a1 = "R0,R2";}
-        else if (target_structure == "R4") {a1 = "R0,R2,R3";}
-        else if (target_structure == "R5") {a1 = "R0,R2,R3";}
-        else if (target_structure == "R6") {a1 = "R0,R2,R3,R5";}
-        else if (target_structure == "R7") {a1 = "R0,R2,R3,R5,R6";}
-        else if (target_structure == "R8") {a1 = "R0,R2,R3,R5,R6,R7";}
-        else if (target_structure == "R9") {a1 = "R0,R2,R3,R5,R6,R7,R8";}
-        else if (target_structure == "R10") {a1 = "R0,R2,R3,R5,R6,R7,R8,R9";}
-        else if (target_structure == "R11") {a1 = "R0,R2,R3,R5,R6,R7,R8,R9,R10";}
-        else if (target_structure == "R12") {a1 = "R0,R2,R3,R5,R6,R7";}
-        else if (target_structure == "R13") {a1 = "R0,R2,R3,R5,R6,R7,R12";}
-        else if (target_structure == "R14") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13";}
-        else if (target_structure == "R15") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
+        if (target_structure.equals("RO")) {a1 = "";}
+        else if (target_structure.equals("R1")) {a1 = "R0";}
+        else if (target_structure.equals("R2")) {a1 = "R0";}
+        else if (target_structure.equals("R3")) {a1 = "R0,R2";}
+        else if (target_structure.equals("R4")) {a1 = "R0,R2,R3";}
+        else if (target_structure.equals("R5")) {a1 = "R0,R2,R3";}
+        else if (target_structure.equals("R6")) {a1 = "R0,R2,R3,R5";}
+        else if (target_structure.equals("R7")) {a1 = "R0,R2,R3,R5,R6";}
+        else if (target_structure.equals("R8")) {a1 = "R0,R2,R3,R5,R6,R7";}
+        else if (target_structure.equals("R9")) {a1 = "R0,R2,R3,R5,R6,R7,R8";}
+        else if (target_structure.equals("R10")) {a1 = "R0,R2,R3,R5,R6,R7,R8,R9";}
+        else if (target_structure.equals("R11")) {a1 = "R0,R2,R3,R5,R6,R7,R8,R9,R10";}
+        else if (target_structure.equals("R12")) {a1 = "R0,R2,R3,R5,R6,R7";}
+        else if (target_structure.equals("R13")) {a1 = "R0,R2,R3,R5,R6,R7,R12";}
+        else if (target_structure.equals("R14")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13";}
+        else if (target_structure.equals("R15")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
 
-        else if (target_structure == "S3") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
-        else if (target_structure == "S4") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
-        else if (target_structure == "S5") {a1 = "R0,R2,R3,R5";}
-        else if (target_structure == "S7") {a1 = "R0,R2,R3,R5,R6,R7";}
-        else if (target_structure == "S9") {a1 = "R0,R2,R3,R5,R6,R7,R9";}
-        else if (target_structure == "S11") {a1 = "R0,R2,R3,R5,R6,R7,R8,R9,R10,R11";}
+        else if (target_structure.equals("S3")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
+        else if (target_structure.equals("S4")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
+        else if (target_structure.equals("S5")) {a1 = "R0,R2,R3,R5";}
+        else if (target_structure.equals("S7")) {a1 = "R0,R2,R3,R5,R6,R7";}
+        else if (target_structure.equals("S9")) {a1 = "R0,R2,R3,R5,R6,R7,R9";}
+        else if (target_structure.equals("S11")) {a1 = "R0,R2,R3,R5,R6,R7,R8,R9,R10,R11";}
 
-        else if (target_structure == "C7") {a1 = "R0,R1";}
-        else if (target_structure == "C12") {a1 = "R0,R2,R3,R4";}
-        else if (target_structure == "C20") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13";}
-        else if (target_structure == "C30") {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14,R15";}
+        else if (target_structure.equals("C7")) {a1 = "R0,R1";}
+        else if (target_structure.equals("C12")) {a1 = "R0,R2,R3,R4";}
+        else if (target_structure.equals("C20")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13";}
+        else if (target_structure.equals("C30")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14,R15";}
 
         String[] a2 = a1.split(",");
         List<String> a3 = Arrays.asList(a2);
