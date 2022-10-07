@@ -483,8 +483,8 @@ public class CatanDice {
         else if (target_structure.equals("R14")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13";}
         else if (target_structure.equals("R15")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
 
-        else if (target_structure.equals("S3")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
-        else if (target_structure.equals("S4")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
+        else if (target_structure.equals("S3")) {a1 = "";}
+        else if (target_structure.equals("S4")) {a1 = "R0,R2";}
         else if (target_structure.equals("S5")) {a1 = "R0,R2,R3,R5";}
         else if (target_structure.equals("S7")) {a1 = "R0,R2,R3,R5,R6,R7";}
         else if (target_structure.equals("S9")) {a1 = "R0,R2,R3,R5,R6,R7,R9";}
