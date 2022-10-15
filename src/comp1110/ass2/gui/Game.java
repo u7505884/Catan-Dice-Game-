@@ -1,5 +1,6 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.Board;
 import comp1110.ass2.CatanDice;
 import javafx.animation.FadeTransition;
 import javafx.animation.Timeline;
@@ -27,24 +28,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Game extends Application {
-    private final Group root = new Group();
-    private static final CatanDice catanDice = new CatanDice();
+    private static final Board board = new Board();
+
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 700;
-
     private static final double BOARD_LOCATION_WIDTH = 600-125*Math.sqrt(3);
     private static final double BOARD_LOCATION_HEIGHT = 350-3*75;
+    private static final String URI_BASE = "assets/";
+
+    //basic board
     private static final double BOARD_LOCATION_WIDTH_ADAPTION = 18; //fit the background manually by ourselves
     private static final double BOARD_LOCATION_HEIGHT_ADAPTION = BOARD_LOCATION_WIDTH_ADAPTION*450/(250*Math.sqrt(3));
     private static final boolean WHETHER_SHOW_BOUNDARY = false; //modify whether show the boundary manually
-    private static final String URI_BASE = "assets/";
+    //recorder
+    private static final double HORIZONTAL_SPACE_ADAPTION = 18;
+    private static final double VERTICAL_SPACE_ADAPTION = 18;
+    private static final double XOfRecorder = 18;
+    private static final double YOfRecorder = 18;
 
-    private final Group controls = new Group();
-    private final Group board = new Group();
+    private final Group root = new Group();// basic group
+    private final Group basicBoard = new Group();
     private final Group roads = new Group();
     private final Group settlements = new Group();
     private final Group cities = new Group();
     private final Group knights = new Group();
+    private final Group controls = new Group();
+    private final Group recorder = new Group();
 
     private TextField playerTextField;
     private TextField boardTextField;
@@ -276,7 +285,7 @@ public class Game extends Application {
         background.setFitHeight(450+2*BOARD_LOCATION_HEIGHT_ADAPTION);
         background.setLayoutX(BOARD_LOCATION_WIDTH-BOARD_LOCATION_WIDTH_ADAPTION);
         background.setLayoutY(BOARD_LOCATION_HEIGHT-BOARD_LOCATION_HEIGHT_ADAPTION);
-        this.board.getChildren().add(background);
+        this.basicBoard.getChildren().add(background);
         //set basic edge model
         hexagon hexagon1 = new hexagon(600+75*Math.sqrt(3),275,50*Math.sqrt(3)-1);
         hexagon hexagon2 = new hexagon(600+75*Math.sqrt(3),425,50*Math.sqrt(3)-1);
@@ -293,7 +302,7 @@ public class Game extends Application {
         hexagonsMap.put(6,hexagon6);
         for(hexagon hexagon: hexagonsMap.values()){
             hexagon.setAllPoints();
-            this.board.getChildren().add(hexagon);
+            this.basicBoard.getChildren().add(hexagon);
         }
         //create start sign
         startSign startSign = new startSign(600-37.5*Math.sqrt(3), 275-37.5);
@@ -302,7 +311,7 @@ public class Game extends Application {
         road specialUseOfRoad = new road(600-37.5*Math.sqrt(3), 275-37.5,60);
         specialUseOfRoad.setFill(Color.PURPLE);
         specialUseOfRoad.setAllPoints();
-        this.board.getChildren().addAll(specialUseOfRoad, startSign);
+        this.basicBoard.getChildren().addAll(specialUseOfRoad, startSign);
     }
 
     /**
@@ -413,7 +422,7 @@ public class Game extends Application {
     }
 
     /**
-     * Create a basic text field for input and a refresh button.
+     * Create a basic text field for input and a refresh button
      */
     private void makeControls() {
         Label boardLabel = new Label("Board State:");
@@ -430,6 +439,46 @@ public class Game extends Application {
         hb.getChildren().addAll(boardLabel, boardTextField, button);
         hb.setSpacing(10);
         controls.getChildren().add(hb);
+    }
+
+    /**
+     * Create 16 labels to display score for each round
+     */
+    private void makeRecorder(){
+        //create labels to display score in each round
+        Label score;
+        for(int i = 0; i < 15; i++){
+            //set content of label
+            if(i<board.getRound()){
+                score = new Label(String.valueOf(board.getScoresRecorder()[i]));
+            }else {
+                score = new Label("");
+            }
+            //set position of label
+            if(i<5){
+                score.setLayoutX(XOfRecorder + i * HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutY(YOfRecorder);
+            }else if (i == 5){
+                score.setLayoutX(XOfRecorder + 4 * HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutY(YOfRecorder + VERTICAL_SPACE_ADAPTION);
+            } else if (i>5 && i<= 10){
+                score.setLayoutX(XOfRecorder + (10-i) * HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutY(YOfRecorder + 2 * VERTICAL_SPACE_ADAPTION);
+            } else if (i == 11){
+                score.setLayoutX(XOfRecorder);
+                score.setLayoutY(YOfRecorder + 3 * VERTICAL_SPACE_ADAPTION);
+            } else {
+                score.setLayoutX(XOfRecorder + (12-i) * HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutY(YOfRecorder + 4 * VERTICAL_SPACE_ADAPTION);
+            }
+            recorder.getChildren().add(score);
+        }
+        //create a label to display current final score in each round
+        int currentFinalScore = board.calculateCurrentFinalScore();
+        Label finalScore = new Label(String.valueOf(currentFinalScore));
+        finalScore.setLayoutX(XOfRecorder + 3.75 * HORIZONTAL_SPACE_ADAPTION);
+        finalScore.setLayoutY(YOfRecorder + 4 * VERTICAL_SPACE_ADAPTION);
+        recorder.getChildren().add(finalScore);
     }
     /**
      * highlight the selected component in Group roads, settlements, cities, knights
@@ -460,7 +509,7 @@ public class Game extends Application {
      * add Group board, roads, settlements, cities, knights to Group root and show the initialized board on stage
      */
     void initializeBoard() {
-        root.getChildren().add(board);
+        root.getChildren().add(basicBoard);
         root.getChildren().add(roads);
         root.getChildren().add(settlements);
         root.getChildren().add(cities);
@@ -472,6 +521,13 @@ public class Game extends Application {
         this.makeKnights();
     }
 
+    /**
+     * add Group recorder to Group root and show the initialized board on stage
+     */
+    void initializeRecorder() {
+        root.getChildren().add(recorder);
+        this.makeRecorder();
+    }
     /**
      * add Group controls to Group root and show the initialized controls on stage
      */
@@ -487,7 +543,8 @@ public class Game extends Application {
 
         //add different part of the game into stage
         initializeBoard();
-        initializeControls();
+        initializeRecorder();
+        //initializeControls();
 
         //show stage
         stage.setScene(scene);

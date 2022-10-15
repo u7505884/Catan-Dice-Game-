@@ -62,33 +62,6 @@ public class BuildableStructures {
         return whetherHaveBuilt;
     }
 
-    /**
-     * Identify whether we can build current structure with current resources
-     *
-     * @param currentResources:  an integer array stand for the current resources we have
-     * @return A boolean value standing for whether it can pass the resources constraint
-     */
 
-    public  boolean resourcesConstraint(int[] currentResources ) {
-        int[]temp = currentResources.clone();
-        if (getWhetherHaveBuilt()) {
-            return false;
-        } else {
-            for (int resource : temp) {
-                if (resource < 0)
-                    return false;
-            }
-            //Subtract the resources consumed for construction from the current resources
-            for (int i = 0; i < temp.length; i++) {
-                temp[i] -= demandOfResources[i];
-            }
-            //check whether there is negative number after assumption of deduction
-            for (int resource : temp) {
-                if (resource < 0)
-                    return false;
-            }
-            return true;
-        }
-    }
 
 }

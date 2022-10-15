@@ -68,22 +68,61 @@ public class TestBoard {
     }
 
     private void whetherCanBeBuiltTest(Board board, BuildableStructures buildableStructures, int[] resources, boolean bool){
-        assertEquals(board.whetherCanBeBuilt(buildableStructures,resources),bool, "Unexpected output, expected: "+bool+" but actual: "+ board.buildingConstraint(buildableStructures));
+        board.currentResource = resources.clone();
+        assertEquals(board.whetherCanBeBuilt(buildableStructures),bool, "Unexpected output, expected: "+bool+" but actual: "+ board.buildingConstraint(buildableStructures));
     }
 
-    private void buildTest(Board board, BuildableStructures buildableStructures){
-        board.build(buildableStructures);
-        assertTrue(buildableStructures.whetherHaveBuilt,"It should have been built");
-    }
-
-    private void whetherShouldFinishTest(Board board, boolean bool){
-        assertEquals(board.whetherShouldFinish(),bool, bool? "It is time to finish the game at round "+board.round:"In correct time to finish the game at round "+board.round);
-    }
 
     private void calculateFinalScoresTest(Board board, int sum){
-        assertEquals(board.calculateFinalScores(), sum, "Incorrect sum of the final scores");
+        assertEquals(board.calculateCurrentFinalScore(), sum, "Incorrect sum of the final scores");
     }
 
+    private void testResConstraint(Board board, BuildableStructures b, boolean w, int[] currentResources, boolean expected) {
+        b.whetherHaveBuilt = w;
+        assertNotEquals(expected, b.getWhetherHaveBuilt(), "Unexpected result for '" + w + "'");
+        boolean out = board.resourcesConstraint(b);
+        assertEquals(expected, out, "Unexpected result for '" + currentResources + "'");
+
+    }
+
+    @Test
+    void resourcesConstraint() {
+        Board b = new Board();
+        BuildableStructures b1 = new BuildableStructures();
+        int[] a = new int[]{6, 3, 4, 3, 2, 2};
+        int[] c = new int[]{1, 4, 3, 3, 1, 3};
+        int[] d = new int[]{1, 3, 1, 2, 5, 2};
+        int[] e = new int[]{3, 2, 0, 4, 1, 1};
+        if (b1.demandOfResources == new int[]{3, 2, 0, 0, 0, 0}) {
+            testResConstraint(b,b1, false, a, false);
+            testResConstraint(b,b1, true, c, false);
+            testResConstraint(b,b1, false, c, false);
+            testResConstraint(b,b1, false, d, false);
+            testResConstraint(b,b1, true, d, false);
+            testResConstraint(b,b1, false, e, true);
+        } else if (b1.demandOfResources == new int[]{1, 1, 1, 0, 0, 0}) {
+            testResConstraint(b,b1, false, a, true);
+            testResConstraint(b,b1, true, c, false);
+            testResConstraint(b,b1, false, c, true);
+            testResConstraint(b,b1, false, d, true);
+            testResConstraint(b,b1, true, d, false);
+            testResConstraint(b,b1, false, e, false);
+        } else if (b1.demandOfResources == new int[]{0, 0, 0, 1, 1, 0}) {
+            testResConstraint(b,b1, false, a, true);
+            testResConstraint(b,b1, true, c, false);
+            testResConstraint(b,b1, false, c, true);
+            testResConstraint(b,b1, false, d, true);
+            testResConstraint(b,b1, true, d, false);
+            testResConstraint(b,b1, false, e, true);
+        } else if (b1.demandOfResources == new int[]{0, 1, 1, 1, 1, 0}) {
+            testResConstraint(b,b1, false, a, true);
+            testResConstraint(b,b1, true, c, false);
+            testResConstraint(b,b1, false, c, true);
+            testResConstraint(b,b1, false, d, true);
+            testResConstraint(b,b1, true, d, false);
+            testResConstraint(b,b1, false, e, false);
+        }
+    }
     @Test
     public void testConstructorAndInitialization() {
         Board board = new Board();
@@ -188,44 +227,6 @@ public class TestBoard {
 
     }
 
-    @Test
-    public void testBuild(){
-        Board board = new Board();
-        for(Road road:board.roads.values()){
-            if(!road.whetherHaveBuilt){
-                buildTest(board, road);
-            }
-        }
-        for(Settlement settlement:board.settlements.values()){
-            if(!settlement.whetherHaveBuilt){
-                buildTest(board, settlement);
-            }
-        }
-        for(City city:board.cities.values()){
-            if(!city.whetherHaveBuilt){
-                buildTest(board, city);
-            }
-        }
-        for(Knight knight:board.knights.values()){
-            if(!knight.whetherHaveBuilt){
-                buildTest(board, knight);
-            }
-        }
-
-    }
-
-    @Test
-    public void testWhetherShouldFinished(){
-        Board board = new Board();
-        for(int i=0; i < 15;i++){
-            board.round = i;
-            whetherShouldFinishTest(board, false);
-        }
-        for(int i=15; i < 30;i++){
-            board.round = i;
-            whetherShouldFinishTest(board, true);
-        }
-    }
 
     @Test
     public void testCalculateFinalScoresTest(){
@@ -238,8 +239,8 @@ public class TestBoard {
             int random4 = random.nextInt();
             int random5 = random.nextInt();
             int random6 = random.nextInt();
-            board.scoresRecorder = new int[]{random1, random2, random3, random4, random5,random6};
-            calculateFinalScoresTest(board, Arrays.stream(board.scoresRecorder).sum());
+            board.currentResource = new int[]{random1, random2, random3, random4, random5,random6};
+            calculateFinalScoresTest(board, Arrays.stream(board.getScoresRecorder()).sum());
         }
     }
 }

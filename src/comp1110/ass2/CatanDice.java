@@ -2,7 +2,6 @@ package comp1110.ass2;
 
 import java.util.*;
 
-import static comp1110.ass2.Order.rightOrder;
 
 public class CatanDice {
 
@@ -195,21 +194,22 @@ public class CatanDice {
         // FIXME: Task #7
         //initialize a new board
         Board board = new Board();
+        board.currentResource = resource_state.clone();
         //check resources
         int indexOfStructure;
         switch (structure.charAt(0)) {
             case ('R'):
                 indexOfStructure = Integer.valueOf(structure.substring(1));
-                return board.roads.get(indexOfStructure).resourcesConstraint(resource_state);
+                return board.resourcesConstraint(board.roads.get(indexOfStructure));
             case ('J'):
                 indexOfStructure = Integer.valueOf(structure.substring(1));
-                return board.knights.get(indexOfStructure).resourcesConstraint(resource_state);
+                return board.resourcesConstraint(board.knights.get(indexOfStructure));
             case ('S'):
                 indexOfStructure = Integer.valueOf(structure.substring(1));
-                return board.settlements.get(indexOfStructure).resourcesConstraint(resource_state);
+                return board.resourcesConstraint(board.settlements.get(indexOfStructure));
             case ('C'):
                 indexOfStructure = Integer.valueOf(structure.substring(1));
-                return board.cities.get(indexOfStructure).resourcesConstraint(resource_state);
+                return board.resourcesConstraint(board.cities.get(indexOfStructure));
             default:
                 return false;
         }
@@ -336,8 +336,8 @@ public class CatanDice {
                                       int[] resource_state) {
         String[] s = action.split(" ");
         ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
-        String playaction = argument.get(0);
-        switch (playaction) {
+        String playAction = argument.get(0);
+        switch (playAction) {
             case ("build"):
                 return (s.length == 2 && checkBuildConstraints(argument.get(1), board_state) && checkResources(argument.get(1), resource_state)) ? true : false;
 

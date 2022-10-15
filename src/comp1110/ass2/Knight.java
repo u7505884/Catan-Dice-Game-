@@ -26,7 +26,7 @@ public class Knight extends BuildableStructures {
      * @return A boolean value which indicates whether we have used the chance to
      * swap resource from current knight.
      */
-    public boolean isWhetherHaveSwapped() {
+    public boolean getWhetherHaveSwapped() {
         return whetherHaveSwapped;
     }
 

@@ -7,9 +7,12 @@ public class Board {
     protected final HashMap<Integer, Knight> knights = new HashMap<>();//All knights contained in the board
     protected final HashMap<Integer, Settlement> settlements = new HashMap<>();//All settlements contained in the board
     protected final HashMap<Integer, City> cities = new HashMap<>();//All cities contained in the board
-    protected int round = 0;//indicate which turn we are in
-    protected int[] scoresRecorder;//record scores we have gotten or lost in each previous round
+    private boolean whetherNewStructureWasBuilt = false;//indicate whether we have build new building in current single round
+    private int round = 0;//indicate which turn we are in
+    private int[] scoresRecorder = new int[15];//record scores we have gotten or lost in each previous round
+    protected int[] currentResource = new int[6];//record current resource we have
 
+    private final static Dice dice = new Dice();
     /**
      * Constructor
      */
@@ -17,10 +20,39 @@ public class Board {
         this.initializeBoard();
     }
 
+    public HashMap<Integer, Road> getRoads() {
+        return roads;
+    }
+
+    public HashMap<Integer, Knight> getKnights() {
+        return knights;
+    }
+
+    public HashMap<Integer, Settlement> getSettlements() {
+        return settlements;
+    }
+
+    public HashMap<Integer, City> getCities() {
+        return cities;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public int[] getScoresRecorder() {
+        return scoresRecorder;
+    }
+
+    public int[] getCurrentResource() {
+        return currentResource;
+    }
+
     /**
      * Initialize the board, including create all roads, settlements, cities and knights
      */
     public void initializeBoard(){
+        //initialize all buildings on board
         Road R0 = new Road(0);
         Road R1 = new Road(1,R0);
         Road R2 = new Road(2,R0);
@@ -88,12 +120,12 @@ public class Board {
         knights.put(4,J4);
         knights.put(5,J5);
         knights.put(6,J6);
-
     }
 
     /**
      * Identify whether we can build current structure by the limit of building constraint
      *
+     * @param whatWeWantToBuild: the building we want to construct now
      * @return A boolean value standing for whether it can pass the resources constraint
      */
     public boolean buildingConstraint(BuildableStructures whatWeWantToBuild){
@@ -148,35 +180,141 @@ public class Board {
     }
 
     /**
-     * Identify whether we can build current structure by building constraint and resources constraint
+     * Identify whether we can build current structure with current resources
      *
-     * @param whatWeWantToBuild: The buildable structure we want to build.
-     *      * @param resourcesWeHave: The resources we have at this moment.
-     *      * @return true iff the structure can be built, false otherwise.
+     * @param whatWeWantToBuild:  the building we want to construct now
+     * @return A boolean value standing for whether it can pass the resources constraint
      */
-    public boolean whetherCanBeBuilt(BuildableStructures whatWeWantToBuild, int[] resourcesWeHave){
-        return whatWeWantToBuild.resourcesConstraint(resourcesWeHave) && buildingConstraint(whatWeWantToBuild);
+
+    public boolean resourcesConstraint(BuildableStructures whatWeWantToBuild ) {
+        int[]temp = currentResource.clone();
+        if (whatWeWantToBuild.getWhetherHaveBuilt()) {
+            return false;
+        } else {
+            for (int resource : temp) {
+                if (resource < 0)
+                    return false;
+            }
+            //Subtract the resources consumed for construction from the current resources
+            for (int i = 0; i < temp.length; i++) {
+                temp[i] -= whatWeWantToBuild.demandOfResources[i];
+            }
+            //check whether there is negative number after assumption of deduction
+            for (int resource : temp) {
+                if (resource < 0)
+                    return false;
+            }
+            return true;
+        }
     }
 
     /**
-     * Build the building we want. What we need to pay attention is, this method
-     * should only be used after we have check the validity of the construction by
-     * method tryToBuild().
+     * Identify whether we can build current structure by building constraint and resources constraint
+     *
+     * @param whatWeWantToBuild: The buildable structure we want to build.
+     * @return true iff the structure can be built, false otherwise.
+     */
+    public boolean whetherCanBeBuilt(BuildableStructures whatWeWantToBuild){
+        return resourcesConstraint(whatWeWantToBuild) && buildingConstraint(whatWeWantToBuild);
+    }
+
+    /**
+     * if we can build what we want (whetherCanBeBuilt() return true), then
+     * Build the building we want.
+     * refresh scoresRecorder and whetherNewStructureWasBuilt
      *
      * @param whatWeWantToBuild: The buildable structure we want to build
      */
     public void build(BuildableStructures whatWeWantToBuild){
-        whatWeWantToBuild.setWhetherBuild(true);
+        if(whetherCanBeBuilt(whatWeWantToBuild)){
+            whatWeWantToBuild.setWhetherBuild(true);
+            scoresRecorder[round] += whatWeWantToBuild.getScores();
+            whetherNewStructureWasBuilt = true;
+            System.out.println(whatWeWantToBuild+" has been built");
+        }else {
+            System.out.println("We can not build " + whatWeWantToBuild +"!");
+        }
+
+    }
+    /**
+     * Identify whether we can trade one resource by gold
+     *
+     * @return true iff we have at least two gold, false otherwise.
+     */
+    public boolean whetherCanBeTraded(){
+        return currentResource[5]>=2;
     }
 
     /**
-     * Check if it is time to finish the whole game. This method should be implemented
-     * by the class variable round.
+     * if we can trade what we want (whetherCanTrade() return true), then trade it
      *
-     * @return true iff it is time to finish, false otherwise.
+     * @param newResource the resource we are trying to acquire by trade
      */
-    public boolean whetherShouldFinish(){
-        return round>=15;
+    public void trade(Resource newResource){
+        if(whetherCanBeTraded()){
+            currentResource[5]-=2;
+            currentResource[newResource.getIndex()-1]++;
+            System.out.println("Trade for " + newResource + " succeed!");
+        }else {
+            System.out.println("Trade for " + newResource + " failed!");
+        }
+    }
+
+    /**
+     * Identify whether we can swap one resource with resource-specific knights
+     *
+     * @return true iff the associated knight was built but not used and we have at least
+     * one the resource we plan to swap out, false otherwise.
+     */
+    public boolean whetherCanBeSwapped(Resource resourceAsPrice, Resource newResource){
+        if(newResource.getKnight(this).getWhetherHaveBuilt()){
+            if(newResource.getKnight(this).getWhetherHaveSwapped()){
+                if(currentResource[resourceAsPrice.getIndex()-1]>=1){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Identify whether we can swap one resource with wildcard knight(knight with index 6)
+     *
+     * @return true iff the associated knight was built without use and we have at least
+     * one resource we plan to swap out, false otherwise.
+     */
+    public boolean whetherCanBeSwappedWithWildcardKnight(Resource resourceAsPrice, Resource newResource){
+        if(knights.get(6).getWhetherHaveBuilt()){
+            if(knights.get(6).getWhetherHaveSwapped()){
+                if(currentResource[resourceAsPrice.getIndex()-1]>=1){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * if we can swap what we want (whetherCanSwap() or whetherCanSwapWithWildcardKnight() return true),
+     * then swap it
+     *
+     * @param resourceAsPrice the resource we swap out
+     * @param newResource the resource we are trying to acquire by swap
+     */
+    public void swap(Resource resourceAsPrice, Resource newResource){
+        if(whetherCanBeSwapped(resourceAsPrice, newResource)){//swap with resource-specific knights
+            newResource.getKnight(this).setWhetherHaveSwapped(true);
+            currentResource[newResource.getIndex()-1]++;
+            currentResource[resourceAsPrice.getIndex()-1]--;
+            System.out.println("Swap for " + newResource + " succeed!");
+        }else if (whetherCanBeSwappedWithWildcardKnight(resourceAsPrice, newResource)){//swap with wildcard knight
+            this.knights.get(6).setWhetherHaveSwapped(true);
+            currentResource[newResource.getIndex()-1]++;
+            currentResource[5]--;
+            System.out.println("Swap for " + newResource + " succeed but wildcard knight can not be used anymore!");
+        }else{
+            System.out.println("Swap for " + newResource + " failed!");
+        }
     }
 
     /**
@@ -185,7 +323,7 @@ public class Board {
      * whetherShouldFinish().
      *
      */
-    public int calculateFinalScores(){
+    public int calculateCurrentFinalScore(){
         int sum = 0;
         for(int i : this.scoresRecorder){
             sum += i;
@@ -193,28 +331,23 @@ public class Board {
         return sum;
     }
 
-
     /**
-     * Trade new resource with gold. In this method we should check whether we
-     * have enough gold to pay first.
-     *
-     * @param resourceWanted: The resource we want to trade with our gold
-     * @return New array of Resources after replacement.
+     * Check whether player build any structure first. If not there will be a penalty of -2 points
+     * Then refresh round and check whether we should finish game
+     * If not (means we should enter next round), then we should roll all dices and refresh whetherNewStructureWasBuilt.
      */
-    public int[] tradeByGold(Resources resourceWanted){
-        return new int[]{};
-    }
+    public void nextRound(){
+        if(!whetherNewStructureWasBuilt){
+            scoresRecorder[round] -= 2;
+        }
+        round++;
+        if(round>=15){
+            System.out.println("Final score " + calculateCurrentFinalScore());
+            return;
+        }else {
+            currentResource = dice.rollDice(6).clone();
+            whetherNewStructureWasBuilt = false;
+        }
 
-    /**
-     * Swap resource with knight. In this method we should check whether the knight
-     * has been used before.
-     * !!!In this method, we should pay attention to Knight 6 (The wildcard)!
-     *
-     * @param knight: The knight we want to trade with.
-     * @param resourcePaid: The resource we want to pay in this swap.
-     * @return New array of Resources after swap.
-     */
-    public int[] tradeWithKnight(Knight knight, Resources resourcePaid){
-        return  new int[]{};
     }
 }

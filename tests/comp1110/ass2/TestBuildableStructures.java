@@ -34,13 +34,7 @@ class TestBuildableStructures {
         assertEquals(whetherHaveBuilt, b.getWhetherHaveBuilt(), "Getter method did not return value correctly.");
     }
 
-    private void testResConstraint(BuildableStructures b, boolean w, int[] currentResources, boolean expected) {
-        b.whetherHaveBuilt = w;
-        assertNotEquals(expected, b.getWhetherHaveBuilt(), "Unexpected result for '" + w + "'");
-        boolean out = b.resourcesConstraint(currentResources);
-        assertEquals(expected, out, "Unexpected result for '" + currentResources + "'");
 
-    }
 
 
     @Test
@@ -87,41 +81,5 @@ class TestBuildableStructures {
         }
     }
 
-    @Test
-    void resourcesConstraint() {
-        BuildableStructures b = new BuildableStructures();
-        int[] a = new int[]{6, 3, 4, 3, 2, 2};
-        int[] c = new int[]{1, 4, 3, 3, 1, 3};
-        int[] d = new int[]{1, 3, 1, 2, 5, 2};
-        int[] e = new int[]{3, 2, 0, 4, 1, 1};
-        if (b.demandOfResources == new int[]{3, 2, 0, 0, 0, 0}) {
-            testResConstraint(b, false, a, false);
-            testResConstraint(b, true, c, false);
-            testResConstraint(b, false, c, false);
-            testResConstraint(b, false, d, false);
-            testResConstraint(b, true, d, false);
-            testResConstraint(b, false, e, true);
-        } else if (b.demandOfResources == new int[]{1, 1, 1, 0, 0, 0}) {
-            testResConstraint(b, false, a, true);
-            testResConstraint(b, true, c, false);
-            testResConstraint(b, false, c, true);
-            testResConstraint(b, false, d, true);
-            testResConstraint(b, true, d, false);
-            testResConstraint(b, false, e, false);
-        } else if (b.demandOfResources == new int[]{0, 0, 0, 1, 1, 0}) {
-            testResConstraint(b, false, a, true);
-            testResConstraint(b, true, c, false);
-            testResConstraint(b, false, c, true);
-            testResConstraint(b, false, d, true);
-            testResConstraint(b, true, d, false);
-            testResConstraint(b, false, e, true);
-        } else if (b.demandOfResources == new int[]{0, 1, 1, 1, 1, 0}) {
-            testResConstraint(b, false, a, true);
-            testResConstraint(b, true, c, false);
-            testResConstraint(b, false, c, true);
-            testResConstraint(b, false, d, true);
-            testResConstraint(b, true, d, false);
-            testResConstraint(b, false, e, false);
-        }
-    }
+
 }
