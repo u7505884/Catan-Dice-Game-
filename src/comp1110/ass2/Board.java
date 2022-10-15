@@ -48,6 +48,14 @@ public class Board {
         return currentResource;
     }
 
+    public void setRound(int round) {
+        this.round = round;
+    }
+
+    public void setScoresRecorder(int[] scoresRecorder) {
+        this.scoresRecorder = scoresRecorder;
+    }
+
     /**
      * Initialize the board, including create all roads, settlements, cities and knights
      */

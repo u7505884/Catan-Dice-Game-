@@ -298,13 +298,13 @@ public class Viewer extends Application {
 
     private void makeBasicBoard() {
         //set background
-        Image backgroundImage = new Image(Viewer.class.getResource(URI_BASE + "background.JPG").toString());
-        ImageView background = new ImageView(backgroundImage);
-        background.setFitWidth(250*Math.sqrt(3)+2*BOARD_LOCATION_WIDTH_ADAPTION);
-        background.setFitHeight(450+2*BOARD_LOCATION_HEIGHT_ADAPTION);
-        background.setLayoutX(BOARD_LOCATION_WIDTH-BOARD_LOCATION_WIDTH_ADAPTION);
-        background.setLayoutY(BOARD_LOCATION_HEIGHT-BOARD_LOCATION_HEIGHT_ADAPTION);
-        this.board.getChildren().add(background);
+        Image boardImage = new Image(Viewer.class.getResource(URI_BASE + "Board.JPG").toString());
+        ImageView boardView = new ImageView(boardImage);
+        boardView.setFitWidth(250*Math.sqrt(3)+2*BOARD_LOCATION_WIDTH_ADAPTION);
+        boardView.setFitHeight(450+2*BOARD_LOCATION_HEIGHT_ADAPTION);
+        boardView.setLayoutX(BOARD_LOCATION_WIDTH-BOARD_LOCATION_WIDTH_ADAPTION);
+        boardView.setLayoutY(BOARD_LOCATION_HEIGHT-BOARD_LOCATION_HEIGHT_ADAPTION);
+        this.board.getChildren().add(boardView);
         //set basic edge model
         hexagon hexagon1 = new hexagon(600+75*Math.sqrt(3),275,50*Math.sqrt(3)-1);
         hexagon hexagon2 = new hexagon(600+75*Math.sqrt(3),425,50*Math.sqrt(3)-1);

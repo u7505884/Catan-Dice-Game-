@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,6 +21,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -40,11 +43,17 @@ public class Game extends Application {
     private static final double BOARD_LOCATION_WIDTH_ADAPTION = 18; //fit the background manually by ourselves
     private static final double BOARD_LOCATION_HEIGHT_ADAPTION = BOARD_LOCATION_WIDTH_ADAPTION*450/(250*Math.sqrt(3));
     private static final boolean WHETHER_SHOW_BOUNDARY = false; //modify whether show the boundary manually
+
+    //catan logo
+    private static final double CATAN_LOCATION_WIDTH_ADAPTION = 250;
+    private static final double CATAN_LOCATION_HEIGHT_ADAPTION = 100;
+    private static final double XOfCatan = 0;
+    private static final double YOfCatan = 0;
     //recorder
-    private static final double HORIZONTAL_SPACE_ADAPTION = 18;
-    private static final double VERTICAL_SPACE_ADAPTION = 18;
-    private static final double XOfRecorder = 18;
-    private static final double YOfRecorder = 18;
+    private static final double HORIZONTAL_SPACE_ADAPTION = 59;
+    private static final double VERTICAL_SPACE_ADAPTION = 57;
+    private static final double XOfRecorder = 865;
+    private static final double YOfRecorder = 20;
 
     private final Group root = new Group();// basic group
     private final Group basicBoard = new Group();
@@ -279,13 +288,13 @@ public class Game extends Application {
      */
     private void makeBasicBoard() {
         //set background
-        Image backgroundImage = new Image(Viewer.class.getResource(URI_BASE + "background.JPG").toString());
-        ImageView background = new ImageView(backgroundImage);
-        background.setFitWidth(250*Math.sqrt(3)+2*BOARD_LOCATION_WIDTH_ADAPTION);
-        background.setFitHeight(450+2*BOARD_LOCATION_HEIGHT_ADAPTION);
-        background.setLayoutX(BOARD_LOCATION_WIDTH-BOARD_LOCATION_WIDTH_ADAPTION);
-        background.setLayoutY(BOARD_LOCATION_HEIGHT-BOARD_LOCATION_HEIGHT_ADAPTION);
-        this.basicBoard.getChildren().add(background);
+        Image boardImage = new Image(Viewer.class.getResource(URI_BASE + "Board.JPG").toString());
+        ImageView boardView = new ImageView(boardImage);
+        boardView.setFitWidth(250*Math.sqrt(3)+2*BOARD_LOCATION_WIDTH_ADAPTION);
+        boardView.setFitHeight(450+2*BOARD_LOCATION_HEIGHT_ADAPTION);
+        boardView.setLayoutX(BOARD_LOCATION_WIDTH-BOARD_LOCATION_WIDTH_ADAPTION);
+        boardView.setLayoutY(BOARD_LOCATION_HEIGHT-BOARD_LOCATION_HEIGHT_ADAPTION);
+        this.basicBoard.getChildren().add(boardView);
         //set basic edge model
         hexagon hexagon1 = new hexagon(600+75*Math.sqrt(3),275,50*Math.sqrt(3)-1);
         hexagon hexagon2 = new hexagon(600+75*Math.sqrt(3),425,50*Math.sqrt(3)-1);
@@ -446,38 +455,46 @@ public class Game extends Application {
      */
     private void makeRecorder(){
         //create labels to display score in each round
+        //test
+        board.setRound(14);
+        board.setScoresRecorder(new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15});
         Label score;
         for(int i = 0; i < 15; i++){
             //set content of label
-            if(i<board.getRound()){
+            if(i<=board.getRound()){
                 score = new Label(String.valueOf(board.getScoresRecorder()[i]));
             }else {
                 score = new Label("");
             }
             //set position of label
             if(i<5){
-                score.setLayoutX(XOfRecorder + i * HORIZONTAL_SPACE_ADAPTION);
-                score.setLayoutY(YOfRecorder);
+                score.setLayoutX(i * HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutY(0);
             }else if (i == 5){
-                score.setLayoutX(XOfRecorder + 4 * HORIZONTAL_SPACE_ADAPTION);
-                score.setLayoutY(YOfRecorder + VERTICAL_SPACE_ADAPTION);
+                score.setLayoutX(4 * HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutY(VERTICAL_SPACE_ADAPTION);
             } else if (i>5 && i<= 10){
-                score.setLayoutX(XOfRecorder + (10-i) * HORIZONTAL_SPACE_ADAPTION);
-                score.setLayoutY(YOfRecorder + 2 * VERTICAL_SPACE_ADAPTION);
+                score.setLayoutX((10-i) * HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutY(2 * VERTICAL_SPACE_ADAPTION);
             } else if (i == 11){
-                score.setLayoutX(XOfRecorder);
-                score.setLayoutY(YOfRecorder + 3 * VERTICAL_SPACE_ADAPTION);
+                score.setLayoutX(0);
+                score.setLayoutY(3 * VERTICAL_SPACE_ADAPTION);
             } else {
-                score.setLayoutX(XOfRecorder + (12-i) * HORIZONTAL_SPACE_ADAPTION);
-                score.setLayoutY(YOfRecorder + 4 * VERTICAL_SPACE_ADAPTION);
+                score.setLayoutX((i-12) * HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutY(4 * VERTICAL_SPACE_ADAPTION);
             }
+            score.setFont(Font.font("TimesRomes", FontWeight.BOLD, 22));
+            score.setAlignment(Pos.CENTER);
             recorder.getChildren().add(score);
         }
         //create a label to display current final score in each round
         int currentFinalScore = board.calculateCurrentFinalScore();
+        System.out.println(currentFinalScore);
         Label finalScore = new Label(String.valueOf(currentFinalScore));
-        finalScore.setLayoutX(XOfRecorder + 3.75 * HORIZONTAL_SPACE_ADAPTION);
-        finalScore.setLayoutY(YOfRecorder + 4 * VERTICAL_SPACE_ADAPTION);
+        finalScore.setLayoutX(3.65 * HORIZONTAL_SPACE_ADAPTION);
+        finalScore.setLayoutY(4 * VERTICAL_SPACE_ADAPTION);
+        finalScore.setFont(Font.font("TimesRomes", FontWeight.BOLD, 22));
+        finalScore.setAlignment(Pos.CENTER);
         recorder.getChildren().add(finalScore);
     }
     /**
@@ -506,6 +523,32 @@ public class Game extends Application {
     }
 
     /**
+     * set background
+     */
+    void initializeBackground(){
+        Image backgroundImage = new Image(Viewer.class.getResource(URI_BASE + "Background.JPG").toString());
+        ImageView backgroundView = new ImageView(backgroundImage);
+        backgroundView.setFitWidth(1200);
+        backgroundView.setFitHeight(700);
+        backgroundView.setLayoutX(0);
+        backgroundView.setLayoutY(0);
+        this.root.getChildren().add(backgroundView);
+    }
+
+    /**
+     * set catan logo
+     */
+    void initializeCatan(){
+        Image catanImage = new Image(Viewer.class.getResource(URI_BASE + "Catan.PNG").toString());
+        ImageView catanView = new ImageView(catanImage);
+        catanView.setFitWidth(CATAN_LOCATION_WIDTH_ADAPTION);
+        catanView.setFitHeight(CATAN_LOCATION_HEIGHT_ADAPTION);
+        catanView.setLayoutX(XOfCatan);
+        catanView.setLayoutY(YOfCatan);
+        this.root.getChildren().add(catanView);
+    }
+
+    /**
      * add Group board, roads, settlements, cities, knights to Group root and show the initialized board on stage
      */
     void initializeBoard() {
@@ -525,6 +568,15 @@ public class Game extends Application {
      * add Group recorder to Group root and show the initialized board on stage
      */
     void initializeRecorder() {
+        Image recorderImage = new Image(Viewer.class.getResource(URI_BASE + "Recorder.PNG").toString());
+        ImageView recorderView = new ImageView(recorderImage);
+        recorderView.setFitWidth(300);
+        recorderView.setFitHeight(300);
+        recorderView.setLayoutX(XOfRecorder+8);
+        recorderView.setLayoutY(YOfRecorder+5);
+        this.root.getChildren().add(recorderView);
+        recorder.setLayoutX(XOfRecorder+30);
+        recorder.setLayoutY(YOfRecorder+30);
         root.getChildren().add(recorder);
         this.makeRecorder();
     }
@@ -542,6 +594,8 @@ public class Game extends Application {
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         //add different part of the game into stage
+        initializeBackground();
+        initializeCatan();
         initializeBoard();
         initializeRecorder();
         //initializeControls();
