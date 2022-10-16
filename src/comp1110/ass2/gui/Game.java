@@ -677,29 +677,29 @@ public class Game extends Application {
         private double y;
         private double radius;
         private Resource currentResource = Resource.Brick;
-        private Group resource = new Group();
+        protected Group resource = new Group();
 
         public resource(double x, double y, double radius, Resource currentResource){
             this.x = x;
             this.y = y;
             this.radius = radius;
-            this.resource = resource;
+            this.currentResource = currentResource;
             this.setCenterX(x);
             this.setCenterY(y);
             this.setRadius(radius);
             this.setFill(Color.WHITE);
             this.setStroke(Color.BLACK);
             //set image
-//            Image resourceImage = new Image(Viewer.class.getResource(URI_BASE + currentResource.getName() + ".png").toString());
-//            ImageView resourceView = new ImageView(resourceImage);
-//            resourceView.setFitWidth(3*radius);
-//            resourceView.setFitHeight(2.4*radius);
-//            resourceView.setLayoutX(x-1.3*radius);
-//            resourceView.setLayoutY(y-radius);
-//            this.resource.getChildren().addAll(this, resourceView);
-            this.resource.getChildren().add(this);
+            Image resourceImage = new Image(Viewer.class.getResource(URI_BASE + currentResource.getName() + ".png").toString());
+            ImageView resourceView = new ImageView(resourceImage);
+            resourceView.setFitWidth(3*radius);
+            resourceView.setFitHeight(2.4*radius);
+            resourceView.setLayoutX(x-1.3*radius);
+            resourceView.setLayoutY(y-radius);
+            this.resource.getChildren().addAll(this, resourceView);
+//            this.resource.getChildren().add(this);
         }
-        private void showText(){
+        protected void showText(){
             Text text = new Text(x, y+2.3*radius, String.valueOf(board.getCurrentResource()[this.currentResource.getIndex()-1]));
             text.setFont(new Font(15));
             text.setStyle("-fx-font-weight:bold");
@@ -719,8 +719,8 @@ public class Game extends Application {
         public DraggableResource(double x, double y, double radius, Resource currentResource, Game game) {
             super(x, y, radius, currentResource);
             this.game = game;
-            this.setLayoutX(x);
-            this.setLayoutY(y);
+            this.setCenterX(x);
+            this.setCenterY(y);
 
             this.setOnMousePressed(event -> {
                 this.mouseX = event.getSceneX();
@@ -728,8 +728,8 @@ public class Game extends Application {
                 this.toFront();
             });
             this.setOnMouseDragged(event->{
-                this.setCenterX(mouseX);
-                this.setCenterY(mouseY);
+                this.setLayoutX(mouseX);
+                this.setLayoutY(mouseY);
                 this.mouseX = event.getSceneX();
                 this.mouseY = event.getSceneY();
                 highlightNearestCircle(mouseX,mouseY);
@@ -746,14 +746,24 @@ public class Game extends Application {
         public Circle findNearestCircle(double x, double y){
             double minDistance = Integer.MAX_VALUE;
             Circle currentCircle = null;
+//            System.out.println("------------------------start-----------------");
             for(Circle circle:circles){
                 double currentDistance = Math.sqrt(Math.pow((circle.getCenterX()-x),2)+Math.pow((circle.getCenterY()-y),2));
                 if(currentDistance<minDistance){
                     minDistance = currentDistance;
                     currentCircle = circle;
+//                    System.out.println("--------------circle-------------");
+//                    System.out.println("For layout, " + circle.getLayoutX()+", " +circle.getLayoutY());
+//                    System.out.println("For center, " + circle.getCenterX()+", " +circle.getCenterY());
+//                    System.out.println("-----------------------------");
+//                    System.out.println("---------------currentCircle------------");
+//                    System.out.println("For layout, " + currentCircle.getLayoutX()+", " +currentCircle.getLayoutY());
+//                    System.out.println("For center, " + currentCircle.getCenterX()+", " +currentCircle.getCenterY());
+//                    System.out.println("-----------------------------");
                 }
+
             }
-            System.out.println(currentCircle);
+
             return currentCircle;
         };
 
@@ -783,7 +793,7 @@ public class Game extends Application {
         resourcesMap.put(4,timber);
         resourcesMap.put(5,brick);
         resourcesMap.put(6,gold);
-        for(resource resource: resourcesMap.values()){
+        for(DraggableResource resource: resourcesMap.values()){
             resource.showText();
             this.resources.getChildren().add(resource.resource);
         }
@@ -805,6 +815,13 @@ public class Game extends Application {
         circles.add(circle4);
         circles.add(circle5);
         circles.add(circle6);
+//        for(Circle resource:circles){
+//            System.out.println("--------------resource-------------");
+//            System.out.println("For layout, " + resource.getLayoutX()+", " +resource.getLayoutY());
+//            System.out.println("For center, " + resource.getCenterX()+", " +resource.getCenterY());
+//            System.out.println("-----------------------------");
+//        }
+
         Rectangle rectangle = new Rectangle(XOfDiceRoller, YOfDiceRoller, DICE_ROLLER_WIDTH, DICE_ROLLER_HEIGHT);
         rectangle.setFill(null);
         rectangle.setStroke(Color.BLACK);
