@@ -3,19 +3,23 @@ package comp1110.ass2;
 import java.util.HashMap;
 
 public enum Resource {
-    Ore(1),
-    Grain(2),
-    Wool(3),
-    Timber(4),
-    Brick(5),
-    Gold(6);
+    Ore("Ore", 1),
+    Grain("Grain", 2),
+    Wool("Wool", 3),
+    Timber("Timber", 4),
+    Brick("Brick", 5),
+    Gold("Gold", 6);
 
+    private String name;
     private int index;
 
-    Resource(int index){
+    Resource(String name, int index){
+        this.name = name;
         this.index = index;
     }
-
+    public String getName() {
+        return name;
+    }
     public int getIndex(){
         return this.index;
     }

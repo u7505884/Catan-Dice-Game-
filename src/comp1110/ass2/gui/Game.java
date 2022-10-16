@@ -1,7 +1,7 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.Board;
-import comp1110.ass2.CatanDice;
+import comp1110.ass2.Resource;
 import javafx.animation.FadeTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -27,11 +28,15 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static javafx.scene.text.TextAlignment.CENTER;
+
 public class Game extends Application {
     private static final Board board = new Board();
+    private static final Game game = new Game();
 
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 700;
@@ -50,10 +55,21 @@ public class Game extends Application {
     private static final double XOfCatan = 0;
     private static final double YOfCatan = 0;
     //recorder
-    private static final double HORIZONTAL_SPACE_ADAPTION = 59;
-    private static final double VERTICAL_SPACE_ADAPTION = 57;
+    private static final double RECORDER_HORIZONTAL_SPACE_ADAPTION = 59;
+    private static final double RECORDER_VERTICAL_SPACE_ADAPTION = 57;
     private static final double XOfRecorder = 865;
     private static final double YOfRecorder = 20;
+    //resource
+    private static final double RESOURCE_HORIZONTAL_SPACE_ADAPTION = 30;
+    private static final double XOfResource = 180;
+    private static final double YOfResource = 200;
+    private static final double RESOURCE_RADIUS = 25;
+    //dice roller
+    private static final double XOfDiceRoller = 30;
+    private static final double YOfDiceRoller = 300;
+    private static final double DICE_ROLLER_WIDTH = 300;
+    private static final double DICE_ROLLER_HEIGHT = 180;
+    private static final double DICE_ROLLER_RADIUS = 25;
 
     private final Group root = new Group();// basic group
     private final Group basicBoard = new Group();
@@ -63,6 +79,8 @@ public class Game extends Application {
     private final Group knights = new Group();
     private final Group controls = new Group();
     private final Group recorder = new Group();
+    private final Group resources = new Group();
+    private final Group diceRoller = new Group();
 
     private TextField playerTextField;
     private TextField boardTextField;
@@ -72,6 +90,8 @@ public class Game extends Application {
     Map<Integer, settlement> settlementsMap = new HashMap<>();
     Map<Integer, city> citiesMap = new HashMap<>();
     Map<Integer, knight> knightsMap = new HashMap<>();
+    Map<Integer, DraggableResource> resourcesMap = new HashMap<>();
+    ArrayList<Circle> circles = new ArrayList<>();
 
     /**
      * use for create elements of boundary
@@ -120,6 +140,7 @@ public class Game extends Application {
             this.setStroke(Color.BLACK);
             Text text = new Text(x-3, y+3, "1");
             text.setFont(new Font(10));
+            text.setTextAlignment(CENTER);
             road.getChildren().addAll(this,text);
 
         }
@@ -154,6 +175,7 @@ public class Game extends Application {
             this.setStroke(Color.BLACK);
             Text text = new Text(x-5, y+5, String.valueOf(score));
             text.setFont(new Font(10));
+            text.setTextAlignment(CENTER);
             settlement.getChildren().addAll(this,text);
         }
         public void setAllPoints(){
@@ -190,6 +212,7 @@ public class Game extends Application {
             this.setStroke(Color.BLACK);
             Text text = new Text(x-5, y+5, String.valueOf(score));
             text.setFont(new Font(10));
+            text.setTextAlignment(CENTER);
             city.getChildren().addAll(this,text);
         }
         public void setAllPoints(){
@@ -238,6 +261,7 @@ public class Game extends Application {
             this.circle.setStroke(Color.BLACK);
             Text text = new Text(x-3, y+5, String.valueOf(score));
             text.setFont(new Font(10));
+            text.setTextAlignment(CENTER);
             knight.getChildren().addAll(this,circle,text);
         }
         public void highlightJ(){
@@ -302,7 +326,6 @@ public class Game extends Application {
         hexagon hexagon4 = new hexagon(600-75*Math.sqrt(3),425,50*Math.sqrt(3)-1);
         hexagon hexagon5 = new hexagon(600-75*Math.sqrt(3),275,50*Math.sqrt(3)-1);
         hexagon hexagon6 = new hexagon(600,200,50*Math.sqrt(3)-1);
-
         hexagonsMap.put(1,hexagon1);
         hexagonsMap.put(2,hexagon2);
         hexagonsMap.put(3,hexagon3);
@@ -455,9 +478,6 @@ public class Game extends Application {
      */
     private void makeRecorder(){
         //create labels to display score in each round
-        //test
-        board.setRound(14);
-        board.setScoresRecorder(new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15});
         Label score;
         for(int i = 0; i < 15; i++){
             //set content of label
@@ -468,20 +488,20 @@ public class Game extends Application {
             }
             //set position of label
             if(i<5){
-                score.setLayoutX(i * HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutX(i * RECORDER_HORIZONTAL_SPACE_ADAPTION);
                 score.setLayoutY(0);
             }else if (i == 5){
-                score.setLayoutX(4 * HORIZONTAL_SPACE_ADAPTION);
-                score.setLayoutY(VERTICAL_SPACE_ADAPTION);
+                score.setLayoutX(4 * RECORDER_HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutY(RECORDER_VERTICAL_SPACE_ADAPTION);
             } else if (i>5 && i<= 10){
-                score.setLayoutX((10-i) * HORIZONTAL_SPACE_ADAPTION);
-                score.setLayoutY(2 * VERTICAL_SPACE_ADAPTION);
+                score.setLayoutX((10-i) * RECORDER_HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutY(2 * RECORDER_VERTICAL_SPACE_ADAPTION);
             } else if (i == 11){
                 score.setLayoutX(0);
-                score.setLayoutY(3 * VERTICAL_SPACE_ADAPTION);
+                score.setLayoutY(3 * RECORDER_VERTICAL_SPACE_ADAPTION);
             } else {
-                score.setLayoutX((i-12) * HORIZONTAL_SPACE_ADAPTION);
-                score.setLayoutY(4 * VERTICAL_SPACE_ADAPTION);
+                score.setLayoutX((i-12) * RECORDER_HORIZONTAL_SPACE_ADAPTION);
+                score.setLayoutY(4 * RECORDER_VERTICAL_SPACE_ADAPTION);
             }
             score.setFont(Font.font("TimesRomes", FontWeight.BOLD, 22));
             score.setAlignment(Pos.CENTER);
@@ -491,8 +511,8 @@ public class Game extends Application {
         int currentFinalScore = board.calculateCurrentFinalScore();
         System.out.println(currentFinalScore);
         Label finalScore = new Label(String.valueOf(currentFinalScore));
-        finalScore.setLayoutX(3.65 * HORIZONTAL_SPACE_ADAPTION);
-        finalScore.setLayoutY(4 * VERTICAL_SPACE_ADAPTION);
+        finalScore.setLayoutX(3.65 * RECORDER_HORIZONTAL_SPACE_ADAPTION);
+        finalScore.setLayoutY(4 * RECORDER_VERTICAL_SPACE_ADAPTION);
         finalScore.setFont(Font.font("TimesRomes", FontWeight.BOLD, 22));
         finalScore.setAlignment(Pos.CENTER);
         recorder.getChildren().add(finalScore);
@@ -539,7 +559,7 @@ public class Game extends Application {
      * set catan logo
      */
     void initializeCatan(){
-        Image catanImage = new Image(Viewer.class.getResource(URI_BASE + "Catan.PNG").toString());
+        Image catanImage = new Image(Viewer.class.getResource(URI_BASE + "Catan.png").toString());
         ImageView catanView = new ImageView(catanImage);
         catanView.setFitWidth(CATAN_LOCATION_WIDTH_ADAPTION);
         catanView.setFitHeight(CATAN_LOCATION_HEIGHT_ADAPTION);
@@ -549,7 +569,7 @@ public class Game extends Application {
     }
 
     /**
-     * add Group board, roads, settlements, cities, knights to Group root and show the initialized board on stage
+     * set board: add Group board, roads, settlements, cities, knights to Group root and show the initialized board on stage
      */
     void initializeBoard() {
         root.getChildren().add(basicBoard);
@@ -565,10 +585,10 @@ public class Game extends Application {
     }
 
     /**
-     * add Group recorder to Group root and show the initialized board on stage
+     * set recorder: add Group recorder to Group root and show the initialized board on stage
      */
     void initializeRecorder() {
-        Image recorderImage = new Image(Viewer.class.getResource(URI_BASE + "Recorder.PNG").toString());
+        Image recorderImage = new Image(Viewer.class.getResource(URI_BASE + "Recorder.png").toString());
         ImageView recorderView = new ImageView(recorderImage);
         recorderView.setFitWidth(300);
         recorderView.setFitHeight(300);
@@ -579,6 +599,22 @@ public class Game extends Application {
         recorder.setLayoutY(YOfRecorder+30);
         root.getChildren().add(recorder);
         this.makeRecorder();
+    }
+
+    /**
+     * set resources: add Group resources to Group root
+     */
+    void initializeResources(){
+        root.getChildren().add(resources);
+        this.makeResources();
+    }
+
+    /**
+     * set dice roller: add Group diceRoller to Group root
+     */
+    void initializeDiceRoller(){
+        root.getChildren().add(diceRoller);
+        this.makeDiceRoller();
     }
     /**
      * add Group controls to Group root and show the initialized controls on stage
@@ -598,10 +634,243 @@ public class Game extends Application {
         initializeCatan();
         initializeBoard();
         initializeRecorder();
+        initializeResources();
+        initializeDiceRoller();
         //initializeControls();
 
         //show stage
         stage.setScene(scene);
         stage.show();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    class resource extends Circle {
+        private double x;
+        private double y;
+        private double radius;
+        private Resource currentResource = Resource.Brick;
+        private Group resource = new Group();
+
+        public resource(double x, double y, double radius, Resource currentResource){
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.resource = resource;
+            this.setCenterX(x);
+            this.setCenterY(y);
+            this.setRadius(radius);
+            this.setFill(Color.WHITE);
+            this.setStroke(Color.BLACK);
+            //set image
+//            Image resourceImage = new Image(Viewer.class.getResource(URI_BASE + currentResource.getName() + ".png").toString());
+//            ImageView resourceView = new ImageView(resourceImage);
+//            resourceView.setFitWidth(3*radius);
+//            resourceView.setFitHeight(2.4*radius);
+//            resourceView.setLayoutX(x-1.3*radius);
+//            resourceView.setLayoutY(y-radius);
+//            this.resource.getChildren().addAll(this, resourceView);
+            this.resource.getChildren().add(this);
+        }
+        private void showText(){
+            Text text = new Text(x, y+2.3*radius, String.valueOf(board.getCurrentResource()[this.currentResource.getIndex()-1]));
+            text.setFont(new Font(15));
+            text.setStyle("-fx-font-weight:bold");
+            text.setTextAlignment(CENTER);
+            resources.getChildren().add(text);
+        }
+        private double distance(double x, double y){
+            return Math.sqrt(Math.pow(x-this.x,2)+Math.pow(y-this.y,2));
+        }
+    }
+
+    class DraggableResource extends resource {
+        private Game game;
+        private double mouseX;
+        private double mouseY;
+        private Circle highlighted = null;
+        public DraggableResource(double x, double y, double radius, Resource currentResource, Game game) {
+            super(x, y, radius, currentResource);
+            this.game = game;
+            this.setLayoutX(x);
+            this.setLayoutY(y);
+
+            this.setOnMousePressed(event -> {
+                this.mouseX = event.getSceneX();
+                this.mouseY = event.getSceneY();
+                this.toFront();
+            });
+            this.setOnMouseDragged(event->{
+                this.setCenterX(mouseX);
+                this.setCenterY(mouseY);
+                this.mouseX = event.getSceneX();
+                this.mouseY = event.getSceneY();
+                highlightNearestCircle(mouseX,mouseY);
+            });
+            this.setOnMouseReleased(event->{
+                Circle snapCircle = findNearestCircle(mouseX,mouseY);
+                this.setCenterX(snapCircle.getCenterX());
+                this.setCenterY(snapCircle.getCenterY());
+                this.mouseX = event.getSceneX();
+                this.mouseY = event.getSceneY();
+            });
+        }
+
+        public Circle findNearestCircle(double x, double y){
+            double minDistance = Integer.MAX_VALUE;
+            Circle currentCircle = null;
+            for(Circle circle:circles){
+                double currentDistance = Math.sqrt(Math.pow((circle.getCenterX()-x),2)+Math.pow((circle.getCenterY()-y),2));
+                if(currentDistance<minDistance){
+                    minDistance = currentDistance;
+                    currentCircle = circle;
+                }
+            }
+            System.out.println(currentCircle);
+            return currentCircle;
+        };
+
+        public void highlightNearestCircle(double x, double y){
+            if(highlighted != null){
+                highlighted.setFill(Color.LIGHTGRAY);
+            }
+            highlighted = findNearestCircle(x,y);
+            highlighted.setFill(Color.GREEN);
+        }
+    }
+
+    /**
+     * Create 6 circle to display 6 types of resource
+     */
+    private void makeResources() {
+        //set basic edge model
+        DraggableResource ore = new DraggableResource(XOfResource - 5*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Ore, game);
+        DraggableResource grain = new DraggableResource(XOfResource - 3*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Grain, game);
+        DraggableResource wool = new DraggableResource(XOfResource - RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Wool, game);
+        DraggableResource timber = new DraggableResource(XOfResource + RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Timber, game);
+        DraggableResource brick = new DraggableResource(XOfResource + 3*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Brick, game);
+        DraggableResource gold = new DraggableResource(XOfResource + 5*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Gold, game);
+        resourcesMap.put(1,ore);
+        resourcesMap.put(2,grain);
+        resourcesMap.put(3,wool);
+        resourcesMap.put(4,timber);
+        resourcesMap.put(5,brick);
+        resourcesMap.put(6,gold);
+        for(resource resource: resourcesMap.values()){
+            resource.showText();
+            this.resources.getChildren().add(resource.resource);
+        }
+    }
+
+    /**
+     * Create dice roller
+     */
+    private void makeDiceRoller(){
+        Circle circle1 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/6,YOfDiceRoller+DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        Circle circle2 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/2,YOfDiceRoller+DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        Circle circle3 = new Circle(XOfDiceRoller+5*DICE_ROLLER_WIDTH/6,YOfDiceRoller+DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        Circle circle4 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/6,YOfDiceRoller+3*DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        Circle circle5 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/2,YOfDiceRoller+3*DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        Circle circle6 = new Circle(XOfDiceRoller+5*DICE_ROLLER_WIDTH/6,YOfDiceRoller+3*DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        circles.add(circle1);
+        circles.add(circle2);
+        circles.add(circle3);
+        circles.add(circle4);
+        circles.add(circle5);
+        circles.add(circle6);
+        Rectangle rectangle = new Rectangle(XOfDiceRoller, YOfDiceRoller, DICE_ROLLER_WIDTH, DICE_ROLLER_HEIGHT);
+        rectangle.setFill(null);
+        rectangle.setStroke(Color.BLACK);
+        Button button = new Button("Roll");
+        button.setLayoutX(XOfDiceRoller);
+        button.setLayoutY(YOfDiceRoller+DICE_ROLLER_HEIGHT);
+        button.setAlignment(Pos.CENTER);
+        button.setMinSize(DICE_ROLLER_WIDTH, 30);
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                //FIXME
+            }
+        });
+        diceRoller.getChildren().addAll(rectangle, circle1,circle2,circle3,circle4,circle5,circle6,button);
+    }
+
+
+
+
+
+
+
+//    class Triangle extends Polygon{
+//        private double x;
+//        private double y;
+//        private double side;
+//        public Triangle(double x, double y, double side){
+//            this.x = x;
+//            this.y = y;
+//            this.side = side;
+//            this.setLayoutY(y);
+//            this.setLayoutX(x);
+//            this.getPoints().addAll(
+//                    0.0, -this.side * Math.sqrt(3) / 4,
+//                    -this.side/2, this.side * Math.sqrt(3) / 4,
+//                    this.side/2, this.side * Math.sqrt(3) / 4
+//            );
+//
+//            this.setFill(Color.LIGHTGRAY);
+//        }
+//
+//    }
+//
+//    @Override
+//    public void start(Stage stage) throws Exception{
+//        stage.setTitle("Board");
+//        Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
+//        stage.setScene(scene);
+//
+//        for(int i = 0; i<5; i++){
+//            for(int j = 0; j < 3; j++){
+//                Triangle triangle = new Triangle(100+100*i, 86.6+173.2*j, 196);
+//                triangles.add(triangle);
+//                if(i%2 == 1){
+//                    triangle.setRotate(180);
+//                }
+//                root.getChildren().add(triangle);
+//            }
+//        }
+//
+//        DraggableTriangle draggableTriangle = new DraggableTriangle(300, 260,200, this);
+//        root.getChildren().add(draggableTriangle);
+//        stage.show();
+//    }
+//
+
+
 }
