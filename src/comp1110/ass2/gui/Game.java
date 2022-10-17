@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static javafx.scene.text.TextAlignment.CENTER;
+import static javafx.scene.text.TextAlignment.LEFT;
 
 public class Game extends Application {
     private static final Board board = new Board();
@@ -79,7 +80,8 @@ public class Game extends Application {
     private final Group knights = new Group();
     private final Group controls = new Group();
     private final Group recorder = new Group();
-    private final Group resources = new Group();
+    private final Group draggableResources = new Group();
+    private final HBox resourcesAndText = new HBox();
     private final Group diceRoller = new Group();
 
     private TextField playerTextField;
@@ -90,8 +92,9 @@ public class Game extends Application {
     Map<Integer, settlement> settlementsMap = new HashMap<>();
     Map<Integer, city> citiesMap = new HashMap<>();
     Map<Integer, knight> knightsMap = new HashMap<>();
-    Map<Integer, DraggableResource> resourcesMap = new HashMap<>();
     ArrayList<Circle> circles = new ArrayList<>();
+    ArrayList<Circle> currentCircles =  new ArrayList<>();
+    int[] resourcesNeedToBeRolled = new int[6];
 
     /**
      * use for create elements of boundary
@@ -308,6 +311,102 @@ public class Game extends Application {
     }
 
     /**
+     * use for create resource component, which represents resource we have currently
+     */
+    class resource extends Circle {
+        private double x;
+        private double y;
+        private double radius;
+        private Resource currentResource = Resource.Brick;
+        protected Group resource = new Group();
+
+        public resource(double x, double y, double radius, Resource currentResource){
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.currentResource = currentResource;
+            this.setCenterX(x);
+            this.setCenterY(y);
+            this.setRadius(radius);
+            this.setFill(Color.WHITE);
+            this.setStroke(Color.BLACK);
+            //set image
+//            Image resourceImage = new Image(Viewer.class.getResource(URI_BASE + currentResource.getName() + ".png").toString());
+//            ImageView resourceView = new ImageView(resourceImage);
+//            resourceView.setFitWidth(3*radius);
+//            resourceView.setFitHeight(2.4*radius);
+//            resourceView.setLayoutX(x-1.3*radius);
+//            resourceView.setLayoutY(y-radius);
+//            this.resource.getChildren().addAll(this, resourceView);
+            this.resource.getChildren().add(this);
+        }
+    }
+
+    /**
+     * use for create draggable resource component
+     */
+    class DraggableResource extends resource {
+        private Game game;
+        private double mouseX;
+        private double mouseY;
+        private Circle highlighted = null;
+        public DraggableResource(double x, double y, double radius, Resource currentResource, Game game) {
+            super(x, y, radius, currentResource);
+            this.game = game;
+            this.setCenterX(x);
+            this.setCenterY(y);
+
+            this.setOnMousePressed(event -> {
+                this.mouseX = event.getSceneX();
+                this.mouseY = event.getSceneY();
+                this.toFront();
+            });
+            this.setOnMouseDragged(event->{
+                this.setCenterX(mouseX);
+                this.setCenterY(mouseY);
+                this.mouseX = event.getSceneX();
+                this.mouseY = event.getSceneY();
+                highlightNearestCircle(mouseX,mouseY);
+            });
+            this.setOnMouseReleased(event->{
+                Circle snapCircle = findNearestCircle(mouseX,mouseY);
+                this.setCenterX(snapCircle.getCenterX());
+                this.setCenterY(snapCircle.getCenterY());
+                this.mouseX = event.getSceneX();
+                this.mouseY = event.getSceneY();
+                //record which circles we have occupied
+                currentCircles.add(snapCircle);
+                //record which resource has been placed in roller
+                resourcesNeedToBeRolled[super.currentResource.getIndex()-1]++;
+            });
+        }
+
+        public Circle findNearestCircle(double x, double y){
+
+            double minDistance = Integer.MAX_VALUE;
+            Circle currentCircle = null;
+            for(Circle circle:circles){
+                if(!currentCircles.contains(circle)){
+                    double currentDistance = Math.sqrt(Math.pow((circle.getCenterX()-x),2)+Math.pow((circle.getCenterY()-y),2));
+                    if(currentDistance<minDistance){
+                        minDistance = currentDistance;
+                        currentCircle = circle;
+                    }
+                }
+            }
+            return currentCircle;
+        };
+
+        public void highlightNearestCircle(double x, double y){
+            if(highlighted != null){
+                highlighted.setFill(Color.LIGHTGRAY);
+            }
+            highlighted = findNearestCircle(x,y);
+            highlighted.setFill(Color.GREEN);
+        }
+    }
+
+    /**
      * use for combined hexagon and startSign components into board group
      */
     private void makeBasicBoard() {
@@ -517,6 +616,114 @@ public class Game extends Application {
         finalScore.setAlignment(Pos.CENTER);
         recorder.getChildren().add(finalScore);
     }
+
+    /**
+     * Create 6 circle to display 6 types of resource and text under them to display their amount
+     */
+
+    private void makeResourcesAndText(){
+        // make circles
+        ArrayList<Circle> backCircles = new ArrayList<>();
+        Circle ore = new Circle(XOfResource - 5*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS);
+        Circle grain = new Circle(XOfResource - 3*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS);
+        Circle wool = new Circle(XOfResource - RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS);
+        Circle timber = new Circle(XOfResource + RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS);
+        Circle brick = new Circle(XOfResource + 3*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS);
+        Circle gold = new Circle(XOfResource + 5*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS);
+        backCircles.add(ore);
+        backCircles.add(grain);
+        backCircles.add(wool);
+        backCircles.add(timber);
+        backCircles.add(brick);
+        backCircles.add(gold);
+        int index = 0;
+        for(Circle backCircle:backCircles){
+            //make texts under circles, which indicate the amount of resource
+            Group resourceElement = new Group();
+            backCircle.setFill(Color.WHITE);
+            backCircle.setStroke(Color.BLACK);
+            Text textAmount = new Text(backCircle.getCenterX(), backCircle.getCenterY()+2.3*backCircle.getRadius(), String.valueOf(board.getCurrentResource()[index]));
+            textAmount.setFont(new Font(15));
+            textAmount.setStyle("-fx-font-weight:bold");
+            textAmount.setTextAlignment(CENTER);
+            //make texts "EMPTY" in circles
+            Text textNone = new Text(backCircle.getCenterX()-0.8*backCircle.getRadius(), backCircle.getCenterY(), "EMPTY");
+            textNone.setFont(new Font(12));
+            textNone.setTextAlignment(CENTER);
+            resourceElement.getChildren().addAll(backCircle,textNone,textAmount);
+            resourcesAndText.getChildren().add(resourceElement);
+            index++;
+        }
+        resourcesAndText.setLayoutX(XOfResource- 5.85*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
+        resourcesAndText.setLayoutY(YOfResource-RESOURCE_RADIUS);
+        resourcesAndText.setSpacing(0.3*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
+    }
+
+    /**
+     * create draggable component based on their required amount
+     */
+    private void makeDraggableResources() {
+        //make components based on their amount
+        for(int i =0; i < 6; i++){
+            int amount = board.getCurrentResource()[i];
+            while(amount>0){
+                DraggableResource draggableResource;
+                switch (i){
+                    case(0)-> draggableResource = new DraggableResource(XOfResource - 5*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Ore, game);
+                    case(1)-> draggableResource = new DraggableResource(XOfResource - 3*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Grain, game);
+                    case(2)-> draggableResource = new DraggableResource(XOfResource - RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Wool, game);
+                    case(3)-> draggableResource = new DraggableResource(XOfResource + RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Timber, game);
+                    case(4)-> draggableResource = new DraggableResource(XOfResource + 3*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Brick, game);
+                    case(5)-> draggableResource = new DraggableResource(XOfResource + 5*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Gold, game);
+                    default -> draggableResource = null;
+                }
+                this.draggableResources.getChildren().add(draggableResource.resource);
+                amount--;
+            }
+        }
+    }
+
+    /**
+     * Create dice roller
+     */
+    private void makeDiceRoller(){
+        Circle circle1 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/6,YOfDiceRoller+DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        Circle circle2 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/2,YOfDiceRoller+DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        Circle circle3 = new Circle(XOfDiceRoller+5*DICE_ROLLER_WIDTH/6,YOfDiceRoller+DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        Circle circle4 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/6,YOfDiceRoller+3*DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        Circle circle5 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/2,YOfDiceRoller+3*DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        Circle circle6 = new Circle(XOfDiceRoller+5*DICE_ROLLER_WIDTH/6,YOfDiceRoller+3*DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
+        circles.add(circle1);
+        circles.add(circle2);
+        circles.add(circle3);
+        circles.add(circle4);
+        circles.add(circle5);
+        circles.add(circle6);
+
+        Rectangle rectangle = new Rectangle(XOfDiceRoller, YOfDiceRoller, DICE_ROLLER_WIDTH, DICE_ROLLER_HEIGHT);
+        rectangle.setFill(null);
+        rectangle.setStroke(Color.BLACK);
+        Button button = new Button("Roll");
+        button.setLayoutX(XOfDiceRoller);
+        button.setLayoutY(YOfDiceRoller+DICE_ROLLER_HEIGHT);
+        button.setAlignment(Pos.CENTER);
+        button.setMinSize(DICE_ROLLER_WIDTH, 30);
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                board.roll(resourcesNeedToBeRolled);
+                root.getChildren().clear();
+                initializeBackground();
+                initializeCatan();
+                initializeBoard();
+                initializeRecorder();
+                initializeDiceRoller();
+                initializeResourcesAndText();
+                initializeDraggableResources();
+            }
+        });
+        diceRoller.getChildren().addAll(rectangle, circle1,circle2,circle3,circle4,circle5,circle6,button);
+    }
     /**
      * highlight the selected component in Group roads, settlements, cities, knights
      *
@@ -602,11 +809,19 @@ public class Game extends Application {
     }
 
     /**
-     * set resources: add Group resources to Group root
+     * set draggable resources: add Group draggableResources to Group root
      */
-    void initializeResources(){
-        root.getChildren().add(resources);
-        this.makeResources();
+    void initializeDraggableResources(){
+        root.getChildren().add(draggableResources);
+        this.makeDraggableResources();
+    }
+
+    /**
+     * set resources and texts: add Group resourcesAndText to Group root
+     */
+    void initializeResourcesAndText(){
+        root.getChildren().add(resourcesAndText);
+        this.makeResourcesAndText();
     }
 
     /**
@@ -623,8 +838,13 @@ public class Game extends Application {
         root.getChildren().add(controls);
         this.makeControls();
     }
+
     @Override
     public void start(Stage stage) throws Exception {
+        //test
+        board.setRound(7);
+        board.setScoresRecorder(new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15});
+        board.setCurrentResource(new int[]{1,2,3,4,5,6});
         //set basic configuration of stage
         stage.setTitle("Game");
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -634,260 +854,14 @@ public class Game extends Application {
         initializeCatan();
         initializeBoard();
         initializeRecorder();
-        initializeResources();
         initializeDiceRoller();
+        initializeResourcesAndText();
+        initializeDraggableResources();
+
         //initializeControls();
 
         //show stage
         stage.setScene(scene);
         stage.show();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    class resource extends Circle {
-        private double x;
-        private double y;
-        private double radius;
-        private Resource currentResource = Resource.Brick;
-        protected Group resource = new Group();
-
-        public resource(double x, double y, double radius, Resource currentResource){
-            this.x = x;
-            this.y = y;
-            this.radius = radius;
-            this.currentResource = currentResource;
-            this.setCenterX(x);
-            this.setCenterY(y);
-            this.setRadius(radius);
-            this.setFill(Color.WHITE);
-            this.setStroke(Color.BLACK);
-            //set image
-            Image resourceImage = new Image(Viewer.class.getResource(URI_BASE + currentResource.getName() + ".png").toString());
-            ImageView resourceView = new ImageView(resourceImage);
-            resourceView.setFitWidth(3*radius);
-            resourceView.setFitHeight(2.4*radius);
-            resourceView.setLayoutX(x-1.3*radius);
-            resourceView.setLayoutY(y-radius);
-            this.resource.getChildren().addAll(this, resourceView);
-//            this.resource.getChildren().add(this);
-        }
-        protected void showText(){
-            Text text = new Text(x, y+2.3*radius, String.valueOf(board.getCurrentResource()[this.currentResource.getIndex()-1]));
-            text.setFont(new Font(15));
-            text.setStyle("-fx-font-weight:bold");
-            text.setTextAlignment(CENTER);
-            resources.getChildren().add(text);
-        }
-        private double distance(double x, double y){
-            return Math.sqrt(Math.pow(x-this.x,2)+Math.pow(y-this.y,2));
-        }
-    }
-
-    class DraggableResource extends resource {
-        private Game game;
-        private double mouseX;
-        private double mouseY;
-        private Circle highlighted = null;
-        public DraggableResource(double x, double y, double radius, Resource currentResource, Game game) {
-            super(x, y, radius, currentResource);
-            this.game = game;
-            this.setCenterX(x);
-            this.setCenterY(y);
-
-            this.setOnMousePressed(event -> {
-                this.mouseX = event.getSceneX();
-                this.mouseY = event.getSceneY();
-                this.toFront();
-            });
-            this.setOnMouseDragged(event->{
-                this.setLayoutX(mouseX);
-                this.setLayoutY(mouseY);
-                this.mouseX = event.getSceneX();
-                this.mouseY = event.getSceneY();
-                highlightNearestCircle(mouseX,mouseY);
-            });
-            this.setOnMouseReleased(event->{
-                Circle snapCircle = findNearestCircle(mouseX,mouseY);
-                this.setCenterX(snapCircle.getCenterX());
-                this.setCenterY(snapCircle.getCenterY());
-                this.mouseX = event.getSceneX();
-                this.mouseY = event.getSceneY();
-            });
-        }
-
-        public Circle findNearestCircle(double x, double y){
-            double minDistance = Integer.MAX_VALUE;
-            Circle currentCircle = null;
-//            System.out.println("------------------------start-----------------");
-            for(Circle circle:circles){
-                double currentDistance = Math.sqrt(Math.pow((circle.getCenterX()-x),2)+Math.pow((circle.getCenterY()-y),2));
-                if(currentDistance<minDistance){
-                    minDistance = currentDistance;
-                    currentCircle = circle;
-//                    System.out.println("--------------circle-------------");
-//                    System.out.println("For layout, " + circle.getLayoutX()+", " +circle.getLayoutY());
-//                    System.out.println("For center, " + circle.getCenterX()+", " +circle.getCenterY());
-//                    System.out.println("-----------------------------");
-//                    System.out.println("---------------currentCircle------------");
-//                    System.out.println("For layout, " + currentCircle.getLayoutX()+", " +currentCircle.getLayoutY());
-//                    System.out.println("For center, " + currentCircle.getCenterX()+", " +currentCircle.getCenterY());
-//                    System.out.println("-----------------------------");
-                }
-
-            }
-
-            return currentCircle;
-        };
-
-        public void highlightNearestCircle(double x, double y){
-            if(highlighted != null){
-                highlighted.setFill(Color.LIGHTGRAY);
-            }
-            highlighted = findNearestCircle(x,y);
-            highlighted.setFill(Color.GREEN);
-        }
-    }
-
-    /**
-     * Create 6 circle to display 6 types of resource
-     */
-    private void makeResources() {
-        //set basic edge model
-        DraggableResource ore = new DraggableResource(XOfResource - 5*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Ore, game);
-        DraggableResource grain = new DraggableResource(XOfResource - 3*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Grain, game);
-        DraggableResource wool = new DraggableResource(XOfResource - RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Wool, game);
-        DraggableResource timber = new DraggableResource(XOfResource + RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Timber, game);
-        DraggableResource brick = new DraggableResource(XOfResource + 3*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Brick, game);
-        DraggableResource gold = new DraggableResource(XOfResource + 5*RESOURCE_HORIZONTAL_SPACE_ADAPTION, YOfResource, RESOURCE_RADIUS, Resource.Gold, game);
-        resourcesMap.put(1,ore);
-        resourcesMap.put(2,grain);
-        resourcesMap.put(3,wool);
-        resourcesMap.put(4,timber);
-        resourcesMap.put(5,brick);
-        resourcesMap.put(6,gold);
-        for(DraggableResource resource: resourcesMap.values()){
-            resource.showText();
-            this.resources.getChildren().add(resource.resource);
-        }
-    }
-
-    /**
-     * Create dice roller
-     */
-    private void makeDiceRoller(){
-        Circle circle1 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/6,YOfDiceRoller+DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
-        Circle circle2 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/2,YOfDiceRoller+DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
-        Circle circle3 = new Circle(XOfDiceRoller+5*DICE_ROLLER_WIDTH/6,YOfDiceRoller+DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
-        Circle circle4 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/6,YOfDiceRoller+3*DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
-        Circle circle5 = new Circle(XOfDiceRoller+DICE_ROLLER_WIDTH/2,YOfDiceRoller+3*DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
-        Circle circle6 = new Circle(XOfDiceRoller+5*DICE_ROLLER_WIDTH/6,YOfDiceRoller+3*DICE_ROLLER_HEIGHT/4, DICE_ROLLER_RADIUS, Color.LIGHTGRAY);
-        circles.add(circle1);
-        circles.add(circle2);
-        circles.add(circle3);
-        circles.add(circle4);
-        circles.add(circle5);
-        circles.add(circle6);
-//        for(Circle resource:circles){
-//            System.out.println("--------------resource-------------");
-//            System.out.println("For layout, " + resource.getLayoutX()+", " +resource.getLayoutY());
-//            System.out.println("For center, " + resource.getCenterX()+", " +resource.getCenterY());
-//            System.out.println("-----------------------------");
-//        }
-
-        Rectangle rectangle = new Rectangle(XOfDiceRoller, YOfDiceRoller, DICE_ROLLER_WIDTH, DICE_ROLLER_HEIGHT);
-        rectangle.setFill(null);
-        rectangle.setStroke(Color.BLACK);
-        Button button = new Button("Roll");
-        button.setLayoutX(XOfDiceRoller);
-        button.setLayoutY(YOfDiceRoller+DICE_ROLLER_HEIGHT);
-        button.setAlignment(Pos.CENTER);
-        button.setMinSize(DICE_ROLLER_WIDTH, 30);
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                //FIXME
-            }
-        });
-        diceRoller.getChildren().addAll(rectangle, circle1,circle2,circle3,circle4,circle5,circle6,button);
-    }
-
-
-
-
-
-
-
-//    class Triangle extends Polygon{
-//        private double x;
-//        private double y;
-//        private double side;
-//        public Triangle(double x, double y, double side){
-//            this.x = x;
-//            this.y = y;
-//            this.side = side;
-//            this.setLayoutY(y);
-//            this.setLayoutX(x);
-//            this.getPoints().addAll(
-//                    0.0, -this.side * Math.sqrt(3) / 4,
-//                    -this.side/2, this.side * Math.sqrt(3) / 4,
-//                    this.side/2, this.side * Math.sqrt(3) / 4
-//            );
-//
-//            this.setFill(Color.LIGHTGRAY);
-//        }
-//
-//    }
-//
-//    @Override
-//    public void start(Stage stage) throws Exception{
-//        stage.setTitle("Board");
-//        Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
-//        stage.setScene(scene);
-//
-//        for(int i = 0; i<5; i++){
-//            for(int j = 0; j < 3; j++){
-//                Triangle triangle = new Triangle(100+100*i, 86.6+173.2*j, 196);
-//                triangles.add(triangle);
-//                if(i%2 == 1){
-//                    triangle.setRotate(180);
-//                }
-//                root.getChildren().add(triangle);
-//            }
-//        }
-//
-//        DraggableTriangle draggableTriangle = new DraggableTriangle(300, 260,200, this);
-//        root.getChildren().add(draggableTriangle);
-//        stage.show();
-//    }
-//
-
-
 }

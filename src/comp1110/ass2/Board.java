@@ -1,5 +1,6 @@
 package comp1110.ass2;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Board {
@@ -11,7 +12,6 @@ public class Board {
     private int round = 0;//indicate which turn we are in
     private int[] scoresRecorder = new int[15];//record scores we have gotten or lost in each previous round
     protected int[] currentResource = new int[6];//record current resource we have
-
     private final static Dice dice = new Dice();
     /**
      * Constructor
@@ -54,6 +54,10 @@ public class Board {
 
     public void setScoresRecorder(int[] scoresRecorder) {
         this.scoresRecorder = scoresRecorder;
+    }
+
+    public void setCurrentResource(int[] currentResource) {
+        this.currentResource = currentResource;
     }
 
     /**
@@ -128,6 +132,20 @@ public class Board {
         knights.put(4,J4);
         knights.put(5,J5);
         knights.put(6,J6);
+    }
+
+    /**
+     * roll dice to replace target dice(s)
+     *
+     * @param dicesWeWantToRoll: an array stands for the dice(s) we want to re-roll.
+     *                         E.g.we want to re-roll two ore, then it should be {2,0,0,0,0,0}
+     */
+    public void roll(int[] dicesWeWantToRoll){
+        int sum = Arrays.stream(dicesWeWantToRoll).sum();
+        int[] newRes = dice.rollDice(sum);
+        for(int i = 0; i < 6; i++){
+            currentResource[i] += newRes[i];
+        }
     }
 
     /**
