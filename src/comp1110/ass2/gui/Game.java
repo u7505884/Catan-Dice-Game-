@@ -1,7 +1,6 @@
 package comp1110.ass2.gui;
 
-import comp1110.ass2.Board;
-import comp1110.ass2.Resource;
+import comp1110.ass2.*;
 import javafx.animation.FadeTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -132,6 +131,9 @@ public class Game extends Application {
         private double x;
         private double y;
         private double rotation;
+
+        private Road roadObject;
+
         public road(double x, double y, double rotation){
             this.x = x;
             this.y = y;
@@ -145,7 +147,21 @@ public class Game extends Application {
             text.setFont(new Font(10));
             text.setTextAlignment(CENTER);
             road.getChildren().addAll(this,text);
-
+        }
+        public road(double x, double y, double rotation, Road roadObject){
+            this.x = x;
+            this.y = y;
+            this.rotation = rotation;
+            this.roadObject = roadObject;
+            this.setRotate(this.rotation);
+            this.setLayoutX(this.x);
+            this.setLayoutY(this.y);
+            this.setFill(Color.WHITE);
+            this.setStroke(Color.BLACK);
+            Text text = new Text(x-3, y+3, "1");
+            text.setFont(new Font(10));
+            text.setTextAlignment(CENTER);
+            road.getChildren().addAll(this,text);
         }
         public void setAllPoints(){
             this.getPoints().addAll(
@@ -168,10 +184,12 @@ public class Game extends Application {
         private double x;
         private double y;
         private int score;
-        public settlement(double x, double y, int score){
+        private Settlement settlementObject;
+        public settlement(double x, double y, int score, Settlement settlementObject){
             this.x = x;
             this.y = y;
             this.score = score;
+            this.settlementObject = settlementObject;
             this.setLayoutX(this.x);
             this.setLayoutY(this.y);
             this.setFill(Color.WHITE);
@@ -205,10 +223,12 @@ public class Game extends Application {
         private double x;
         private double y;
         private int score;
-        public city(double x, double y, int score){
+        private City cityObject;
+        public city(double x, double y, int score, City cityObject){
             this.x = x;
             this.y = y;
             this.score = score;
+            this.cityObject = cityObject;
             this.setLayoutX(this.x);
             this.setLayoutY(this.y);
             this.setFill(Color.WHITE);
@@ -248,12 +268,15 @@ public class Game extends Application {
         private int score;
         private Circle circle;
 
-        public knight(double x, double y, double radiusX, double radiusY, int score){
+        private Knight knightObject;
+
+        public knight(double x, double y, double radiusX, double radiusY, int score, Knight knightObject){
             this.x = x;
             this.y = y;
             this.radiusX = radiusX;
             this.radiusY = radiusY;
             this.score = score;
+            this.knightObject = knightObject;
             this.setCenterX(x);
             this.setCenterY(y);
             this.setRadiusX(radiusX);
@@ -328,17 +351,7 @@ public class Game extends Application {
             this.setCenterX(x);
             this.setCenterY(y);
             this.setRadius(radius);
-            this.setFill(Color.WHITE);
-            this.setStroke(Color.BLACK);
-            //set image
-//            Image resourceImage = new Image(Viewer.class.getResource(URI_BASE + currentResource.getName() + ".png").toString());
-//            ImageView resourceView = new ImageView(resourceImage);
-//            resourceView.setFitWidth(3*radius);
-//            resourceView.setFitHeight(2.4*radius);
-//            resourceView.setLayoutX(x-1.3*radius);
-//            resourceView.setLayoutY(y-radius);
-//            this.resource.getChildren().addAll(this, resourceView);
-            this.resource.getChildren().add(this);
+            this.setFill(Color.rgb(0,0,0,0));// set color null, but the difference from null is this can be captured by click
         }
     }
 
@@ -355,6 +368,13 @@ public class Game extends Application {
             this.game = game;
             this.setCenterX(x);
             this.setCenterY(y);
+            Image draggableResourceImage = new Image(Viewer.class.getResource(URI_BASE + currentResource.getName() +".png").toString());
+            ImageView draggableResourceView = new ImageView(draggableResourceImage);
+            draggableResourceView.setFitWidth(2*radius+10);
+            draggableResourceView.setFitHeight(2*radius+10);
+            draggableResourceView.setLayoutX(x-radius-5);
+            draggableResourceView.setLayoutY(y-radius-5);
+            this.resource.getChildren().addAll(draggableResourceView, this);//add image first, so that resource component can be clicked
 
             this.setOnMousePressed(event -> {
                 this.mouseX = event.getSceneX();
@@ -366,12 +386,16 @@ public class Game extends Application {
                 this.setCenterY(mouseY);
                 this.mouseX = event.getSceneX();
                 this.mouseY = event.getSceneY();
+                draggableResourceView.setLayoutX(mouseX-radius);
+                draggableResourceView.setLayoutY(mouseY-radius);
                 highlightNearestCircle(mouseX,mouseY);
             });
             this.setOnMouseReleased(event->{
                 Circle snapCircle = findNearestCircle(mouseX,mouseY);
                 this.setCenterX(snapCircle.getCenterX());
                 this.setCenterY(snapCircle.getCenterY());
+                draggableResourceView.setLayoutX(snapCircle.getCenterX()-radius-3);
+                draggableResourceView.setLayoutY(snapCircle.getCenterY()-radius-3);
                 this.mouseX = event.getSceneX();
                 this.mouseY = event.getSceneY();
                 //record which circles we have occupied
@@ -449,22 +473,22 @@ public class Game extends Application {
      * use for combined all road components into roads group
      */
     private void makeRoads(){
-        road road0 = new road(600-37.5*Math.sqrt(3), 350-37.5,-60);
-        road road1 = new road(600-75*Math.sqrt(3), 350.0,0);
-        road road2 = new road(600-37.5*Math.sqrt(3), 350+37.5,60);
-        road road3 = new road(600-37.5*Math.sqrt(3), 350+3*37.5,-60);
-        road road4 = new road(600-75*Math.sqrt(3), 350+150,0);
-        road road5 = new road(600-37.5*Math.sqrt(3), 500+37.5,60);
-        road road6 = new road(600, 575,0);
-        road road7 = new road(600+37.5*Math.sqrt(3), 500+37.5,-60);
-        road road8 = new road(600+37.5*Math.sqrt(3), 500-37.5,60);
-        road road9 = new road(600+37.5*Math.sqrt(3), 350+37.5,-60);
-        road road10 = new road(600+37.5*Math.sqrt(3), 350-37.5,60);
-        road road11 = new road(600+37.5*Math.sqrt(3), 350-112.5,-60);
-        road road12 = new road(600+75*Math.sqrt(3), 500,0.0);
-        road road13 = new road(600+112.5*Math.sqrt(3), 425+37.5,-60);
-        road road14 = new road(600+112.5*Math.sqrt(3), 425-37.5,60);
-        road road15 = new road(600+112.5*Math.sqrt(3), 275+37.5,-60);
+        road road0 = new road(600-37.5*Math.sqrt(3), 350-37.5,-60, board.getRoads().get(0));
+        road road1 = new road(600-75*Math.sqrt(3), 350.0,0, board.getRoads().get(1));
+        road road2 = new road(600-37.5*Math.sqrt(3), 350+37.5,60, board.getRoads().get(2));
+        road road3 = new road(600-37.5*Math.sqrt(3), 350+3*37.5,-60, board.getRoads().get(3));
+        road road4 = new road(600-75*Math.sqrt(3), 350+150,0, board.getRoads().get(4));
+        road road5 = new road(600-37.5*Math.sqrt(3), 500+37.5,60, board.getRoads().get(5));
+        road road6 = new road(600, 575,0, board.getRoads().get(6));
+        road road7 = new road(600+37.5*Math.sqrt(3), 500+37.5,-60, board.getRoads().get(7));
+        road road8 = new road(600+37.5*Math.sqrt(3), 500-37.5,60, board.getRoads().get(8));
+        road road9 = new road(600+37.5*Math.sqrt(3), 350+37.5,-60, board.getRoads().get(9));
+        road road10 = new road(600+37.5*Math.sqrt(3), 350-37.5,60, board.getRoads().get(10));
+        road road11 = new road(600+37.5*Math.sqrt(3), 350-112.5,-60, board.getRoads().get(11));
+        road road12 = new road(600+75*Math.sqrt(3), 500,0.0, board.getRoads().get(12));
+        road road13 = new road(600+112.5*Math.sqrt(3), 425+37.5,-60, board.getRoads().get(13));
+        road road14 = new road(600+112.5*Math.sqrt(3), 425-37.5,60, board.getRoads().get(14));
+        road road15 = new road(600+112.5*Math.sqrt(3), 275+37.5,-60, board.getRoads().get(15));
 
         roadsMap.put(0,road0);
         roadsMap.put(1,road1);
@@ -492,12 +516,12 @@ public class Game extends Application {
      * use for combined all settlement components into settlements group
      */
     private void makeSettlements(){
-        settlement settlement3 = new settlement(600-75/Math.sqrt(3), 350-75, 3);
-        settlement settlement4 = new settlement(600-75/Math.sqrt(3), 500-75,4);
-        settlement settlement5 = new settlement(600-75/Math.sqrt(3), 500+75,5);
-        settlement settlement7 = new settlement(600+50*Math.sqrt(3), 500,7);
-        settlement settlement9 = new settlement(600+50*Math.sqrt(3), 350,9);
-        settlement settlement11 = new settlement(600+50*Math.sqrt(3), 200,11);
+        settlement settlement3 = new settlement(600-75/Math.sqrt(3), 350-75, 3, board.getSettlements().get(3));
+        settlement settlement4 = new settlement(600-75/Math.sqrt(3), 500-75,4, board.getSettlements().get(4));
+        settlement settlement5 = new settlement(600-75/Math.sqrt(3), 500+75,5, board.getSettlements().get(5));
+        settlement settlement7 = new settlement(600+50*Math.sqrt(3), 500,7, board.getSettlements().get(7));
+        settlement settlement9 = new settlement(600+50*Math.sqrt(3), 350,9, board.getSettlements().get(9));
+        settlement settlement11 = new settlement(600+50*Math.sqrt(3), 200,11, board.getSettlements().get(11));
 
         settlementsMap.put(3,settlement3);
         settlementsMap.put(4,settlement4);
@@ -515,10 +539,10 @@ public class Game extends Application {
      * use for combined all city components into cities group
      */
     private void makeCities(){
-        city city7 = new city(600-100*Math.sqrt(3), 350,7);
-        city city12 = new city(600-100*Math.sqrt(3), 500, 12);
-        city city20 = new city(600+125*Math.sqrt(3), 425, 20);
-        city city30 = new city(600+125*Math.sqrt(3), 275, 30);
+        city city7 = new city(600-100*Math.sqrt(3), 350,7, board.getCities().get(7));
+        city city12 = new city(600-100*Math.sqrt(3), 500, 12, board.getCities().get(12));
+        city city20 = new city(600+125*Math.sqrt(3), 425, 20, board.getCities().get(20));
+        city city30 = new city(600+125*Math.sqrt(3), 275, 30, board.getCities().get(30));
 
         citiesMap.put(7,city7);
         citiesMap.put(12, city12);
@@ -534,12 +558,12 @@ public class Game extends Application {
      * use for combined all knight components into knights group
      */
     private void makeKnights(){
-        knight knight1 = new knight(600-75*Math.sqrt(3), 275-35, 10, 15,1);
-        knight knight2 = new knight(600-75*Math.sqrt(3), 425-35, 10, 15,2);
-        knight knight3 = new knight(600, 500-35, 10, 15,3);
-        knight knight4 = new knight(600+75*Math.sqrt(3), 425-35, 10, 15,4);
-        knight knight5 = new knight(600+75*Math.sqrt(3), 275-35, 10, 15,5);
-        knight knight6 = new knight(600, 200-35, 10, 15,6);
+        knight knight1 = new knight(600-75*Math.sqrt(3), 275-35, 10, 15,1, board.getKnights().get(1));
+        knight knight2 = new knight(600-75*Math.sqrt(3), 425-35, 10, 15,2, board.getKnights().get(2));
+        knight knight3 = new knight(600, 500-35, 10, 15,3, board.getKnights().get(3));
+        knight knight4 = new knight(600+75*Math.sqrt(3), 425-35, 10, 15,4, board.getKnights().get(4));
+        knight knight5 = new knight(600+75*Math.sqrt(3), 275-35, 10, 15,5, board.getKnights().get(5));
+        knight knight6 = new knight(600, 200-35, 10, 15,6, board.getKnights().get(6));
         knightsMap.put(1,knight1);
         knightsMap.put(2,knight2);
         knightsMap.put(3,knight3);
@@ -712,41 +736,17 @@ public class Game extends Application {
             @Override
             public void handle(ActionEvent e) {
                 board.roll(resourcesNeedToBeRolled);
-                root.getChildren().clear();
-                initializeBackground();
-                initializeCatan();
-                initializeBoard();
-                initializeRecorder();
-                initializeDiceRoller();
-                initializeResourcesAndText();
-                initializeDraggableResources();
+//                root.getChildren().clear();
+//                initializeBackground();
+//                initializeCatan();
+//                initializeBoard();
+//                initializeRecorder();
+//                initializeDiceRoller();
+//                initializeResourcesAndText();
+//                initializeDraggableResources();
             }
         });
         diceRoller.getChildren().addAll(rectangle, circle1,circle2,circle3,circle4,circle5,circle6,button);
-    }
-    /**
-     * highlight the selected component in Group roads, settlements, cities, knights
-     *
-     * @param board_state represent the component we selected
-     */
-    public void highlight(String board_state){
-        //FIXME: need to modify its parameter, so that it will be more suitable here.
-        String[] board_state_collections = board_state.split(",");
-        for(String board_state_element:board_state_collections){
-            board_state_element = board_state_element.strip();
-            try{
-                switch (board_state_element.charAt(0)){
-                    case('R')->roadsMap.get(Integer.valueOf(board_state_element.substring(1))).highlight();
-                    case('S')->settlementsMap.get(Integer.valueOf(board_state_element.substring(1))).highlight();
-                    case('C')->citiesMap.get(Integer.valueOf(board_state_element.substring(1))).highlight();
-                    case('K')->knightsMap.get(Integer.valueOf(board_state_element.substring(1))).highlightK();
-                    case('J')->knightsMap.get(Integer.valueOf(board_state_element.substring(1))).highlightJ();
-                }
-            }catch(StringIndexOutOfBoundsException ex){
-                break;
-            }
-
-        }
     }
 
     /**
@@ -839,12 +839,67 @@ public class Game extends Application {
         this.makeControls();
     }
 
+    /**
+     * highlight all buildable structures in board
+     */
+    public void highlightBuildableStructures(){
+        for (int index: roadsMap.keySet()){
+            if(!board.whetherCanBeBuilt(board.getRoads().get(index))){
+                continue;
+            }
+            roadsMap.get(index).setFill(Color.LIGHTGREEN);
+            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),roadsMap.get(index));
+            fadeTransition.setFromValue(1);
+            fadeTransition.setToValue(0.3);
+            fadeTransition.setCycleCount(Timeline.INDEFINITE);
+            fadeTransition.setAutoReverse(true);
+            fadeTransition.play();
+        }
+        for (int index: knightsMap.keySet()){
+            if(!board.whetherCanBeBuilt(board.getKnights().get(index))){
+                continue;
+            }
+            knightsMap.get(index).circle.setFill(Color.LIGHTGREEN);
+            knightsMap.get(index).setFill(Color.LIGHTGREEN);
+            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),knightsMap.get(index).knight);
+            fadeTransition.setFromValue(1);
+            fadeTransition.setToValue(0.3);
+            fadeTransition.setCycleCount(Timeline.INDEFINITE);
+            fadeTransition.setAutoReverse(true);
+            fadeTransition.play();
+        }
+        for (int index: settlementsMap.keySet()){
+            if(!board.whetherCanBeBuilt(board.getSettlements().get(index))){
+                continue;
+            }
+            settlementsMap.get(index).setFill(Color.LIGHTGREEN);
+            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),settlementsMap.get(index));
+            fadeTransition.setFromValue(1);
+            fadeTransition.setToValue(0.3);
+            fadeTransition.setCycleCount(Timeline.INDEFINITE);
+            fadeTransition.setAutoReverse(true);
+            fadeTransition.play();
+        }
+        for (int index: citiesMap.keySet()){
+            if(!board.whetherCanBeBuilt(board.getCities().get(index))){
+                continue;
+            }
+            citiesMap.get(index).setFill(Color.LIGHTGREEN);
+            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),citiesMap.get(index));
+            fadeTransition.setFromValue(1);
+            fadeTransition.setToValue(0.3);
+            fadeTransition.setCycleCount(Timeline.INDEFINITE);
+            fadeTransition.setAutoReverse(true);
+            fadeTransition.play();
+        }
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         //test
         board.setRound(7);
         board.setScoresRecorder(new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15});
-        board.setCurrentResource(new int[]{1,2,3,4,5,6});
+        board.setCurrentResource(new int[]{11,2,1,4,1,6});
         //set basic configuration of stage
         stage.setTitle("Game");
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -857,6 +912,7 @@ public class Game extends Application {
         initializeDiceRoller();
         initializeResourcesAndText();
         initializeDraggableResources();
+        highlightBuildableStructures();
 
         //initializeControls();
 
