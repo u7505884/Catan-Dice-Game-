@@ -36,6 +36,7 @@ import static javafx.scene.text.TextAlignment.CENTER;
 import static javafx.scene.text.TextAlignment.LEFT;
 
 public class Game extends Application {
+
     private static final Board board = new Board();
     private static final Game game = new Game();
 
@@ -49,7 +50,6 @@ public class Game extends Application {
     private static final double BOARD_LOCATION_WIDTH_ADAPTION = 18; //fit the background manually by ourselves
     private static final double BOARD_LOCATION_HEIGHT_ADAPTION = BOARD_LOCATION_WIDTH_ADAPTION*450/(250*Math.sqrt(3));
     private static final boolean WHETHER_SHOW_BOUNDARY = false; //modify whether show the boundary manually
-
     //catan logo
     private static final double CATAN_LOCATION_WIDTH_ADAPTION = 250;
     private static final double CATAN_LOCATION_HEIGHT_ADAPTION = 100;
@@ -72,17 +72,17 @@ public class Game extends Application {
     private static final double DICE_ROLLER_HEIGHT = 180;
     private static final double DICE_ROLLER_RADIUS = 25;
 
-    private final Group root = new Group();// basic group
-    private final Group basicBoard = new Group();
-    private final Group roads = new Group();
-    private final Group settlements = new Group();
-    private final Group cities = new Group();
-    private final Group knights = new Group();
-    private final Group controls = new Group();
-    private final Group recorder = new Group();
-    private final Group draggableResources = new Group();
-    private final HBox resourcesAndText = new HBox();
-    private final Group diceRoller = new Group();
+    private static final Group root = new Group();// basic group
+    private static final Group basicBoard = new Group();
+    private static final Group roads = new Group();
+    private static final Group settlements = new Group();
+    private static final Group cities = new Group();
+    private static final Group knights = new Group();
+    private static final Group controls = new Group();
+    private static final Group recorder = new Group();
+    private static final Group draggableResources = new Group();
+    private static final HBox resourcesAndText = new HBox();
+    private static final Group diceRoller = new Group();
 
     private TextField playerTextField;
     private TextField boardTextField;
