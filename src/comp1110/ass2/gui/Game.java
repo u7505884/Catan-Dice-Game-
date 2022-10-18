@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -86,14 +87,16 @@ public class Game extends Application {
     private TextField playerTextField;
     private TextField boardTextField;
 
-    Map<Integer, hexagon> hexagonsMap = new HashMap<>();
-    Map<Integer, road> roadsMap = new HashMap<>();
-    Map<Integer, settlement> settlementsMap = new HashMap<>();
-    Map<Integer, city> citiesMap = new HashMap<>();
-    Map<Integer, knight> knightsMap = new HashMap<>();
-    ArrayList<Circle> circles = new ArrayList<>();
-    ArrayList<Circle> currentCircles =  new ArrayList<>();
-    int[] resourcesNeedToBeRolled = new int[6];
+    static Map<Integer, hexagon> hexagonsMap = new HashMap<>();
+    static Map<Integer, road> roadsMap = new HashMap<>();
+    static Map<Integer, settlement> settlementsMap = new HashMap<>();
+    static Map<Integer, city> citiesMap = new HashMap<>();
+    static Map<Integer, knight> knightsMap = new HashMap<>();
+    static ArrayList<Circle> circles = new ArrayList<>();
+    static ArrayList<Circle> currentCircles =  new ArrayList<>();
+    static int[] resourcesNeedToBeRolled = new int[6];
+    static int[] numberOfRollInEachRound = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+    static ArrayList<BuildableStructures> buildableStructures = new ArrayList<>();
 
     /**
      * use for create elements of boundary
@@ -162,6 +165,15 @@ public class Game extends Application {
             text.setFont(new Font(10));
             text.setTextAlignment(CENTER);
             road.getChildren().addAll(this,text);
+            road.setOnMouseClicked(event -> {
+                if(buildableStructures.contains(this.roadObject)){
+                    board.build(roadObject);
+                    highlight();
+                    refreshDices(false);
+                    refreshBoard();
+                    refreshRecorder();
+                }
+            });
         }
         public void setAllPoints(){
             this.getPoints().addAll(
@@ -198,6 +210,15 @@ public class Game extends Application {
             text.setFont(new Font(10));
             text.setTextAlignment(CENTER);
             settlement.getChildren().addAll(this,text);
+            settlement.setOnMouseClicked(event -> {
+                if(buildableStructures.contains(this.settlementObject)){
+                    board.build(settlementObject);
+                    highlight();
+                    refreshDices(false);
+                    refreshBoard();
+                    refreshRecorder();
+                }
+            });
         }
         public void setAllPoints(){
             this.getPoints().addAll(
@@ -237,6 +258,15 @@ public class Game extends Application {
             text.setFont(new Font(10));
             text.setTextAlignment(CENTER);
             city.getChildren().addAll(this,text);
+            city.setOnMouseClicked(event -> {
+                if(buildableStructures.contains(this.cityObject)){
+                    board.build(cityObject);
+                    highlight();
+                    refreshDices(false);
+                    refreshBoard();
+                    refreshRecorder();
+                }
+            });
         }
         public void setAllPoints(){
             this.getPoints().addAll(
@@ -285,10 +315,22 @@ public class Game extends Application {
             this.setStroke(Color.BLACK);
             this.circle = new Circle(x,y-17,8, Color.WHITE);
             this.circle.setStroke(Color.BLACK);
+            this.setAccessibleText("disdainful");
             Text text = new Text(x-3, y+5, String.valueOf(score));
             text.setFont(new Font(10));
             text.setTextAlignment(CENTER);
             knight.getChildren().addAll(this,circle,text);
+            knight.setOnMouseClicked(event -> {
+                if(buildableStructures.contains(this.knightObject)){
+                    board.build(knightObject);
+                    highlightJ();
+                    refreshDices(false);
+                    refreshBoard();
+                    refreshRecorder();
+                } else if (!knightObject.getWhetherHaveSwapped()&&knightObject.getWhetherHaveBuilt()){
+                    //FIXME
+                }
+            });
         }
         public void highlightJ(){
             this.circle.setFill(Color.GREEN);
@@ -363,6 +405,8 @@ public class Game extends Application {
         private double mouseX;
         private double mouseY;
         private Circle highlighted = null;
+        private boolean lock = false;// lock draggable resource when it is in the position, unless right click
+        private Circle destination; // record where will current node go, so that we can roll back when right click happens
         public DraggableResource(double x, double y, double radius, Resource currentResource, Game game) {
             super(x, y, radius, currentResource);
             this.game = game;
@@ -370,55 +414,77 @@ public class Game extends Application {
             this.setCenterY(y);
             Image draggableResourceImage = new Image(Viewer.class.getResource(URI_BASE + currentResource.getName() +".png").toString());
             ImageView draggableResourceView = new ImageView(draggableResourceImage);
-            draggableResourceView.setFitWidth(2*radius+10);
-            draggableResourceView.setFitHeight(2*radius+10);
-            draggableResourceView.setLayoutX(x-radius-5);
-            draggableResourceView.setLayoutY(y-radius-5);
+            draggableResourceView.setFitWidth(2*radius+4);
+            draggableResourceView.setFitHeight(2*radius+4);
+            draggableResourceView.setLayoutX(x-radius-2);
+            draggableResourceView.setLayoutY(y-radius-2);
             this.resource.getChildren().addAll(draggableResourceView, this);//add image first, so that resource component can be clicked
-
+            //mouse action
             this.setOnMousePressed(event -> {
-                this.mouseX = event.getSceneX();
-                this.mouseY = event.getSceneY();
-                this.toFront();
+                if(event.getButton() == MouseButton.PRIMARY && lock == false){
+                    this.mouseX = event.getSceneX();
+                    this.mouseY = event.getSceneY();
+                    this.toFront();
+                }
+            });
+            this.setOnMouseClicked(event -> {
+                if(event.getButton()== MouseButton.SECONDARY){
+                    //back to initial position
+                    this.setCenterX(x);
+                    this.setCenterY(y);
+                    draggableResourceView.setLayoutX(x-radius-2);
+                    draggableResourceView.setLayoutY(y-radius-2);
+                    this.toFront();
+                    //roll back configuration
+                    lock = false;
+                    currentCircles.remove(destination);//set this circle available again
+                    destination.setFill(Color.LIGHTGRAY);
+                }
             });
             this.setOnMouseDragged(event->{
-                this.setCenterX(mouseX);
-                this.setCenterY(mouseY);
-                this.mouseX = event.getSceneX();
-                this.mouseY = event.getSceneY();
-                draggableResourceView.setLayoutX(mouseX-radius);
-                draggableResourceView.setLayoutY(mouseY-radius);
-                highlightNearestCircle(mouseX,mouseY);
+                if(lock == false){
+                    this.setCenterX(mouseX);
+                    this.setCenterY(mouseY);
+                    this.mouseX = event.getSceneX();
+                    this.mouseY = event.getSceneY();
+                    draggableResourceView.setLayoutX(mouseX-radius);
+                    draggableResourceView.setLayoutY(mouseY-radius);
+                    highlightNearestCircle(mouseX,mouseY);
+                }
             });
             this.setOnMouseReleased(event->{
-                Circle snapCircle = findNearestCircle(mouseX,mouseY);
-                this.setCenterX(snapCircle.getCenterX());
-                this.setCenterY(snapCircle.getCenterY());
-                draggableResourceView.setLayoutX(snapCircle.getCenterX()-radius-3);
-                draggableResourceView.setLayoutY(snapCircle.getCenterY()-radius-3);
-                this.mouseX = event.getSceneX();
-                this.mouseY = event.getSceneY();
-                //record which circles we have occupied
-                currentCircles.add(snapCircle);
-                //record which resource has been placed in roller
-                resourcesNeedToBeRolled[super.currentResource.getIndex()-1]++;
+                if(lock == false){
+                    Circle snapCircle = findNearestCircle(mouseX,mouseY);
+                    this.destination = snapCircle;
+                    this.setCenterX(snapCircle.getCenterX());
+                    this.setCenterY(snapCircle.getCenterY());
+                    draggableResourceView.setLayoutX(snapCircle.getCenterX()-radius-3);
+                    draggableResourceView.setLayoutY(snapCircle.getCenterY()-radius-3);
+                    this.mouseX = event.getSceneX();
+                    this.mouseY = event.getSceneY();
+                    lock = true;
+                    //record which circles we have occupied
+                    currentCircles.add(snapCircle);
+                    //record which resource has been placed in roller
+                    resourcesNeedToBeRolled[super.currentResource.getIndex()-1]++;
+                }
+
             });
         }
 
         public Circle findNearestCircle(double x, double y){
-
             double minDistance = Integer.MAX_VALUE;
-            Circle currentCircle = null;
+            Circle resCircle = null;
             for(Circle circle:circles){
                 if(!currentCircles.contains(circle)){
                     double currentDistance = Math.sqrt(Math.pow((circle.getCenterX()-x),2)+Math.pow((circle.getCenterY()-y),2));
                     if(currentDistance<minDistance){
                         minDistance = currentDistance;
-                        currentCircle = circle;
+                        resCircle = circle;
                     }
                 }
             }
-            return currentCircle;
+            return resCircle;
         };
 
         public void highlightNearestCircle(double x, double y){
@@ -632,7 +698,6 @@ public class Game extends Application {
         }
         //create a label to display current final score in each round
         int currentFinalScore = board.calculateCurrentFinalScore();
-        System.out.println(currentFinalScore);
         Label finalScore = new Label(String.valueOf(currentFinalScore));
         finalScore.setLayoutX(3.65 * RECORDER_HORIZONTAL_SPACE_ADAPTION);
         finalScore.setLayoutY(4 * RECORDER_VERTICAL_SPACE_ADAPTION);
@@ -732,20 +797,17 @@ public class Game extends Application {
         button.setLayoutY(YOfDiceRoller+DICE_ROLLER_HEIGHT);
         button.setAlignment(Pos.CENTER);
         button.setMinSize(DICE_ROLLER_WIDTH, 30);
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                board.roll(resourcesNeedToBeRolled);
-//                root.getChildren().clear();
-//                initializeBackground();
-//                initializeCatan();
-//                initializeBoard();
-//                initializeRecorder();
-//                initializeDiceRoller();
-//                initializeResourcesAndText();
-//                initializeDraggableResources();
-            }
-        });
+        if(numberOfRollInEachRound[board.getRound()]<3) {
+            button.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    board.roll(resourcesNeedToBeRolled);
+                    refreshDices(true);
+                }
+            });
+        }else {
+            button.setDisable(true);//can not re-roll more than 3 times
+        }
         diceRoller.getChildren().addAll(rectangle, circle1,circle2,circle3,circle4,circle5,circle6,button);
     }
 
@@ -789,6 +851,9 @@ public class Game extends Application {
         this.makeSettlements();
         this.makeCities();
         this.makeKnights();
+
+        highlightBuildableStructures();
+
     }
 
     /**
@@ -844,54 +909,121 @@ public class Game extends Application {
      */
     public void highlightBuildableStructures(){
         for (int index: roadsMap.keySet()){
-            if(!board.whetherCanBeBuilt(board.getRoads().get(index))){
-                continue;
+            if(board.whetherCanBeBuilt(board.getRoads().get(index))){
+                buildableStructures.add(roadsMap.get(index).roadObject);
+                roadsMap.get(index).setFill(Color.LIGHTGREEN);
+                FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),roadsMap.get(index));
+                fadeTransition.setFromValue(1);
+                fadeTransition.setToValue(0.3);
+                fadeTransition.setCycleCount(Timeline.INDEFINITE);
+                fadeTransition.setAutoReverse(true);
+                fadeTransition.play();
+            }else if(board.getRoads().get(index).getWhetherHaveBuilt()){
+                roadsMap.get(index).highlight();
             }
-            roadsMap.get(index).setFill(Color.LIGHTGREEN);
-            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),roadsMap.get(index));
-            fadeTransition.setFromValue(1);
-            fadeTransition.setToValue(0.3);
-            fadeTransition.setCycleCount(Timeline.INDEFINITE);
-            fadeTransition.setAutoReverse(true);
-            fadeTransition.play();
+
         }
         for (int index: knightsMap.keySet()){
-            if(!board.whetherCanBeBuilt(board.getKnights().get(index))){
-                continue;
+            if(board.whetherCanBeBuilt(board.getKnights().get(index))){
+                buildableStructures.add(knightsMap.get(index).knightObject);
+                knightsMap.get(index).circle.setFill(Color.LIGHTGREEN);
+                knightsMap.get(index).setFill(Color.LIGHTGREEN);
+                FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),knightsMap.get(index).knight);
+                fadeTransition.setFromValue(1);
+                fadeTransition.setToValue(0.3);
+                fadeTransition.setCycleCount(Timeline.INDEFINITE);
+                fadeTransition.setAutoReverse(true);
+                fadeTransition.play();
+            }else if(board.getKnights().get(index).getWhetherHaveBuilt()){
+                if(board.getKnights().get(index).getWhetherHaveSwapped()){
+                    knightsMap.get(index).highlightK();
+                }else {
+                    knightsMap.get(index).highlightJ();
+                }
             }
-            knightsMap.get(index).circle.setFill(Color.LIGHTGREEN);
-            knightsMap.get(index).setFill(Color.LIGHTGREEN);
-            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),knightsMap.get(index).knight);
-            fadeTransition.setFromValue(1);
-            fadeTransition.setToValue(0.3);
-            fadeTransition.setCycleCount(Timeline.INDEFINITE);
-            fadeTransition.setAutoReverse(true);
-            fadeTransition.play();
         }
         for (int index: settlementsMap.keySet()){
-            if(!board.whetherCanBeBuilt(board.getSettlements().get(index))){
-                continue;
+            if(board.whetherCanBeBuilt(board.getSettlements().get(index))){
+                buildableStructures.add(settlementsMap.get(index).settlementObject);
+                settlementsMap.get(index).setFill(Color.LIGHTGREEN);
+                FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),settlementsMap.get(index));
+                fadeTransition.setFromValue(1);
+                fadeTransition.setToValue(0.3);
+                fadeTransition.setCycleCount(Timeline.INDEFINITE);
+                fadeTransition.setAutoReverse(true);
+                fadeTransition.play();
+            }else if(board.getSettlements().get(index).getWhetherHaveBuilt()){
+                settlementsMap.get(index).highlight();
             }
-            settlementsMap.get(index).setFill(Color.LIGHTGREEN);
-            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),settlementsMap.get(index));
-            fadeTransition.setFromValue(1);
-            fadeTransition.setToValue(0.3);
-            fadeTransition.setCycleCount(Timeline.INDEFINITE);
-            fadeTransition.setAutoReverse(true);
-            fadeTransition.play();
         }
         for (int index: citiesMap.keySet()){
-            if(!board.whetherCanBeBuilt(board.getCities().get(index))){
-                continue;
+            if(board.whetherCanBeBuilt(board.getCities().get(index))){
+                buildableStructures.add(citiesMap.get(index).cityObject);
+                citiesMap.get(index).setFill(Color.LIGHTGREEN);
+                FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),citiesMap.get(index));
+                fadeTransition.setFromValue(1);
+                fadeTransition.setToValue(0.3);
+                fadeTransition.setCycleCount(Timeline.INDEFINITE);
+                fadeTransition.setAutoReverse(true);
+                fadeTransition.play();
+            }else if(board.getCities().get(index).getWhetherHaveBuilt()){
+                citiesMap.get(index).highlight();
             }
-            citiesMap.get(index).setFill(Color.LIGHTGREEN);
-            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),citiesMap.get(index));
-            fadeTransition.setFromValue(1);
-            fadeTransition.setToValue(0.3);
-            fadeTransition.setCycleCount(Timeline.INDEFINITE);
-            fadeTransition.setAutoReverse(true);
-            fadeTransition.play();
         }
+    }
+
+    /**
+     * refresh draggable resources, text of resources' number and dice roller
+     *
+     * @param whetherHaveRolled: identify whether we have roll dice(s), before refresh this
+     */
+    public void refreshDices(boolean whetherHaveRolled){
+        resourcesAndText.getChildren().clear();
+        diceRoller.getChildren().clear();
+        draggableResources.getChildren().clear();
+
+        resourcesNeedToBeRolled = new int[6];
+        currentCircles = new ArrayList<>();
+        circles = new ArrayList<>();
+        if(whetherHaveRolled)
+            numberOfRollInEachRound[board.getRound()]++;
+
+        makeDiceRoller();
+        makeResourcesAndText();
+        makeDraggableResources();
+    }
+
+    /**
+     * refresh basic board
+     */
+    public void refreshBoard(){
+        basicBoard.getChildren().clear();
+        roads.getChildren().clear();
+        settlements.getChildren().clear();
+        cities.getChildren().clear();
+        knights.getChildren().clear();
+
+        hexagonsMap = new HashMap<>();
+        roadsMap = new HashMap<>();
+        settlementsMap = new HashMap<>();
+        citiesMap = new HashMap<>();
+        knightsMap = new HashMap<>();
+
+        makeBasicBoard();
+        makeRoads();
+        makeSettlements();
+        makeCities();
+        makeKnights();
+
+        highlightBuildableStructures();
+    }
+
+    /**
+     * refresh score recorder
+     */
+    public void refreshRecorder(){
+        recorder.getChildren().clear();
+        makeRecorder();
     }
 
     @Override
@@ -899,7 +1031,7 @@ public class Game extends Application {
         //test
         board.setRound(7);
         board.setScoresRecorder(new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15});
-        board.setCurrentResource(new int[]{11,2,1,4,1,6});
+        board.setCurrentResource(new int[]{10,10,10,10,10,2});
         //set basic configuration of stage
         stage.setTitle("Game");
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -912,8 +1044,6 @@ public class Game extends Application {
         initializeDiceRoller();
         initializeResourcesAndText();
         initializeDraggableResources();
-        highlightBuildableStructures();
-
         //initializeControls();
 
         //show stage

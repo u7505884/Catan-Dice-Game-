@@ -144,6 +144,7 @@ public class Board {
         int sum = Arrays.stream(dicesWeWantToRoll).sum();
         int[] newRes = dice.rollDice(sum);
         for(int i = 0; i < 6; i++){
+            currentResource[i] -= dicesWeWantToRoll[i];
             currentResource[i] += newRes[i];
         }
     }
@@ -253,8 +254,16 @@ public class Board {
      */
     public void build(BuildableStructures whatWeWantToBuild){
         if(whetherCanBeBuilt(whatWeWantToBuild)){
+            // build
             whatWeWantToBuild.setWhetherBuild(true);
+            // record your score
             scoresRecorder[round] += whatWeWantToBuild.getScores();
+            //consume resources
+            int[] consumptionOfResources = whatWeWantToBuild.demandOfResources;
+            for(int i = 0; i < 6; i++){
+                currentResource[i] -= consumptionOfResources[i];
+            }
+            // record whether we have avoided penalty of no new building
             whetherNewStructureWasBuilt = true;
             System.out.println(whatWeWantToBuild+" has been built");
         }else {
