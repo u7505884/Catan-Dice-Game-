@@ -2,6 +2,9 @@ package comp1110.ass2;
 
 import java.util.HashMap;
 
+/**
+ * @author
+ */
 public enum Resource {
     Ore("Ore", 1),
     Grain("Grain", 2),

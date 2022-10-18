@@ -2,6 +2,9 @@ package comp1110.ass2;
 
 import java.util.Random;
 
+/**
+ * @author Ta-Wei Chen (u7546144)
+ */
 public class Dice {
     /**
      * roll a certain number of dices and return the results as int[].

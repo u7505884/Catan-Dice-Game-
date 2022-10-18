@@ -2,7 +2,6 @@ package comp1110.ass2;
 
 import java.util.*;
 
-
 public class CatanDice {
 
     /**
@@ -14,6 +13,7 @@ public class CatanDice {
      * @param board_state: The string representation of the board state.
      * @return true iff the string is a well-formed representation of
      * a board state, false otherwise.
+     * @author Haoxiang Wang (u7544188)
      */
     public static boolean isBoardStateWellFormed(String board_state) {
         //FIXME: Task #3
@@ -81,6 +81,7 @@ public class CatanDice {
      * @param action: The string representation of the action.
      * @return true iff the string is a well-formed representation of
      * a board state, false otherwise.
+     * @author Ziling Ruan (u7505884)
      */
     public static boolean isActionWellFormed(String action) {
         // FIXME: Task #4
@@ -123,6 +124,7 @@ public class CatanDice {
      *                        <p>
      *                        This method does not return any value. It should update the given
      *                        resource_state.
+     * @author Ta-Wei Chen (u7546144)
      */
     public static void rollDice(int n_dice, int[] resource_state) {
         // FIXME: Task #6
@@ -144,6 +146,7 @@ public class CatanDice {
      * @param board_state: The string representation of the board state.
      * @return true iff the structure is a possible next build, false
      * otherwise.
+     * @author Haoxiang Wang (u7544188)
      */
     public static boolean checkBuildConstraints(String structure, String board_state) {
         // FIXME: Task #8
@@ -189,6 +192,7 @@ public class CatanDice {
      * @param resource_state: The available resources.
      * @return true iff the structure can be built with the available
      * resources, false otherwise.
+     * @author Haoxiang Wang (u7544188)
      */
     public static boolean checkResources(String structure, int[] resource_state) {
         // FIXME: Task #7
@@ -227,6 +231,7 @@ public class CatanDice {
      * @param resource_state: The available resources.
      * @return true iff the structure can be built with the available
      * resources, false otherwise.
+     * @author Ziling Ruan (u7505884)
      */
     public static boolean checkResourcesWithTradeAndSwap(String structure,
                                                          String board_state,
@@ -282,7 +287,9 @@ public class CatanDice {
     }
     // FIXME: Task #12
 
-
+    /**
+     * @author Ziling Ruan (u7505884)
+     */
     public static HashMap<Integer, Integer> re_lack(String structure, int[] resource_state) {
         HashMap<Integer, Integer> re_lack = new HashMap<>();
         switch (structure.charAt(0)) {
@@ -330,6 +337,7 @@ public class CatanDice {
      * @param board_state:    The string representation of the board state.
      * @param resource_state: The available resources.
      * @return true iff the action is applicable, false otherwise.
+     * @author Ziling Ruan (u7505884)
      */
     public static boolean canDoAction(String action,
                                       String board_state,
@@ -361,6 +369,7 @@ public class CatanDice {
      * @param board_state:    The string representation of the board state.
      * @param resource_state: The available resources.
      * @return true iff the action sequence is executable, false otherwise.
+     * @author Ziling Ruan (u7505884)
      */
     public static boolean canDoSequence(String[] actions,
                                         String board_state,
@@ -462,6 +471,7 @@ public class CatanDice {
      * @param board_state:      The string representation of the board state.
      * @return An array of string representations of the roads along the
      * path.
+     * @author Ta-Wei Chen (u7546144)
      */
     public static String[] pathTo(String target_structure,
                                   String board_state) {
@@ -536,6 +546,7 @@ public class CatanDice {
      * @return An array of string representations of player actions. If
      *         there exists no valid build plan for the target structure,
      *         the method should return null.
+     * @author Ta-Wei Chen (u7546144)
      */
     public static String[] buildPlan(String target_structure,
                                      String board_state,

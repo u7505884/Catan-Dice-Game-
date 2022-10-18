@@ -1,5 +1,8 @@
 package comp1110.ass2;
 
+/**
+ * @author
+ */
 public class Road extends BuildableStructures{
 
     public Road(int index) {//only used for the first road R0

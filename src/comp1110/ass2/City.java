@@ -1,5 +1,8 @@
 package comp1110.ass2;
 
+/**
+ * @author
+ */
 public class City extends BuildableStructures{
     public City(int index) {//only used for the first city C7
         super.index = index;

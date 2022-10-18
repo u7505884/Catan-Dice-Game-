@@ -11,6 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Timeout(value = 1000, unit = MILLISECONDS)
 
+/**
+ * @author
+ */
 public class TestDice {
 
     private static void directTest(int numberOfDice) {

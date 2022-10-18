@@ -28,6 +28,9 @@ import java.util.Map;
 
 import static com.sun.javafx.scene.control.skin.Utils.getResource;
 
+/**
+ * @author
+ */
 public class Viewer extends Application {
 
     private final Group root = new Group();

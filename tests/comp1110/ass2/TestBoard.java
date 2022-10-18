@@ -13,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 @Timeout(value = 1000, unit = TimeUnit.MILLISECONDS)
 
+/**
+ * @author
+ */
 public class TestBoard {
     private void constructorTest(Board board) {
         assertNotNull(board,"Expected non-null object, but got null.");

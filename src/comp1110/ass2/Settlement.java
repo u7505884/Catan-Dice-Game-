@@ -1,5 +1,8 @@
 package comp1110.ass2;
 
+/**
+ * @author
+ */
 public class Settlement extends BuildableStructures{
 
     public Settlement(int index) {//only used for the first settlement S3

@@ -9,6 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 @Timeout(value = 1000, unit = TimeUnit.MILLISECONDS)
+
+/**
+ * @author
+ */
 class TestKnight {
     private void constructorTest(Knight knight, int values) {
         assertNotNull(knight,"Expected non-null object, but got null.");

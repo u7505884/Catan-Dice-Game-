@@ -8,6 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Timeout(value = 1000, unit = MILLISECONDS)
 
+/**
+ * @author Ta-Wei Chen (u7546144)
+ */
 public class TestKnightDavid {
     private void directTest(String action, String board_state, boolean expected) {
         boolean out = Knight.swap(action, board_state);

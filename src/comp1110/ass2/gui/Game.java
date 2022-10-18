@@ -35,6 +35,9 @@ import java.util.Map;
 import static javafx.scene.text.TextAlignment.CENTER;
 import static javafx.scene.text.TextAlignment.LEFT;
 
+/**
+ * @author
+ */
 public class Game extends Application {
 
     private static final Board board = new Board();
@@ -50,6 +53,11 @@ public class Game extends Application {
     private static final double BOARD_LOCATION_WIDTH_ADAPTION = 18; //fit the background manually by ourselves
     private static final double BOARD_LOCATION_HEIGHT_ADAPTION = BOARD_LOCATION_WIDTH_ADAPTION*450/(250*Math.sqrt(3));
     private static final boolean WHETHER_SHOW_BOUNDARY = false; //modify whether show the boundary manually
+    //resource table
+    private static final double RESOURCE_TABLE_LOCATION_WIDTH_ADAPTION = 250;
+    private static final double RESOURCE_TABLE_LOCATION_HEIGHT_ADAPTION = 175;
+    private static final double XOfResourceTable = 57;
+    private static final double YOfResourceTable = 520;
     //catan logo
     private static final double CATAN_LOCATION_WIDTH_ADAPTION = 250;
     private static final double CATAN_LOCATION_HEIGHT_ADAPTION = 100;
@@ -71,6 +79,11 @@ public class Game extends Application {
     private static final double DICE_ROLLER_WIDTH = 300;
     private static final double DICE_ROLLER_HEIGHT = 180;
     private static final double DICE_ROLLER_RADIUS = 25;
+    //nextRoundButton
+    private static final double NEXT_ROUND_BUTTON_LOCATION_WIDTH_ADAPTION = 200;
+    private static final double NEXT_ROUND_BUTTON_LOCATION_HEIGHT_ADAPTION = 50;
+    private static final double XOfNextRoundButton = 600-NEXT_ROUND_BUTTON_LOCATION_WIDTH_ADAPTION*0.5;
+    private static final double YOfNextRoundButton = 617;
 
     private static final Group root = new Group();// basic group
     private static final Group basicBoard = new Group();
@@ -78,11 +91,15 @@ public class Game extends Application {
     private static final Group settlements = new Group();
     private static final Group cities = new Group();
     private static final Group knights = new Group();
+    private static final Group resourceTable = new Group();
     private static final Group controls = new Group();
     private static final Group recorder = new Group();
     private static final Group draggableResources = new Group();
     private static final HBox resourcesAndText = new HBox();
+    private static final HBox tradeButtons = new HBox();
+    private static final HBox nameLabels = new HBox();
     private static final Group diceRoller = new Group();
+    private static final Group nextRoundButton = new Group();
 
     private TextField playerTextField;
     private TextField boardTextField;
@@ -443,30 +460,46 @@ public class Game extends Application {
             });
             this.setOnMouseDragged(event->{
                 if(lock == false){
-                    this.setCenterX(mouseX);
-                    this.setCenterY(mouseY);
-                    this.mouseX = event.getSceneX();
-                    this.mouseY = event.getSceneY();
-                    draggableResourceView.setLayoutX(mouseX-radius);
-                    draggableResourceView.setLayoutY(mouseY-radius);
-                    highlightNearestCircle(mouseX,mouseY);
+                    if(findNearestCircle(mouseX,mouseY) == null){//no left position in dice roller
+                        this.setCenterX(super.getCenterX());
+                        this.setCenterY(super.getCenterY());
+                        draggableResourceView.setLayoutX(super.getCenterX()-super.getRadius()-2);
+                        draggableResourceView.setLayoutY(super.getCenterY()-super.getRadius()-2);
+                    }else{
+                        this.setCenterX(mouseX);
+                        this.setCenterY(mouseY);
+                        this.mouseX = event.getSceneX();
+                        this.mouseY = event.getSceneY();
+                        draggableResourceView.setLayoutX(mouseX-radius);
+                        draggableResourceView.setLayoutY(mouseY-radius);
+                        highlightNearestCircle(mouseX,mouseY);
+                    }
+
                 }
             });
             this.setOnMouseReleased(event->{
                 if(lock == false){
                     Circle snapCircle = findNearestCircle(mouseX,mouseY);
-                    this.destination = snapCircle;
-                    this.setCenterX(snapCircle.getCenterX());
-                    this.setCenterY(snapCircle.getCenterY());
-                    draggableResourceView.setLayoutX(snapCircle.getCenterX()-radius-3);
-                    draggableResourceView.setLayoutY(snapCircle.getCenterY()-radius-3);
-                    this.mouseX = event.getSceneX();
-                    this.mouseY = event.getSceneY();
-                    lock = true;
-                    //record which circles we have occupied
-                    currentCircles.add(snapCircle);
-                    //record which resource has been placed in roller
-                    resourcesNeedToBeRolled[super.currentResource.getIndex()-1]++;
+                    if(snapCircle == null){//no left position in dice roller
+                        this.setCenterX(super.getCenterX());
+                        this.setCenterY(super.getCenterY());
+                        draggableResourceView.setLayoutX(super.getCenterX()-super.getRadius()-2);
+                        draggableResourceView.setLayoutY(super.getCenterY()-super.getRadius()-2);
+                    }else{
+                        this.destination = snapCircle;
+                        this.setCenterX(snapCircle.getCenterX());
+                        this.setCenterY(snapCircle.getCenterY());
+                        draggableResourceView.setLayoutX(snapCircle.getCenterX()-radius-3);
+                        draggableResourceView.setLayoutY(snapCircle.getCenterY()-radius-3);
+                        this.mouseX = event.getSceneX();
+                        this.mouseY = event.getSceneY();
+                        lock = true;
+                        //record which circles we have occupied
+                        currentCircles.add(snapCircle);
+                        //record which resource has been placed in roller
+                        resourcesNeedToBeRolled[super.currentResource.getIndex()-1]++;
+                    }
+
                 }
 
             });
@@ -643,26 +676,6 @@ public class Game extends Application {
     }
 
     /**
-     * Create a basic text field for input and a refresh button
-     */
-    private void makeControls() {
-        Label boardLabel = new Label("Board State:");
-        boardTextField = new TextField();
-        boardTextField.setPrefWidth(500);
-        Button button = new Button("Show");
-//        button.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent e) {
-//                displayState(boardTextField.getText());
-//            }
-//        });
-        HBox hb = new HBox();
-        hb.getChildren().addAll(boardLabel, boardTextField, button);
-        hb.setSpacing(10);
-        controls.getChildren().add(hb);
-    }
-
-    /**
      * Create 16 labels to display score for each round
      */
     private void makeRecorder(){
@@ -725,24 +738,92 @@ public class Game extends Application {
         backCircles.add(timber);
         backCircles.add(brick);
         backCircles.add(gold);
-        int index = 0;
-        for(Circle backCircle:backCircles){
-            //make texts under circles, which indicate the amount of resource
+        int index =0;
+        for(Circle circle :backCircles){
             Group resourceElement = new Group();
-            backCircle.setFill(Color.WHITE);
-            backCircle.setStroke(Color.BLACK);
-            Text textAmount = new Text(backCircle.getCenterX(), backCircle.getCenterY()+2.3*backCircle.getRadius(), String.valueOf(board.getCurrentResource()[index]));
+            circle.setFill(Color.WHITE);
+            circle.setStroke(Color.BLACK);
+            //make texts under circles, which indicate the amount of resource
+            Text textAmount = new Text( circle.getCenterX()-0.3* circle.getRadius(),  circle.getCenterY()+3* circle.getRadius(), String.valueOf(board.getCurrentResource()[index]));
             textAmount.setFont(new Font(15));
             textAmount.setStyle("-fx-font-weight:bold");
             textAmount.setTextAlignment(CENTER);
             //make texts "EMPTY" in circles
-            Text textNone = new Text(backCircle.getCenterX()-0.8*backCircle.getRadius(), backCircle.getCenterY(), "EMPTY");
+            Text textNone = new Text( circle.getCenterX()-0.8* circle.getRadius(), circle.getCenterY(), "EMPTY");
             textNone.setFont(new Font(12));
             textNone.setTextAlignment(CENTER);
-            resourceElement.getChildren().addAll(backCircle,textNone,textAmount);
+            resourceElement.getChildren().addAll(circle,textNone,textAmount);
             resourcesAndText.getChildren().add(resourceElement);
             index++;
         }
+        //make name label
+        Text oreLabel = new Text("Ore");
+        oreLabel.setStyle("-fx-font-weight:bold");
+        Text grainLabel = new Text("Grain");
+        grainLabel.setStyle("-fx-font-weight:bold");
+        Text woolLabel = new Text("Wool");
+        woolLabel.setStyle("-fx-font-weight:bold");
+        Text timberLabel = new Text("Timber");
+        timberLabel.setStyle("-fx-font-weight:bold");
+        Text brickLabel = new Text("Brick");
+        brickLabel.setStyle("-fx-font-weight:bold");
+        Text goldLabel = new Text("Gold");
+        goldLabel.setStyle("-fx-font-weight:bold");
+        nameLabels.getChildren().addAll(oreLabel, grainLabel, woolLabel, timberLabel, brickLabel, goldLabel);
+        nameLabels.setSpacing(0.7*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
+        nameLabels.setLayoutX(XOfResource - 4.6*RESOURCE_HORIZONTAL_SPACE_ADAPTION-RESOURCE_RADIUS);
+        nameLabels.setLayoutY(YOfResource - 2*RESOURCE_RADIUS);
+        //make trade buttons
+        Button oreButton = new Button("Trade");
+        oreButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                board.trade(Resource.Ore);
+                refreshDices(false);
+                refreshBoard();
+            }
+        });
+        Button grainButton = new Button("Trade");
+        grainButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                board.trade(Resource.Grain);
+                refreshDices(false);
+                refreshBoard();
+            }
+        });
+        Button woolButton = new Button("Trade");
+        woolButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                board.trade(Resource.Wool);
+                refreshDices(false);
+                refreshBoard();
+            }
+        });
+        Button timberButton = new Button("Trade");
+        timberButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                board.trade(Resource.Timber);
+                refreshDices(false);
+                refreshBoard();
+            }
+        });
+        Button brickButton = new Button("Trade");
+        brickButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                board.trade(Resource.Brick);
+                refreshDices(false);
+                refreshBoard();
+            }
+        });
+        tradeButtons.getChildren().addAll(oreButton, grainButton, woolButton, timberButton, brickButton);
+        tradeButtons.setSpacing(0.12*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
+        tradeButtons.setLayoutX(XOfResource - 5*RESOURCE_HORIZONTAL_SPACE_ADAPTION-RESOURCE_RADIUS);
+        tradeButtons.setLayoutY(YOfResource + 1.2*RESOURCE_RADIUS);
+
         resourcesAndText.setLayoutX(XOfResource- 5.85*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
         resourcesAndText.setLayoutY(YOfResource-RESOURCE_RADIUS);
         resourcesAndText.setSpacing(0.3*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
@@ -812,6 +893,26 @@ public class Game extends Application {
     }
 
     /**
+     * create a button to enter next round
+     */
+    private void makeNextRoundButton(){
+        Button button = new Button("NEXT ROUND");
+        button.setAlignment(Pos.CENTER);
+        button.setLayoutX(XOfNextRoundButton);
+        button.setLayoutY(YOfNextRoundButton);
+        button.setMinSize(NEXT_ROUND_BUTTON_LOCATION_WIDTH_ADAPTION, NEXT_ROUND_BUTTON_LOCATION_HEIGHT_ADAPTION);
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                board.nextRound();
+                refreshDices(false);
+                refreshRecorder();
+                refreshBoard();
+            }
+        });
+        nextRoundButton.getChildren().add(button);
+    }
+    /**
      * set background
      */
     void initializeBackground(){
@@ -822,6 +923,21 @@ public class Game extends Application {
         backgroundView.setLayoutX(0);
         backgroundView.setLayoutY(0);
         this.root.getChildren().add(backgroundView);
+    }
+
+    /**
+     * set image of resource table
+     */
+    void initializeResourceTable(){
+        //set background
+        Image resourceTableImage = new Image(Viewer.class.getResource(URI_BASE + "Resource Table.png").toString());
+        ImageView resourceTableView = new ImageView(resourceTableImage);
+        resourceTableView.setFitWidth(RESOURCE_TABLE_LOCATION_WIDTH_ADAPTION);
+        resourceTableView.setFitHeight(RESOURCE_TABLE_LOCATION_HEIGHT_ADAPTION);
+        resourceTableView.setLayoutX(XOfResourceTable);
+        resourceTableView.setLayoutY(YOfResourceTable);
+        this.resourceTable.getChildren().add(resourceTableView);
+        this.root.getChildren().add(resourceTable);
     }
 
     /**
@@ -886,6 +1002,8 @@ public class Game extends Application {
      */
     void initializeResourcesAndText(){
         root.getChildren().add(resourcesAndText);
+        root.getChildren().add(tradeButtons);
+        root.getChildren().add(nameLabels);
         this.makeResourcesAndText();
     }
 
@@ -896,12 +1014,13 @@ public class Game extends Application {
         root.getChildren().add(diceRoller);
         this.makeDiceRoller();
     }
+
     /**
-     * add Group controls to Group root and show the initialized controls on stage
+     * set nextRoundButton : add Group nextRoundButton to Group root
      */
-    void initializeControls() {
-        root.getChildren().add(controls);
-        this.makeControls();
+    void initializeNextRoundButton(){
+        root.getChildren().add(nextRoundButton);
+        this.makeNextRoundButton();
     }
 
     /**
@@ -979,6 +1098,8 @@ public class Game extends Application {
      */
     public void refreshDices(boolean whetherHaveRolled){
         resourcesAndText.getChildren().clear();
+        nameLabels.getChildren().clear();
+        tradeButtons.getChildren().clear();
         diceRoller.getChildren().clear();
         draggableResources.getChildren().clear();
 
@@ -1029,21 +1150,23 @@ public class Game extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         //test
-        board.setRound(7);
-        board.setScoresRecorder(new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15});
-        board.setCurrentResource(new int[]{10,10,10,10,10,2});
+//        board.setRound(7);
+//        board.setScoresRecorder(new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15});
+//        board.setCurrentResource(new int[]{10,10,10,10,10,2});
         //set basic configuration of stage
         stage.setTitle("Game");
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         //add different part of the game into stage
         initializeBackground();
+        initializeResourceTable();
         initializeCatan();
         initializeBoard();
         initializeRecorder();
         initializeDiceRoller();
         initializeResourcesAndText();
         initializeDraggableResources();
+        initializeNextRoundButton();
         //initializeControls();
 
         //show stage

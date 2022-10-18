@@ -1,5 +1,8 @@
 package comp1110.ass2;
 
+/**
+ * @author
+ */
 public class BuildableStructures {
     protected int index;//basic building number (The word "basic" means there might be advanced no. in the inheritance class
     protected int scores;//the scores owned by current building

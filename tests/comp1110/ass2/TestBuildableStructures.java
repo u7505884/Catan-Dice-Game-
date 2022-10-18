@@ -8,6 +8,9 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author
+ */
 class TestBuildableStructures {
     private void setterTest(BuildableStructures b, boolean whetherBuild) {
         b.setWhetherBuild(whetherBuild);
