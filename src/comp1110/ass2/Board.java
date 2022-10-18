@@ -17,6 +17,7 @@ public class Board {
      * Constructor
      */
     public Board(){
+        currentResource = dice.rollDice(6).clone();//initialize current resources
         this.initializeBoard();
     }
 
