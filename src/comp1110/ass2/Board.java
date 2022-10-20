@@ -307,7 +307,7 @@ public class Board {
      */
     public boolean whetherCanBeSwapped(Resource resourceAsPrice, Resource newResource){
         if(newResource.getKnight(this).getWhetherHaveBuilt()){
-            if(newResource.getKnight(this).getWhetherHaveSwapped()){
+            if(!newResource.getKnight(this).getWhetherHaveSwapped()){
                 if(currentResource[resourceAsPrice.getIndex()-1]>=1){
                     return true;
                 }
@@ -324,7 +324,7 @@ public class Board {
      */
     public boolean whetherCanBeSwappedWithWildcardKnight(Resource resourceAsPrice, Resource newResource){
         if(knights.get(6).getWhetherHaveBuilt()){
-            if(knights.get(6).getWhetherHaveSwapped()){
+            if(!knights.get(6).getWhetherHaveSwapped()){
                 if(currentResource[resourceAsPrice.getIndex()-1]>=1){
                     return true;
                 }
@@ -380,6 +380,7 @@ public class Board {
             scoresRecorder[round] -= 2;
         }
         round++;
+        System.out.println("Round"+round+" Start!");
         if(round>=15){
             System.out.println("Final score " + calculateCurrentFinalScore());
             return;

@@ -4,18 +4,18 @@ import comp1110.ass2.*;
 import javafx.animation.FadeTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
@@ -28,6 +28,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javax.swing.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,6 +90,11 @@ public class Game extends Application {
     private static final double NEXT_ROUND_BUTTON_LOCATION_HEIGHT_ADAPTION = 50;
     private static final double XOfNextRoundButton = 600-NEXT_ROUND_BUTTON_LOCATION_WIDTH_ADAPTION*0.5;
     private static final double YOfNextRoundButton = 617;
+    //console
+    private static final double CONSOLE_LOCATION_WIDTH_ADAPTION = 300;
+    private static final double CONSOLE_LOCATION_HEIGHT_ADAPTION = 4000;
+    private static final double XOfConsole = 867;
+    private static final double YOfConsole = 450;
 
     private static final Group root = new Group();// basic group
     private static final Group basicBoard = new Group();
@@ -114,6 +125,7 @@ public class Game extends Application {
     static int[] resourcesNeedToBeRolled = new int[6];
     static int[] numberOfRollInEachRound = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
     static ArrayList<BuildableStructures> buildableStructures = new ArrayList<>();
+    static Resource[] resourceType = {Resource.Ore, Resource.Grain, Resource.Wool, Resource.Timber, Resource.Brick, Resource.Gold};
 
     /**
      * use for create elements of boundary
@@ -338,20 +350,22 @@ public class Game extends Application {
             text.setTextAlignment(CENTER);
             knight.getChildren().addAll(this,circle,text);
             knight.setOnMouseClicked(event -> {
-                if(buildableStructures.contains(this.knightObject)){
+                if (!knightObject.getWhetherHaveSwapped()&&knightObject.getWhetherHaveBuilt()){//what we want when we click a built knight
+                    openSwapStage(knightObject);
+                    refreshBoard();
+                }
+                if(buildableStructures.contains(this.knightObject)){//what we want when we click an un-built knight
                     board.build(knightObject);
                     highlightJ();
-                    refreshDices(false);
-                    refreshBoard();
-                    refreshRecorder();
-                } else if (!knightObject.getWhetherHaveSwapped()&&knightObject.getWhetherHaveBuilt()){
-                    //FIXME
                 }
+                refreshDices(false);
+                refreshBoard();
+                refreshRecorder();
             });
         }
         public void highlightJ(){
-            this.circle.setFill(Color.GREEN);
-            this.setFill(Color.GREEN);
+            this.circle.setFill(Color.RED);
+            this.setFill(Color.RED);
             FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),knight);
             fadeTransition.setFromValue(1);
             fadeTransition.setToValue(0.3);
@@ -878,6 +892,7 @@ public class Game extends Application {
         button.setLayoutY(YOfDiceRoller+DICE_ROLLER_HEIGHT);
         button.setAlignment(Pos.CENTER);
         button.setMinSize(DICE_ROLLER_WIDTH, 30);
+        button.setFont(Font.font(15));
         if(numberOfRollInEachRound[board.getRound()]<3) {
             button.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -901,6 +916,7 @@ public class Game extends Application {
         button.setLayoutX(XOfNextRoundButton);
         button.setLayoutY(YOfNextRoundButton);
         button.setMinSize(NEXT_ROUND_BUTTON_LOCATION_WIDTH_ADAPTION, NEXT_ROUND_BUTTON_LOCATION_HEIGHT_ADAPTION);
+        button.setFont(Font.font(18));
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -1024,13 +1040,39 @@ public class Game extends Application {
     }
 
     /**
+     * create a new console window
+     */
+    void initializeConsole() {
+        TextArea console = new TextArea();
+        console.setLayoutX(XOfConsole);
+        console.setLayoutY(YOfConsole);
+        console.setMaxSize(CONSOLE_LOCATION_WIDTH_ADAPTION, CONSOLE_LOCATION_HEIGHT_ADAPTION);
+        System.setOut(new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b){
+                String text = String.valueOf((char)b);
+                Platform.runLater(() ->{
+                    console.appendText(text);
+                });
+            }
+            @Override
+            public void write(byte[] b, int off, int len){
+                String s = new String(b, off, len);
+                Platform.runLater(()-> console.appendText(s));
+            }
+        }, true));
+        System.setErr(System.out);
+        root.getChildren().add(console);
+    }
+
+    /**
      * highlight all buildable structures in board
      */
     public void highlightBuildableStructures(){
         for (int index: roadsMap.keySet()){
             if(board.whetherCanBeBuilt(board.getRoads().get(index))){
                 buildableStructures.add(roadsMap.get(index).roadObject);
-                roadsMap.get(index).setFill(Color.LIGHTGREEN);
+                roadsMap.get(index).setFill(Color.YELLOW);
                 FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),roadsMap.get(index));
                 fadeTransition.setFromValue(1);
                 fadeTransition.setToValue(0.3);
@@ -1045,8 +1087,8 @@ public class Game extends Application {
         for (int index: knightsMap.keySet()){
             if(board.whetherCanBeBuilt(board.getKnights().get(index))){
                 buildableStructures.add(knightsMap.get(index).knightObject);
-                knightsMap.get(index).circle.setFill(Color.LIGHTGREEN);
-                knightsMap.get(index).setFill(Color.LIGHTGREEN);
+                knightsMap.get(index).circle.setFill(Color.YELLOW);
+                knightsMap.get(index).setFill(Color.YELLOW);
                 FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),knightsMap.get(index).knight);
                 fadeTransition.setFromValue(1);
                 fadeTransition.setToValue(0.3);
@@ -1064,7 +1106,7 @@ public class Game extends Application {
         for (int index: settlementsMap.keySet()){
             if(board.whetherCanBeBuilt(board.getSettlements().get(index))){
                 buildableStructures.add(settlementsMap.get(index).settlementObject);
-                settlementsMap.get(index).setFill(Color.LIGHTGREEN);
+                settlementsMap.get(index).setFill(Color.YELLOW);
                 FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),settlementsMap.get(index));
                 fadeTransition.setFromValue(1);
                 fadeTransition.setToValue(0.3);
@@ -1078,7 +1120,7 @@ public class Game extends Application {
         for (int index: citiesMap.keySet()){
             if(board.whetherCanBeBuilt(board.getCities().get(index))){
                 buildableStructures.add(citiesMap.get(index).cityObject);
-                citiesMap.get(index).setFill(Color.LIGHTGREEN);
+                citiesMap.get(index).setFill(Color.YELLOW);
                 FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.7),citiesMap.get(index));
                 fadeTransition.setFromValue(1);
                 fadeTransition.setToValue(0.3);
@@ -1147,12 +1189,65 @@ public class Game extends Application {
         makeRecorder();
     }
 
+    /**
+     * open a new stage to have the action of swap
+     */
+    public void openSwapStage(Knight knight){
+        Stage swapStage = new Stage();
+        swapStage.setTitle("Swap Action");
+
+        Text swapText = new Text(220, 50, "What do you want to swapped out?");
+        swapText.setFont(new Font(20));
+
+        ComboBox<String> resourceSwapOut = new ComboBox<>();
+        for(int indexOfResource = 1; indexOfResource<=6; indexOfResource++){
+            if(board.getCurrentResource()[indexOfResource-1] >= 1 && knight.getScores()!=indexOfResource){
+                resourceSwapOut.getItems().add(resourceType[indexOfResource-1].getName());
+            }
+        }
+
+        Button button = new Button("Swap Out");
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                boolean whetherHaveCorrectChoice = true;
+                try{
+                    switch (resourceSwapOut.getValue()){
+                        case("Ore")->board.swap(Resource.Ore, resourceType[knight.getScores()-1]);
+                        case("Grain")->board.swap(Resource.Grain, resourceType[knight.getScores()-1]);
+                        case("Wool")->board.swap(Resource.Wool, resourceType[knight.getScores()-1]);
+                        case("Timber")->board.swap(Resource.Timber, resourceType[knight.getScores()-1]);
+                        case("Brick")->board.swap(Resource.Brick, resourceType[knight.getScores()-1]);
+                        case("Gold")->board.swap(Resource.Gold, resourceType[knight.getScores()-1]);
+                        default -> whetherHaveCorrectChoice = false;
+                    }
+                }catch (NullPointerException ex){
+                    whetherHaveCorrectChoice = false;
+                }
+                refreshDices(false);
+                refreshRecorder();
+                refreshBoard();
+                if(whetherHaveCorrectChoice){
+                    swapStage.close();
+                }
+            }
+        });
+        button.setFont(Font.font(15));
+
+        VBox swapRoot = new VBox(swapText, resourceSwapOut, button);
+        swapRoot.setAlignment(Pos.CENTER);
+        swapRoot.setSpacing(70);
+        Scene swapScene = new Scene(swapRoot, 600, 300);
+        swapStage.setScene(swapScene);
+        swapStage.show();
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         //test
-//        board.setRound(7);
-//        board.setScoresRecorder(new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15});
-//        board.setCurrentResource(new int[]{10,10,10,10,10,2});
+        board.setRound(7);
+        board.setScoresRecorder(new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15});
+        board.setCurrentResource(new int[]{10,10,10,10,10,2});
         //set basic configuration of stage
         stage.setTitle("Game");
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -1167,7 +1262,7 @@ public class Game extends Application {
         initializeResourcesAndText();
         initializeDraggableResources();
         initializeNextRoundButton();
-        //initializeControls();
+        initializeConsole();
 
         //show stage
         stage.setScene(scene);
