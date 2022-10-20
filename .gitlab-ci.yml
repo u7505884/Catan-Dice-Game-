@@ -1,45 +1,125 @@
-# This file is a template, and might need editing before it works on your project.
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/ee/development/cicd/templates.html
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
+image: cfourteen/comp1110-2022-s2-gitlab-ci:0.1.0
 
-# This is a sample GitLab CI/CD configuration file that should run without any modifications.
-# It demonstrates a basic 3 stage CI/CD pipeline. Instead of real tests or scripts,
-# it uses echo commands to simulate the pipeline execution.
-#
-# A pipeline is composed of independent jobs that run scripts, grouped into stages.
-# Stages run in sequential order, but jobs within stages run in parallel.
-#
-# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
-
-stages:          # List of stages for jobs, and their order of execution
+stages:
+  - checksum
+  - compliance
   - build
   - test
-  - deploy
 
-build-job:       # This job runs in the build stage, which runs first.
+before_script:
+  - export PATH_TO_FX=/usr/share/openjfx/lib
+  - export JAVAFX_OPTIONS="--module-path $PATH_TO_FX --add-modules javafx.controls,javafx.fxml,javafx.media"
+  - export CP=src:/ass2/*:/shared/junit-platform-console-standalone-1.7.0.jar:$PATH_TO_FX/*
+  - export JUNIT="java $JAVAFX_OPTIONS -jar /shared/junit-platform-console-standalone-1.7.0.jar --class-path /ass2/comp1110-ass2-tests.jar:src --disable-banner"
+
+checksum:
+  tags:
+    - comp1110
+  stage: checksum
+  script:
+    - python3 /validate.py --integrity comp1110-ass2
+  except:
+    variables:
+      - $CI_PROJECT_NAME =~ /.*-dev$/
+
+compliance:
+  tags:
+    - comp1110
+  stage: compliance
+  script:
+    - python3 /validate.py --gitlablogin ${GITLAB_USER_LOGIN} --gitlabuser "${GITLAB_USER_NAME}" --gitlabprojectname "${CI_PROJECT_NAME}" --assignment /ass2/compliance-ass2.yml
+  except:
+    variables:
+      - $CI_PROJECT_NAME =~ /.*-dev$/
+  allow_failure: true
+
+build:
+  tags:
+    - comp1110
   stage: build
   script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
+    - javac -encoding utf-8 $JAVAFX_OPTIONS -cp $CP src/comp1110/ass2/*.java src/comp1110/ass2/*/*.java
+  artifacts:
+    paths:
+      - src/comp1110/ass2/*.class
+      - src/comp1110/ass2/*/*.class
 
-unit-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
+Task3:
+  tags:
+    - comp1110
+  stage: test
   script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 60
-    - echo "Code coverage is 90%"
+    - $JUNIT -c=comp1110.ass2.TestIsBoardStateWellFormed
+  allow_failure: true
 
-lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
+Task4:
+  tags:
+    - comp1110
+  stage: test
   script:
-    - echo "Linting code... This will take about 10 seconds."
-    - sleep 10
-    - echo "No lint issues found."
+    - $JUNIT -c=comp1110.ass2.TestIsActionWellFormed
+  allow_failure: true
 
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+Task6:
+  tags:
+    - comp1110
+  stage: test
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - $JUNIT -c=comp1110.ass2.TestRollDice
+  allow_failure: true
+
+Task7:
+  tags:
+    - comp1110
+  stage: test
+  script:
+    - $JUNIT -c=comp1110.ass2.TestCheckResources
+  allow_failure: true
+
+Task8:
+  tags:
+    - comp1110
+  stage: test
+  script:
+    - $JUNIT -c=comp1110.ass2.TestCheckBuildConstraints
+  allow_failure: true
+
+Task9:
+  tags:
+    - comp1110
+  stage: test
+  script:
+    - $JUNIT -c=comp1110.ass2.TestCanDoAction
+  allow_failure: true
+
+Task11:
+  tags:
+    - comp1110
+  stage: test
+  script:
+    - $JUNIT -c=comp1110.ass2.TestCanDoSequence
+  allow_failure: true
+
+Task12:
+  tags:
+    - comp1110
+  stage: test
+  script:
+    - $JUNIT -c=comp1110.ass2.TestCheckResourcesTS
+  allow_failure: true
+
+Task13:
+  tags:
+    - comp1110
+  stage: test
+  script:
+    - $JUNIT -c=comp1110.ass2.TestPathTo
+  allow_failure: true
+
+Task14:
+  tags:
+    - comp1110
+  stage: test
+  script:
+    - $JUNIT -c=comp1110.ass2.TestBuildPlan
+  allow_failure: true
