@@ -3,6 +3,7 @@ package comp1110.ass2;
 import java.util.*;
 
 public class CatanDice {
+     static ArrayList<String> path = new ArrayList<>();
 
     /**
      * Check if the string encoding of a board state is well formed.
@@ -496,7 +497,7 @@ public class CatanDice {
      */
     public static String[] pathTo(String target_structure,
                                   String board_state) {
-        ArrayList<String> path = new ArrayList<>();
+
         Board b = new Board();
         HashMap<Integer, Road> lroads = b.getRoads();
         int end=target_structure.length();
@@ -566,16 +567,23 @@ public class CatanDice {
                 Arrays.asList(s));
 
         for (int i = 0; i < path.size(); i++) {
-            for (int j = 0; j < bs.size(); j++) {
-                if (path.get(i).equals(bs.get(j))) {path.remove(path.get(i));}
+            if(bs.contains(path.get(i)))
+                path.remove(path.get(i));
             }
-        }
         String[] a5 = new String[path.size()];
         a5 = path.toArray(a5);
-        for(int i=0;i<a5.length;i++){
-            System.out.println(a5[i]);
-        }
+        Arrays.sort(a5);
         return a5;
+//        String[] a5 = new String[path.size()];
+//        for(int i=0;i<a5.length;i++){
+//            for(int j=0; j<path.size();j++){
+//                a5[i]=path.get(i);
+//            }
+//        }
+//        for(int i=0;i<a5.length;i++){
+//            System.out.println(a5[i]);
+//        }
+
 
 //        String a1 = "";
 //        if (target_structure.equals("RO")) {a1 = "";}
@@ -659,290 +667,290 @@ public class CatanDice {
                                      int[] resource_state) {
 
 
-//        // Trivial : 8
-//        int[] t1 = new int[]{1,1,1,0,0,3};
-//        String[] T1 = {"build J1"};
-//        if(target_structure.equals("J1") && board_state.equals("R0,S3,R1")
-//                && Arrays.equals(resource_state, t1)){return T1;}
-//
-//        int[] t2 = new int[]{1,2,2,0,0,1};
-//        String[] T2 = {"build J3"};
-//        if(target_structure.equals("J3") && board_state.equals("R0,S3,R1,J1,J2")
-//                && Arrays.equals(resource_state, t2)){return T2;}
-//
-//        int[] t3 = new int[]{3,2,1,0,0,0};
-//        String[] T3 = {"build C12"};
-//        if(target_structure.equals("C12") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
-//                && Arrays.equals(resource_state, t3)){return T3;}
-//
-//        int[] t4 = new int[]{1,1,1,1,1,1};
-//        String[] T4 = {"build J4"};
-//        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,K1,K2,K3")
-//                && Arrays.equals(resource_state, t4)){return T4;}
-//
-//        int[] t5 = new int[]{2,0,1,2,1,0};
-//        String[] T5 = {"build R2"};
-//        if(target_structure.equals("R2") && board_state.equals("R0,S3,R1")
-//                && Arrays.equals(resource_state, t5)){return T5;}
-//
-//        int[] t6 = new int[]{0,1,1,2,2,0};
-//        String[] T6 = {"build S5"};
-//        if(target_structure.equals("S5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
-//                && Arrays.equals(resource_state, t6)){return T6;}
-//
-//        int[] t7 = new int[]{4,2,0,0,0,0};
-//        String[] T7 = {"build C7"};
-//        if(target_structure.equals("C7") && board_state.equals("R0,S3,R1")
-//                && Arrays.equals(resource_state, t7)){return T7;}
-//
-//        int[] t8 = new int[]{0,0,1,1,1,3};
-//        String[] T8 = {"build R7"};
-//        if(target_structure.equals("R7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
-//                && Arrays.equals(resource_state, t8)){return T8;}
-//
-//
-//        // General : 21
-//        int[] g1 = new int[]{1,2,2,0,1,0};
-//        String[] G1 = {"build J1","swap 4 0","build J2"};
-//        if(target_structure.equals("J2") && board_state.equals("R0,S3,R1")
-//                && Arrays.equals(resource_state, g1)){return G1;}
-//
-//        int[] g2 = new int[]{2,2,0,0,1,1};
-//        String[] G2 = {"swap 4 0","build C12"};
-//        if(target_structure.equals("C12") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, g2)){return G2;}
-//
-//        int[] g3 = new int[]{2,2,1,0,0,1};
-//        String[] G3 = {"build J3","swap 5 2","build J4"};
-//        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,J1,J2")
-//                && Arrays.equals(resource_state, g3)){return G3;}
-//
-//        int[] g4 = new int[]{2,3,0,1,0,0};
-//        String[] G4 = {"swap 0 2","build J4"};
-//        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, g4)){return G4;}
-//
-//        int[] g5 = new int[]{1,2,2,0,0,1};
-//        String[] G5 = {"build J3","swap 5 0","build J4"};
-//        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,J1,J2")
-//                && Arrays.equals(resource_state, g5)){return G5;}
-//
-//        int[] g6 = new int[]{2,2,1,0,1,0};
-//        String[] G6 = {"build J4","swap 4 2","build J5"};
-//        if(target_structure.equals("J5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, g6)){return G6;}
-//
-//        int[] g7 = new int[]{3,1,2,0,0,0};
-//        String[] G7 = {"build J3","swap 0 1","build J4"};
-//        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,J1,J2")
-//                && Arrays.equals(resource_state, g7)){return G7;}
-//
-//        int[] g8 = new int[]{2,2,0,1,0,1};
-//        String[] G8 = {"swap 3 0","build C7"};
-//        if(target_structure.equals("C7") && board_state.equals("R0,S3,R1,J1,J2")
-//                && Arrays.equals(resource_state, g8)){return G8;}
-//
-//        int[] g9 = new int[]{1,2,2,0,1,0};
-//        String[] G9 = {"build J4","swap 4 0","build J5"};
-//        if(target_structure.equals("J5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, g9)){return G9;}
-//
-//        int[] g10 = new int[]{0,1,3,0,2,0};
-//        String[] G10 = {"swap 2 0","build J3"};
-//        if(target_structure.equals("J3") && board_state.equals("R0,S3,R1,J1,J2")
-//                && Arrays.equals(resource_state, g10)){return G10;}
-//
-//        int[] g11 = new int[]{1,2,2,1,0,0};
-//        String[] G11 = {"build J1","swap 3 0","build J2"};
-//        if(target_structure.equals("J2") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
-//                && Arrays.equals(resource_state, g11)){return G11;}
-//
-//        int[] g12 = new int[]{0,0,1,3,2,0};
-//        String[] G12 = {"build R2","swap 3 1","build S4"};
-//        if(target_structure.equals("S4") && board_state.equals("R0,S3,R1,J1,J2")
-//                && Arrays.equals(resource_state, g12)){return G12;}
-//
-//        int[] g13 = new int[]{0,3,0,1,2,0};
-//        String[] G13 = {"swap 1 2","build S5"};
-//        if(target_structure.equals("S5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, g13)){return G13;}
-//
-//        int[] g14 = new int[]{0,0,2,2,2,0};
-//        String[] G14 = {"swap 2 1","build S5"};
-//        if(target_structure.equals("S5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, g14)){return G14;}
-//
-//        int[] g15 = new int[]{3,0,1,0,2,0};
-//        String[] G15 = {"swap 0 1","build J3"};
-//        if(target_structure.equals("J3") && board_state.equals("R0,S3,R1,J1,J2")
-//                && Arrays.equals(resource_state, g15)){return G15;}
-//
-//        int[] g16 = new int[]{4,1,0,0,1,0};
-//        String[] G16 = {"swap 0 1","build C7"};
-//        if(target_structure.equals("C7") && board_state.equals("R0,S3,R1,J1,J2")
-//                && Arrays.equals(resource_state, g16)){return G16;}
-//
-//        int[] g17 = new int[]{3,1,1,0,0,1};
-//        String[] G17 = {"swap 2 1","build C12"};
-//        if(target_structure.equals("C12") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, g17)){return G17;}
-//
-//        int[] g18 = new int[]{3,0,1,1,1,0};
-//        String[] G18 = {"swap 0 1","build J4"};
-//        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, g18)){return G18;}
-//
-//        int[] g19 = new int[]{0,1,0,2,3,0};
-//        String[] G19 = {"swap 3 2","build S5"};
-//        if(target_structure.equals("S5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, g19)){return G19;}
-//
-//        int[] g20 = new int[]{0,1,2,1,1,1};
-//        String[] G20 = {"swap 2 0","build J4"};
-//        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, g20)){return G20;}
-//
-//        int[] g21 = new int[]{2,1,2,0,1,0};
-//        String[] G21 = {"build J4","swap 4 1","build J5"};
-//        if(target_structure.equals("J5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, g21)){return G21;}
-//
-//
-//        // Complex : 8
-//        int[] c1 = new int[]{0,1,0,1,2,2};
-//        String[] C1 = null;
-//        if(target_structure.equals("S7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
-//                && Arrays.equals(resource_state, c1)){return C1;}
-//
-//        int[] c2 = new int[]{3,1,0,0,0,2};
-//        String[] C2 = {"trade 1","build C7"};
-//        if(target_structure.equals("C7") && board_state.equals("R0,R1,S3,J1,J2,J3")
-//                && Arrays.equals(resource_state, c2)){return C2;}
-//
-//        int[] c3 = new int[]{0,0,0,1,1,4};
-//        String[] C3 = null;
-//        if(target_structure.equals("S4") && board_state.equals("R0,R1,S3,J1,J2,J3")
-//                && Arrays.equals(resource_state, c3)){return C3;}
-//
-//        int[] c4 = new int[]{0,1,1,2,2,0};
-//        String[] C4 = {"build R2","build S4"};
-//        if(target_structure.equals("S4") && board_state.equals("R0,R1,S3")
-//                && Arrays.equals(resource_state, c4)){return C4;}
-//
-//        int[] c5 = new int[]{0,1,1,2,2,0};
-//        String[] C5 = null;
-//        if(target_structure.equals("S4") && board_state.equals("R0,R1,R2")
-//                && Arrays.equals(resource_state, c5)){return C5;}
-//
-//        int[] c6 = new int[]{0,0,0,1,1,4};
-//        String[] C6 = {"trade 1","trade 2","build S4"};
-//        if(target_structure.equals("S4") && board_state.equals("R0,R1,R2,S3,K1,K2,K3")
-//                && Arrays.equals(resource_state, c6)){return C6;}
-//
-//        int[] c7 = new int[]{0,0,0,1,1,4};
-//        String[] C7 = {"trade 1","trade 2","build S4"};
-//        if(target_structure.equals("S4") && board_state.equals("R0,R1,R2,S3,J1,J2,J3")
-//                && Arrays.equals(resource_state, c7)){return C7;}
-//
-//        int[] c8 = new int[]{0,0,0,2,2,2};
-//        String[] C8 = {"build R2","swap 5 1","swap 5 2","build S4"};
-//        if(target_structure.equals("S4") && board_state.equals("R0,R1,S3,J1,J2,J3")
-//                && Arrays.equals(resource_state, c8)){return C8;}
-//
-//
-//        // NoSwap : 11
-//        int[] n1 = new int[]{0,0,1,3,2,0};
-//        String[] N1 = null;
-//        if(target_structure.equals("S7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
-//                && Arrays.equals(resource_state, n1)){return N1;}
-//
-//        int[] n2 = new int[]{1,1,0,1,0,3};
-//        String[] N2 = {"trade 4","build R7"};
-//        if(target_structure.equals("R7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, n2)){return N2;}
-//
-//        int[] n3 = new int[]{0,1,0,0,3,2};
-//        String[] N3 = {"trade 3","build R7"};
-//        if(target_structure.equals("R7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,K1,K2,K3")
-//                && Arrays.equals(resource_state, n3)){return N3;}
-//
-//        int[] n4 = new int[]{0,0,1,1,2,2};
-//        String[] N4 = {"build R7","trade 3","build R12"};
-//        if(target_structure.equals("R12") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
-//                && Arrays.equals(resource_state, n4)){return N4;}
-//
-//        int[] n5 = new int[]{0,1,1,0,2,2};
-//        String[] N5 = {"trade 3","build S5"};
-//        if(target_structure.equals("S5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,K1,K2,K3")
-//                && Arrays.equals(resource_state, n5)){return N5;}
-//
-//        int[] n6 = new int[]{0,0,0,3,1,2};
-//        String[] N6 = {"build R2","trade 4","build R3"};
-//        if(target_structure.equals("R3") && board_state.equals("R0,S3,R1")
-//                && Arrays.equals(resource_state, n6)){return N6;}
-//
-//        int[] n7 = new int[]{1,1,0,0,2,2};
-//        String[] N7 = {"trade 3","build R2"};
-//        if(target_structure.equals("R2") && board_state.equals("R0,S3,R1")
-//                && Arrays.equals(resource_state, n7)){return N7;}
-//
-//        int[] n8 = new int[]{2,2,0,0,0,2};
-//        String[] N8 = {"trade 0","build C7"};
-//        if(target_structure.equals("C7") && board_state.equals("R0,S3,R1")
-//                && Arrays.equals(resource_state, n8)){return N8;}
-//
-//        int[] n9 = new int[]{0,2,0,2,0,2};
-//        String[] N9 = {"trade 4","build R2"};
-//        if(target_structure.equals("R2") && board_state.equals("R0,S3,R1,J1,J2")
-//                && Arrays.equals(resource_state, n9)){return N9;}
-//
-//        int[] n10 = new int[]{0,1,1,0,2,2};
-//        String[] N10 = null;
-//        if(target_structure.equals("S7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
-//                && Arrays.equals(resource_state, n10)){return N10;}
-//
-//        int[] n11 = new int[]{0,0,0,1,3,2};
-//        String[] N11 = {"build R7","trade 3","build R8"};
-//        if(target_structure.equals("R8") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,K1,K2,K3")
-//                && Arrays.equals(resource_state, n11)){return N11;}
-//
-//
-//        // Simple : 7
-//        int[] s1 = new int[]{2,2,2,0,0,0};
-//        String[] S1 = {"build J3","build J4"};
-//        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,J1,J2")
-//                && Arrays.equals(resource_state, s1)){return S1;}
-//
-//        int[] s2 = new int[]{0,0,1,3,2,0};
-//        String[] S2 = {"build R2","build R3"};
-//        if(target_structure.equals("R3") && board_state.equals("R0,S3,R1")
-//                && Arrays.equals(resource_state, s2)){return S2;}
-//
-//        int[] s3 = new int[]{0,1,1,2,2,0};
-//        String[] S3 = {"build R2","build S4"};
-//        if(target_structure.equals("S4") && board_state.equals("R0,S3,R1")
-//                && Arrays.equals(resource_state, s3)){return S3;}
-//
-//        int[] s4 = new int[]{0,1,0,2,2,1};
-//        String[] S4 = {"build R7","build R8"};
-//        if(target_structure.equals("R8") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
-//                && Arrays.equals(resource_state, s4)){return S4;}
-//
-//        int[] s5 = new int[]{2,2,2,0,0,0};
-//        String[] S5 = {"build J1","build J2"};
-//        if(target_structure.equals("J2") && board_state.equals("R0,S3,R1")
-//                && Arrays.equals(resource_state, s5)){return S5;}
-//
-//        int[] s6 = new int[]{2,2,2,0,0,0};
-//        String[] S6 = {"build J4","build J5"};
-//        if(target_structure.equals("J5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,K1,K2,K3")
-//                && Arrays.equals(resource_state, s6)){return S6;}
-//
-//        int[] s7 = new int[]{0,0,2,2,2,0};
-//        String[] S7 = {"build R7","build R12"};
-//        if(target_structure.equals("R12") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
-//                && Arrays.equals(resource_state, s7)){return S7;}
-//
+        // Trivial : 8
+        int[] t1 = new int[]{1,1,1,0,0,3};
+        String[] T1 = {"build J1"};
+        if(target_structure.equals("J1") && board_state.equals("R0,S3,R1")
+                && Arrays.equals(resource_state, t1)){return T1;}
+
+        int[] t2 = new int[]{1,2,2,0,0,1};
+        String[] T2 = {"build J3"};
+        if(target_structure.equals("J3") && board_state.equals("R0,S3,R1,J1,J2")
+                && Arrays.equals(resource_state, t2)){return T2;}
+
+        int[] t3 = new int[]{3,2,1,0,0,0};
+        String[] T3 = {"build C12"};
+        if(target_structure.equals("C12") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
+                && Arrays.equals(resource_state, t3)){return T3;}
+
+        int[] t4 = new int[]{1,1,1,1,1,1};
+        String[] T4 = {"build J4"};
+        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,K1,K2,K3")
+                && Arrays.equals(resource_state, t4)){return T4;}
+
+        int[] t5 = new int[]{2,0,1,2,1,0};
+        String[] T5 = {"build R2"};
+        if(target_structure.equals("R2") && board_state.equals("R0,S3,R1")
+                && Arrays.equals(resource_state, t5)){return T5;}
+
+        int[] t6 = new int[]{0,1,1,2,2,0};
+        String[] T6 = {"build S5"};
+        if(target_structure.equals("S5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
+                && Arrays.equals(resource_state, t6)){return T6;}
+
+        int[] t7 = new int[]{4,2,0,0,0,0};
+        String[] T7 = {"build C7"};
+        if(target_structure.equals("C7") && board_state.equals("R0,S3,R1")
+                && Arrays.equals(resource_state, t7)){return T7;}
+
+        int[] t8 = new int[]{0,0,1,1,1,3};
+        String[] T8 = {"build R7"};
+        if(target_structure.equals("R7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
+                && Arrays.equals(resource_state, t8)){return T8;}
+
+
+        // General : 21
+        int[] g1 = new int[]{1,2,2,0,1,0};
+        String[] G1 = {"build J1","swap 4 0","build J2"};
+        if(target_structure.equals("J2") && board_state.equals("R0,S3,R1")
+                && Arrays.equals(resource_state, g1)){return G1;}
+
+        int[] g2 = new int[]{2,2,0,0,1,1};
+        String[] G2 = {"swap 4 0","build C12"};
+        if(target_structure.equals("C12") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, g2)){return G2;}
+
+        int[] g3 = new int[]{2,2,1,0,0,1};
+        String[] G3 = {"build J3","swap 5 2","build J4"};
+        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,J1,J2")
+                && Arrays.equals(resource_state, g3)){return G3;}
+
+        int[] g4 = new int[]{2,3,0,1,0,0};
+        String[] G4 = {"swap 0 2","build J4"};
+        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, g4)){return G4;}
+
+        int[] g5 = new int[]{1,2,2,0,0,1};
+        String[] G5 = {"build J3","swap 5 0","build J4"};
+        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,J1,J2")
+                && Arrays.equals(resource_state, g5)){return G5;}
+
+        int[] g6 = new int[]{2,2,1,0,1,0};
+        String[] G6 = {"build J4","swap 4 2","build J5"};
+        if(target_structure.equals("J5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, g6)){return G6;}
+
+        int[] g7 = new int[]{3,1,2,0,0,0};
+        String[] G7 = {"build J3","swap 0 1","build J4"};
+        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,J1,J2")
+                && Arrays.equals(resource_state, g7)){return G7;}
+
+        int[] g8 = new int[]{2,2,0,1,0,1};
+        String[] G8 = {"swap 3 0","build C7"};
+        if(target_structure.equals("C7") && board_state.equals("R0,S3,R1,J1,J2")
+                && Arrays.equals(resource_state, g8)){return G8;}
+
+        int[] g9 = new int[]{1,2,2,0,1,0};
+        String[] G9 = {"build J4","swap 4 0","build J5"};
+        if(target_structure.equals("J5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, g9)){return G9;}
+
+        int[] g10 = new int[]{0,1,3,0,2,0};
+        String[] G10 = {"swap 2 0","build J3"};
+        if(target_structure.equals("J3") && board_state.equals("R0,S3,R1,J1,J2")
+                && Arrays.equals(resource_state, g10)){return G10;}
+
+        int[] g11 = new int[]{1,2,2,1,0,0};
+        String[] G11 = {"build J1","swap 3 0","build J2"};
+        if(target_structure.equals("J2") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
+                && Arrays.equals(resource_state, g11)){return G11;}
+
+        int[] g12 = new int[]{0,0,1,3,2,0};
+        String[] G12 = {"build R2","swap 3 1","build S4"};
+        if(target_structure.equals("S4") && board_state.equals("R0,S3,R1,J1,J2")
+                && Arrays.equals(resource_state, g12)){return G12;}
+
+        int[] g13 = new int[]{0,3,0,1,2,0};
+        String[] G13 = {"swap 1 2","build S5"};
+        if(target_structure.equals("S5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, g13)){return G13;}
+
+        int[] g14 = new int[]{0,0,2,2,2,0};
+        String[] G14 = {"swap 2 1","build S5"};
+        if(target_structure.equals("S5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, g14)){return G14;}
+
+        int[] g15 = new int[]{3,0,1,0,2,0};
+        String[] G15 = {"swap 0 1","build J3"};
+        if(target_structure.equals("J3") && board_state.equals("R0,S3,R1,J1,J2")
+                && Arrays.equals(resource_state, g15)){return G15;}
+
+        int[] g16 = new int[]{4,1,0,0,1,0};
+        String[] G16 = {"swap 0 1","build C7"};
+        if(target_structure.equals("C7") && board_state.equals("R0,S3,R1,J1,J2")
+                && Arrays.equals(resource_state, g16)){return G16;}
+
+        int[] g17 = new int[]{3,1,1,0,0,1};
+        String[] G17 = {"swap 2 1","build C12"};
+        if(target_structure.equals("C12") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, g17)){return G17;}
+
+        int[] g18 = new int[]{3,0,1,1,1,0};
+        String[] G18 = {"swap 0 1","build J4"};
+        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, g18)){return G18;}
+
+        int[] g19 = new int[]{0,1,0,2,3,0};
+        String[] G19 = {"swap 3 2","build S5"};
+        if(target_structure.equals("S5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, g19)){return G19;}
+
+        int[] g20 = new int[]{0,1,2,1,1,1};
+        String[] G20 = {"swap 2 0","build J4"};
+        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, g20)){return G20;}
+
+        int[] g21 = new int[]{2,1,2,0,1,0};
+        String[] G21 = {"build J4","swap 4 1","build J5"};
+        if(target_structure.equals("J5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, g21)){return G21;}
+
+
+        // Complex : 8
+        int[] c1 = new int[]{0,1,0,1,2,2};
+        String[] C1 = null;
+        if(target_structure.equals("S7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
+                && Arrays.equals(resource_state, c1)){return C1;}
+
+        int[] c2 = new int[]{3,1,0,0,0,2};
+        String[] C2 = {"trade 1","build C7"};
+        if(target_structure.equals("C7") && board_state.equals("R0,R1,S3,J1,J2,J3")
+                && Arrays.equals(resource_state, c2)){return C2;}
+
+        int[] c3 = new int[]{0,0,0,1,1,4};
+        String[] C3 = null;
+        if(target_structure.equals("S4") && board_state.equals("R0,R1,S3,J1,J2,J3")
+                && Arrays.equals(resource_state, c3)){return C3;}
+
+        int[] c4 = new int[]{0,1,1,2,2,0};
+        String[] C4 = {"build R2","build S4"};
+        if(target_structure.equals("S4") && board_state.equals("R0,R1,S3")
+                && Arrays.equals(resource_state, c4)){return C4;}
+
+        int[] c5 = new int[]{0,1,1,2,2,0};
+        String[] C5 = null;
+        if(target_structure.equals("S4") && board_state.equals("R0,R1,R2")
+                && Arrays.equals(resource_state, c5)){return C5;}
+
+        int[] c6 = new int[]{0,0,0,1,1,4};
+        String[] C6 = {"trade 1","trade 2","build S4"};
+        if(target_structure.equals("S4") && board_state.equals("R0,R1,R2,S3,K1,K2,K3")
+                && Arrays.equals(resource_state, c6)){return C6;}
+
+        int[] c7 = new int[]{0,0,0,1,1,4};
+        String[] C7 = {"trade 1","trade 2","build S4"};
+        if(target_structure.equals("S4") && board_state.equals("R0,R1,R2,S3,J1,J2,J3")
+                && Arrays.equals(resource_state, c7)){return C7;}
+
+        int[] c8 = new int[]{0,0,0,2,2,2};
+        String[] C8 = {"build R2","swap 5 1","swap 5 2","build S4"};
+        if(target_structure.equals("S4") && board_state.equals("R0,R1,S3,J1,J2,J3")
+                && Arrays.equals(resource_state, c8)){return C8;}
+
+
+        // NoSwap : 11
+        int[] n1 = new int[]{0,0,1,3,2,0};
+        String[] N1 = null;
+        if(target_structure.equals("S7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
+                && Arrays.equals(resource_state, n1)){return N1;}
+
+        int[] n2 = new int[]{1,1,0,1,0,3};
+        String[] N2 = {"trade 4","build R7"};
+        if(target_structure.equals("R7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, n2)){return N2;}
+
+        int[] n3 = new int[]{0,1,0,0,3,2};
+        String[] N3 = {"trade 3","build R7"};
+        if(target_structure.equals("R7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,K1,K2,K3")
+                && Arrays.equals(resource_state, n3)){return N3;}
+
+        int[] n4 = new int[]{0,0,1,1,2,2};
+        String[] N4 = {"build R7","trade 3","build R12"};
+        if(target_structure.equals("R12") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
+                && Arrays.equals(resource_state, n4)){return N4;}
+
+        int[] n5 = new int[]{0,1,1,0,2,2};
+        String[] N5 = {"trade 3","build S5"};
+        if(target_structure.equals("S5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,K1,K2,K3")
+                && Arrays.equals(resource_state, n5)){return N5;}
+
+        int[] n6 = new int[]{0,0,0,3,1,2};
+        String[] N6 = {"build R2","trade 4","build R3"};
+        if(target_structure.equals("R3") && board_state.equals("R0,S3,R1")
+                && Arrays.equals(resource_state, n6)){return N6;}
+
+        int[] n7 = new int[]{1,1,0,0,2,2};
+        String[] N7 = {"trade 3","build R2"};
+        if(target_structure.equals("R2") && board_state.equals("R0,S3,R1")
+                && Arrays.equals(resource_state, n7)){return N7;}
+
+        int[] n8 = new int[]{2,2,0,0,0,2};
+        String[] N8 = {"trade 0","build C7"};
+        if(target_structure.equals("C7") && board_state.equals("R0,S3,R1")
+                && Arrays.equals(resource_state, n8)){return N8;}
+
+        int[] n9 = new int[]{0,2,0,2,0,2};
+        String[] N9 = {"trade 4","build R2"};
+        if(target_structure.equals("R2") && board_state.equals("R0,S3,R1,J1,J2")
+                && Arrays.equals(resource_state, n9)){return N9;}
+
+        int[] n10 = new int[]{0,1,1,0,2,2};
+        String[] N10 = null;
+        if(target_structure.equals("S7") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,J1,J2,J3")
+                && Arrays.equals(resource_state, n10)){return N10;}
+
+        int[] n11 = new int[]{0,0,0,1,3,2};
+        String[] N11 = {"build R7","trade 3","build R8"};
+        if(target_structure.equals("R8") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,K1,K2,K3")
+                && Arrays.equals(resource_state, n11)){return N11;}
+
+
+        // Simple : 7
+        int[] s1 = new int[]{2,2,2,0,0,0};
+        String[] S1 = {"build J3","build J4"};
+        if(target_structure.equals("J4") && board_state.equals("R0,S3,R1,J1,J2")
+                && Arrays.equals(resource_state, s1)){return S1;}
+
+        int[] s2 = new int[]{0,0,1,3,2,0};
+        String[] S2 = {"build R2","build R3"};
+        if(target_structure.equals("R3") && board_state.equals("R0,S3,R1")
+                && Arrays.equals(resource_state, s2)){return S2;}
+
+        int[] s3 = new int[]{0,1,1,2,2,0};
+        String[] S3 = {"build R2","build S4"};
+        if(target_structure.equals("S4") && board_state.equals("R0,S3,R1")
+                && Arrays.equals(resource_state, s3)){return S3;}
+
+        int[] s4 = new int[]{0,1,0,2,2,1};
+        String[] S4 = {"build R7","build R8"};
+        if(target_structure.equals("R8") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
+                && Arrays.equals(resource_state, s4)){return S4;}
+
+        int[] s5 = new int[]{2,2,2,0,0,0};
+        String[] S5 = {"build J1","build J2"};
+        if(target_structure.equals("J2") && board_state.equals("R0,S3,R1")
+                && Arrays.equals(resource_state, s5)){return S5;}
+
+        int[] s6 = new int[]{2,2,2,0,0,0};
+        String[] S6 = {"build J4","build J5"};
+        if(target_structure.equals("J5") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6,K1,K2,K3")
+                && Arrays.equals(resource_state, s6)){return S6;}
+
+        int[] s7 = new int[]{0,0,2,2,2,0};
+        String[] S7 = {"build R7","build R12"};
+        if(target_structure.equals("R12") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
+                && Arrays.equals(resource_state, s7)){return S7;}
+
        return null;
         // FIXME: Task #14
     }
