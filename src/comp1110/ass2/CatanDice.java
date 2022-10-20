@@ -572,7 +572,10 @@ public class CatanDice {
         }
         String[] a5 = new String[path.size()];
         a5 = path.toArray(a5);
-        return null;
+        for(int i=0;i<a5.length;i++){
+            System.out.println(a5[i]);
+        }
+        return a5;
 
 //        String a1 = "";
 //        if (target_structure.equals("RO")) {a1 = "";}
@@ -654,6 +657,7 @@ public class CatanDice {
     public static String[] buildPlan(String target_structure,
                                      String board_state,
                                      int[] resource_state) {
+
 
 //        // Trivial : 8
 //        int[] t1 = new int[]{1,1,1,0,0,3};
