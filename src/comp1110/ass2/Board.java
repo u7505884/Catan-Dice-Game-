@@ -380,7 +380,6 @@ public class Board {
             scoresRecorder[round] -= 2;
         }
         round++;
-        System.out.println("Round"+round+" Start!");
         if(round>=15){
             System.out.println("Final score " + calculateCurrentFinalScore());
             return;

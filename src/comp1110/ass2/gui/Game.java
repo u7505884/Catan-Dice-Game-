@@ -34,6 +34,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +55,7 @@ public class Game extends Application {
     private static final double BOARD_LOCATION_WIDTH = 600-125*Math.sqrt(3);
     private static final double BOARD_LOCATION_HEIGHT = 350-3*75;
     private static final String URI_BASE = "assets/";
+
 
     //basic board
     private static final double BOARD_LOCATION_WIDTH_ADAPTION = 18; //fit the background manually by ourselves
@@ -90,13 +92,30 @@ public class Game extends Application {
     private static final double NEXT_ROUND_BUTTON_LOCATION_HEIGHT_ADAPTION = 50;
     private static final double XOfNextRoundButton = 600-NEXT_ROUND_BUTTON_LOCATION_WIDTH_ADAPTION*0.5;
     private static final double YOfNextRoundButton = 617;
+    //nextRoundButton
+    private static final double MENU_BUTTON_LOCATION_WIDTH_ADAPTION = 100;
+    private static final double MENU_BUTTON_LOCATION_HEIGHT_ADAPTION = 30;
+    private static final double XOfMenuButton = 1070;
+    private static final double YOfMenuButton = 630;
     //console
     private static final double CONSOLE_LOCATION_WIDTH_ADAPTION = 300;
     private static final double CONSOLE_LOCATION_HEIGHT_ADAPTION = 4000;
     private static final double XOfConsole = 867;
-    private static final double YOfConsole = 450;
+    private static final double YOfConsole = 400;
+    //play
+    private static final double PLAY_LOCATION_WIDTH_ADAPTION = 230;
+    private static final double PLAY_LOCATION_HEIGHT_ADAPTION = 150;
+    private static final double XOfPlay = 5;
+    private static final double YOfPlay = 290;
+    //exit
+    private static final double EXIT_LOCATION_WIDTH_ADAPTION = 80;
+    private static final double EXIT_LOCATION_HEIGHT_ADAPTION = 35;
+    private static final double XOfExit = 400;
+    private static final double YOfExit = 590;
 
-    private static final Group root = new Group();// basic group
+    private static final Group boardRoot = new Group();// basic group of board interface
+    private static final Group startRoot = new Group();// basic group of start interface
+    private static final Group endRoot = new Group();// basic group of end interface
     private static final Group basicBoard = new Group();
     private static final Group roads = new Group();
     private static final Group settlements = new Group();
@@ -111,6 +130,7 @@ public class Game extends Application {
     private static final HBox nameLabels = new HBox();
     private static final Group diceRoller = new Group();
     private static final Group nextRoundButton = new Group();
+    private static final Group menuButton = new Group();
 
     private TextField playerTextField;
     private TextField boardTextField;
@@ -194,8 +214,11 @@ public class Game extends Application {
             text.setFont(new Font(10));
             text.setTextAlignment(CENTER);
             road.getChildren().addAll(this,text);
+            if(roadObject.getWhetherHaveBuilt()){
+                highlight();
+            }
             road.setOnMouseClicked(event -> {
-                if(buildableStructures.contains(this.roadObject)){
+                if(buildableStructures.contains(this.roadObject) && numberOfRollInEachRound[board.getRound()]==3){
                     board.build(roadObject);
                     highlight();
                     refreshDices(false);
@@ -239,8 +262,11 @@ public class Game extends Application {
             text.setFont(new Font(10));
             text.setTextAlignment(CENTER);
             settlement.getChildren().addAll(this,text);
+            if(settlementObject.getWhetherHaveBuilt()){
+                highlight();
+            }
             settlement.setOnMouseClicked(event -> {
-                if(buildableStructures.contains(this.settlementObject)){
+                if(buildableStructures.contains(this.settlementObject) && numberOfRollInEachRound[board.getRound()]==3){
                     board.build(settlementObject);
                     highlight();
                     refreshDices(false);
@@ -287,8 +313,11 @@ public class Game extends Application {
             text.setFont(new Font(10));
             text.setTextAlignment(CENTER);
             city.getChildren().addAll(this,text);
+            if(cityObject.getWhetherHaveBuilt()){
+                highlight();
+            }
             city.setOnMouseClicked(event -> {
-                if(buildableStructures.contains(this.cityObject)){
+                if(buildableStructures.contains(this.cityObject)&&numberOfRollInEachRound[board.getRound()]==3){
                     board.build(cityObject);
                     highlight();
                     refreshDices(false);
@@ -349,12 +378,19 @@ public class Game extends Application {
             text.setFont(new Font(10));
             text.setTextAlignment(CENTER);
             knight.getChildren().addAll(this,circle,text);
+            if(knightObject.getWhetherHaveBuilt()){
+                if(knightObject.getWhetherHaveSwapped()){
+                    highlightK();
+                }else{
+                    highlightJ();
+                }
+            }
             knight.setOnMouseClicked(event -> {
-                if (!knightObject.getWhetherHaveSwapped()&&knightObject.getWhetherHaveBuilt()){//what we want when we click a built knight
+                if (!knightObject.getWhetherHaveSwapped()&&knightObject.getWhetherHaveBuilt()&&numberOfRollInEachRound[board.getRound()]==3){//what we want when we click a built knight
                     openSwapStage(knightObject);
                     refreshBoard();
                 }
-                if(buildableStructures.contains(this.knightObject)){//what we want when we click an un-built knight
+                if(buildableStructures.contains(this.knightObject)&&numberOfRollInEachRound[board.getRound()]==3){//what we want when we click an un-built knight
                     board.build(knightObject);
                     highlightJ();
                 }
@@ -469,6 +505,7 @@ public class Game extends Application {
                     //roll back configuration
                     lock = false;
                     currentCircles.remove(destination);//set this circle available again
+                    resourcesNeedToBeRolled[super.currentResource.getIndex()-1]--;//record which resource has been removed in roller
                     destination.setFill(Color.LIGHTGRAY);
                 }
             });
@@ -784,7 +821,7 @@ public class Game extends Application {
         Text goldLabel = new Text("Gold");
         goldLabel.setStyle("-fx-font-weight:bold");
         nameLabels.getChildren().addAll(oreLabel, grainLabel, woolLabel, timberLabel, brickLabel, goldLabel);
-        nameLabels.setSpacing(0.7*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
+        nameLabels.setSpacing(0.9*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
         nameLabels.setLayoutX(XOfResource - 4.6*RESOURCE_HORIZONTAL_SPACE_ADAPTION-RESOURCE_RADIUS);
         nameLabels.setLayoutY(YOfResource - 2*RESOURCE_RADIUS);
         //make trade buttons
@@ -833,8 +870,19 @@ public class Game extends Application {
                 refreshBoard();
             }
         });
-        tradeButtons.getChildren().addAll(oreButton, grainButton, woolButton, timberButton, brickButton);
-        tradeButtons.setSpacing(0.12*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
+        ArrayList<Button> buttons = new ArrayList<>();
+        buttons.add(oreButton);
+        buttons.add(grainButton);
+        buttons.add(woolButton);
+        buttons.add(timberButton);
+        buttons.add(brickButton);
+        for(Button button:buttons){
+            if(numberOfRollInEachRound[board.getRound()]<3){
+                button.setDisable(true);
+            }
+            tradeButtons.getChildren().add(button);
+        }
+        tradeButtons.setSpacing(0.39*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
         tradeButtons.setLayoutX(XOfResource - 5*RESOURCE_HORIZONTAL_SPACE_ADAPTION-RESOURCE_RADIUS);
         tradeButtons.setLayoutY(YOfResource + 1.2*RESOURCE_RADIUS);
 
@@ -899,6 +947,7 @@ public class Game extends Application {
                 public void handle(ActionEvent e) {
                     board.roll(resourcesNeedToBeRolled);
                     refreshDices(true);
+                    refreshBoard();
                 }
             });
         }else {
@@ -921,6 +970,7 @@ public class Game extends Application {
             @Override
             public void handle(ActionEvent e) {
                 board.nextRound();
+                System.out.println("Round"+ board.getRound() +" Ended!");
                 refreshDices(false);
                 refreshRecorder();
                 refreshBoard();
@@ -928,6 +978,26 @@ public class Game extends Application {
         });
         nextRoundButton.getChildren().add(button);
     }
+
+    /**
+     * create a button to call menu
+     */
+    private void makeMenuButton(){
+        Button button = new Button("MENU");
+        button.setAlignment(Pos.CENTER);
+        button.setLayoutX(XOfMenuButton);
+        button.setLayoutY(YOfMenuButton);
+        button.setMinSize(MENU_BUTTON_LOCATION_WIDTH_ADAPTION, MENU_BUTTON_LOCATION_HEIGHT_ADAPTION);
+        button.setFont(Font.font(15));
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                openMenuStage();
+            }
+        });
+        menuButton.getChildren().add(button);
+    }
+
     /**
      * set background
      */
@@ -938,7 +1008,7 @@ public class Game extends Application {
         backgroundView.setFitHeight(700);
         backgroundView.setLayoutX(0);
         backgroundView.setLayoutY(0);
-        this.root.getChildren().add(backgroundView);
+        this.boardRoot.getChildren().add(backgroundView);
     }
 
     /**
@@ -953,7 +1023,7 @@ public class Game extends Application {
         resourceTableView.setLayoutX(XOfResourceTable);
         resourceTableView.setLayoutY(YOfResourceTable);
         this.resourceTable.getChildren().add(resourceTableView);
-        this.root.getChildren().add(resourceTable);
+        this.boardRoot.getChildren().add(resourceTable);
     }
 
     /**
@@ -966,18 +1036,18 @@ public class Game extends Application {
         catanView.setFitHeight(CATAN_LOCATION_HEIGHT_ADAPTION);
         catanView.setLayoutX(XOfCatan);
         catanView.setLayoutY(YOfCatan);
-        this.root.getChildren().add(catanView);
+        this.boardRoot.getChildren().add(catanView);
     }
 
     /**
-     * set board: add Group board, roads, settlements, cities, knights to Group root and show the initialized board on stage
+     * set board: add Group board, roads, settlements, cities, knights to Group boardRoot and show the initialized board on stage
      */
     void initializeBoard() {
-        root.getChildren().add(basicBoard);
-        root.getChildren().add(roads);
-        root.getChildren().add(settlements);
-        root.getChildren().add(cities);
-        root.getChildren().add(knights);
+        boardRoot.getChildren().add(basicBoard);
+        boardRoot.getChildren().add(roads);
+        boardRoot.getChildren().add(settlements);
+        boardRoot.getChildren().add(cities);
+        boardRoot.getChildren().add(knights);
         this.makeBasicBoard();
         this.makeRoads();
         this.makeSettlements();
@@ -989,7 +1059,7 @@ public class Game extends Application {
     }
 
     /**
-     * set recorder: add Group recorder to Group root and show the initialized board on stage
+     * set recorder: add Group recorder to Group boardRoot and show the initialized board on stage
      */
     void initializeRecorder() {
         Image recorderImage = new Image(Viewer.class.getResource(URI_BASE + "Recorder.png").toString());
@@ -998,45 +1068,53 @@ public class Game extends Application {
         recorderView.setFitHeight(300);
         recorderView.setLayoutX(XOfRecorder+8);
         recorderView.setLayoutY(YOfRecorder+5);
-        this.root.getChildren().add(recorderView);
+        this.boardRoot.getChildren().add(recorderView);
         recorder.setLayoutX(XOfRecorder+30);
         recorder.setLayoutY(YOfRecorder+30);
-        root.getChildren().add(recorder);
+        boardRoot.getChildren().add(recorder);
         this.makeRecorder();
     }
 
     /**
-     * set draggable resources: add Group draggableResources to Group root
+     * set draggable resources: add Group draggableResources to Group boardRoot
      */
     void initializeDraggableResources(){
-        root.getChildren().add(draggableResources);
+        boardRoot.getChildren().add(draggableResources);
         this.makeDraggableResources();
     }
 
     /**
-     * set resources and texts: add Group resourcesAndText to Group root
+     * set resources and texts: add Group resourcesAndText to Group boardRoot
      */
     void initializeResourcesAndText(){
-        root.getChildren().add(resourcesAndText);
-        root.getChildren().add(tradeButtons);
-        root.getChildren().add(nameLabels);
+        boardRoot.getChildren().add(resourcesAndText);
+        boardRoot.getChildren().add(tradeButtons);
+        boardRoot.getChildren().add(nameLabels);
         this.makeResourcesAndText();
     }
 
     /**
-     * set dice roller: add Group diceRoller to Group root
+     * set dice roller: add Group diceRoller to Group boardRoot
      */
     void initializeDiceRoller(){
-        root.getChildren().add(diceRoller);
+        boardRoot.getChildren().add(diceRoller);
         this.makeDiceRoller();
     }
 
     /**
-     * set nextRoundButton : add Group nextRoundButton to Group root
+     * set nextRoundButton : add Group nextRoundButton to Group boardRoot
      */
     void initializeNextRoundButton(){
-        root.getChildren().add(nextRoundButton);
+        boardRoot.getChildren().add(nextRoundButton);
         this.makeNextRoundButton();
+    }
+
+    /**
+     * set menuButton : add Group menuButton to Group boardRoot
+     */
+    void initializeMenuButton(){
+        boardRoot.getChildren().add(menuButton);
+        this.makeMenuButton();
     }
 
     /**
@@ -1062,13 +1140,16 @@ public class Game extends Application {
             }
         }, true));
         System.setErr(System.out);
-        root.getChildren().add(console);
+        boardRoot.getChildren().add(console);
     }
 
     /**
      * highlight all buildable structures in board
      */
     public void highlightBuildableStructures(){
+        if(numberOfRollInEachRound[board.getRound()]<3){
+            return;
+        }
         for (int index: roadsMap.keySet()){
             if(board.whetherCanBeBuilt(board.getRoads().get(index))){
                 buildableStructures.add(roadsMap.get(index).roadObject);
@@ -1240,18 +1321,61 @@ public class Game extends Application {
         Scene swapScene = new Scene(swapRoot, 600, 300);
         swapStage.setScene(swapScene);
         swapStage.show();
+    }/**
+     * open a new stage to have the action of swap
+     */
+    public void openMenuStage(){
+        Stage menuStage = new Stage();
+        menuStage.setTitle("Menu");
+
+        Button continueButton = new Button("Continue");
+        Button restartButton = new Button("Restart");
+        Button backButton = new Button("Back to Main Menu");
+        Button helpButton = new Button("Help");
+        Button exitButton = new Button("Exit");
+        Button[] buttons = {continueButton, restartButton, backButton, helpButton, exitButton};
+        for(Button button: buttons){
+            button.setFont(Font.font(15));
+            button.setPrefSize(180, 50);
+        }
+
+        continueButton.setOnAction(actionEvent -> {
+            System.out.println("Continue");
+            menuStage.close();
+        });
+        restartButton.setOnAction(actionEvent -> {
+            System.out.println("Restart");
+            board.nextRound();
+            board.setRound(0);
+            board.initializeBoard();
+            board.setScoresRecorder(new int[15]);
+            numberOfRollInEachRound = new int[] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+            refreshBoard();
+            refreshDices(false);
+            refreshRecorder();
+            menuStage.close();
+        });
+        backButton.setOnAction(actionEvent -> {
+
+        });
+        helpButton.setOnAction(actionEvent -> {
+
+        });
+        exitButton.setOnAction(actionEvent -> {
+            System.exit(0);
+        });
+
+
+        VBox menuRoot = new VBox(continueButton, restartButton, backButton, helpButton, exitButton);
+        menuRoot.setAlignment(Pos.CENTER);
+        menuRoot.setSpacing(10);
+        Scene menuScene = new Scene(menuRoot, 250, 400);
+        menuStage.setScene(menuScene);
+        menuStage.show();
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        //test
-        board.setRound(7);
-        board.setScoresRecorder(new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15});
-        board.setCurrentResource(new int[]{10,10,10,10,10,2});
-        //set basic configuration of stage
-        stage.setTitle("Game");
-        Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
-
+    public Scene boardInterface(){
+        Scene boardScene = new Scene(this.boardRoot, WINDOW_WIDTH, WINDOW_HEIGHT);
         //add different part of the game into stage
         initializeBackground();
         initializeResourceTable();
@@ -1262,10 +1386,79 @@ public class Game extends Application {
         initializeResourcesAndText();
         initializeDraggableResources();
         initializeNextRoundButton();
+        initializeMenuButton();
         initializeConsole();
+        return boardScene;
+    }
+    @Override
+    public void start(Stage Stage) throws Exception {
+        //set basic configuration of stage
+        Stage.setTitle("Game");
+        Scene startScene = new Scene(this.startRoot, WINDOW_WIDTH, WINDOW_HEIGHT);
+        //start background
+        Image startBackgroundImage = new Image(Viewer.class.getResource(URI_BASE + "StartBackground.png").toString());
+        ImageView startBackgroundView = new ImageView(startBackgroundImage);
+        startBackgroundView.setFitWidth(1200);
+        startBackgroundView.setFitHeight(700);
+        startRoot.getChildren().add(startBackgroundView);
+        //catan logo
+        Image catanImage = new Image(Viewer.class.getResource(URI_BASE + "Catan.png").toString());
+        ImageView catanView = new ImageView(catanImage);
+        catanView.setFitWidth(CATAN_LOCATION_WIDTH_ADAPTION);
+        catanView.setFitHeight(CATAN_LOCATION_HEIGHT_ADAPTION);
+        catanView.setLayoutX(XOfCatan);
+        catanView.setLayoutY(YOfCatan);
+        startRoot.getChildren().add(catanView);
+        //play
+        Image playImage = new Image(Viewer.class.getResource(URI_BASE + "Play.png").toString());
+        ImageView playView = new ImageView(playImage);
+        playView.setLayoutX(XOfPlay);
+        playView.setLayoutY(YOfPlay);
+        playView.setFitWidth(PLAY_LOCATION_WIDTH_ADAPTION);
+        playView.setFitHeight(PLAY_LOCATION_HEIGHT_ADAPTION);
+        playView.setOnMouseClicked(mouseEvent -> {
+            Stage.setScene(boardInterface());
+        });
+        playView.setOnMouseEntered(mouseEvent -> {
+            playView.setFitWidth(PLAY_LOCATION_WIDTH_ADAPTION*1.3);
+            playView.setFitHeight(PLAY_LOCATION_HEIGHT_ADAPTION*1.3);
+            playView.setLayoutX(XOfPlay-0.15*PLAY_LOCATION_WIDTH_ADAPTION);
+            playView.setLayoutY(YOfPlay-0.15*PLAY_LOCATION_HEIGHT_ADAPTION);
+        });
+        playView.setOnMouseExited(mouseEvent -> {
+            playView.setLayoutX(XOfPlay);
+            playView.setLayoutY(YOfPlay);
+            playView.setFitWidth(PLAY_LOCATION_WIDTH_ADAPTION);
+            playView.setFitHeight(PLAY_LOCATION_HEIGHT_ADAPTION);
+        });
+        startRoot.getChildren().add(playView);
+
+        //exit
+        Image exitImage = new Image(Viewer.class.getResource(URI_BASE + "Exit.png").toString());
+        ImageView exitView = new ImageView(exitImage);
+        exitView.setFitWidth(EXIT_LOCATION_WIDTH_ADAPTION);
+        exitView.setFitHeight(EXIT_LOCATION_HEIGHT_ADAPTION);
+        exitView.setLayoutX(XOfExit);
+        exitView.setLayoutY(YOfExit);
+        exitView.setOnMouseClicked(mouseEvent -> {
+            System.exit(0);
+        });
+        exitView.setOnMouseEntered(mouseEvent -> {
+            exitView.setFitWidth(EXIT_LOCATION_WIDTH_ADAPTION*1.3);
+            exitView.setFitHeight(EXIT_LOCATION_HEIGHT_ADAPTION*1.3);
+            exitView.setLayoutX(XOfExit-0.15*EXIT_LOCATION_WIDTH_ADAPTION);
+            exitView.setLayoutY(YOfExit-0.15*EXIT_LOCATION_HEIGHT_ADAPTION);
+        });
+        exitView.setOnMouseExited(mouseEvent -> {
+            exitView.setLayoutX(XOfExit);
+            exitView.setLayoutY(YOfExit);
+            exitView.setFitWidth(EXIT_LOCATION_WIDTH_ADAPTION);
+            exitView.setFitHeight(EXIT_LOCATION_HEIGHT_ADAPTION);
+        });
+        startRoot.getChildren().add(exitView);
 
         //show stage
-        stage.setScene(scene);
-        stage.show();
+        Stage.setScene(startScene);
+        Stage.show();
     }
 }
