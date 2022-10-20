@@ -21,6 +21,6 @@ public class Settlement extends BuildableStructures{
 
     @Override
     public String toString(){
-        return "Settlement" + super.index;
+        return "S" + super.index;
     }
 }

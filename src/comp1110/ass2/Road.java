@@ -22,7 +22,7 @@ public class Road extends BuildableStructures{
 
     @Override
     public String toString(){
-        return "Road" + super.index;
+        return "R" + super.index;
     }
 
 

@@ -29,16 +29,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import javax.swing.*;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.sun.javafx.scene.control.skin.Utils.getResource;
 import static javafx.scene.text.TextAlignment.CENTER;
 import static javafx.scene.text.TextAlignment.LEFT;
 
@@ -1321,8 +1319,10 @@ public class Game extends Application {
         Scene swapScene = new Scene(swapRoot, 600, 300);
         swapStage.setScene(swapScene);
         swapStage.show();
-    }/**
-     * open a new stage to have the action of swap
+    }
+
+    /**
+     * open a new stage to call menu
      */
     public void openMenuStage(){
         Stage menuStage = new Stage();
@@ -1355,11 +1355,9 @@ public class Game extends Application {
             refreshRecorder();
             menuStage.close();
         });
-        backButton.setOnAction(actionEvent -> {
-
-        });
         helpButton.setOnAction(actionEvent -> {
-
+            menuStage.close();
+            openHelpStage();
         });
         exitButton.setOnAction(actionEvent -> {
             System.exit(0);
@@ -1372,6 +1370,26 @@ public class Game extends Application {
         Scene menuScene = new Scene(menuRoot, 250, 400);
         menuStage.setScene(menuScene);
         menuStage.show();
+    }
+
+    public void openHelpStage(){
+        Stage helpStage = new Stage();
+        helpStage.setTitle("HELP");
+        InputStream in;
+        try {
+            in = new FileInputStream("src/comp1110/ass2/gui/assets/Help.txt");
+            in = new BufferedInputStream(in, 1024);
+            String help = new String(in.readAllBytes());
+            Text text = new Text(help);
+            VBox helpRoot = new VBox(text);
+            Scene menuScene = new Scene(helpRoot, 250, 400);
+            helpStage.setScene(menuScene);
+        } catch (FileNotFoundException e) {
+                e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        helpStage.show();
     }
 
     public Scene boardInterface(){

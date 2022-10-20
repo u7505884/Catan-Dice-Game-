@@ -87,6 +87,6 @@ public class Knight extends BuildableStructures {
 
     @Override
     public String toString(){
-        return "Knight" + super.index;
+        return "K" + super.index;
     }
 }

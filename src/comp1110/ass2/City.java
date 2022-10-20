@@ -21,6 +21,6 @@ public class City extends BuildableStructures{
 
     @Override
     public String toString(){
-        return "City" + super.index;
+        return "C" + super.index;
     }
 }
