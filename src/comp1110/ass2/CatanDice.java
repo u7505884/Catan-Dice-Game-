@@ -501,25 +501,21 @@ public class CatanDice {
         HashMap<Integer, Road> lroads = b.getRoads();
         int end=target_structure.length();
         int num=0;
-        for (int i =0; i<target_structure.length();i++) {
-            if (Character.isDigit(target_structure.charAt(i))) {
-                String position = target_structure.substring(i, end);
-                num = Integer.parseInt(position);
-                break;
-            }
-        }
+        String position = target_structure.substring(1, end);
+        num = Integer.parseInt(position);
+
         switch (target_structure.charAt(0)) {
             case ('R'):
                 if (num == 0) {
-                    path.add("R0");
+                    path.add("");
                 } else {
                     if (num != 0) {
                         if (num == 1 || num== 2) {
                             path.add("R0");
                         } else {
                             Road r = lroads.get(num);
-                            path.add((String.valueOf( r.getLastBuildableStructure())));
-                            target_structure = String.valueOf(r.getLastBuildableStructure());
+                            path.add((r.lastBuildableStructure).toString());
+                            target_structure = (r.lastBuildableStructure).toString();
                             pathTo(target_structure, board_state);
                         }
                     }
@@ -533,31 +529,31 @@ public class CatanDice {
                     path.add("R2");
                     path.add("R0");
                 } else {
-                    target_structure = String.valueOf( lroads.get(num));
+                    target_structure = (lroads.get(num)).toString();
                     Road r = lroads.get(num);
-                    path.add((String.valueOf(r)));
+                    path.add(r.toString());
                     pathTo(target_structure, board_state);
                 }
                 break;
 
             case ('C'):
                 if (num == 7) {
-                    target_structure = String.valueOf( lroads.get(1));
+                    target_structure = (lroads.get(1)).toString();
                     Road r = lroads.get(1);
-                    path.add((String.valueOf(r)));
+                    path.add(r.toString());
                     pathTo(target_structure, board_state);
                 } else if (num == 12) {
-                    target_structure = String.valueOf(lroads.get(4));
+                    target_structure = (lroads.get(4)).toString();
                     Road r = lroads.get(4);
-                    path.add((String.valueOf( r)));
+                    path.add(r.toString());
                     pathTo(target_structure, board_state);
                 } else if (num == 20) {
-                    target_structure = String.valueOf( lroads.get(13));
+                    target_structure = (lroads.get(13)).toString();
                     Road r = lroads.get(13);
-                    path.add((String.valueOf(r)));
+                    path.add(r.toString());
                     pathTo(target_structure, board_state);
                 } else if (num == 30) {
-                    target_structure = String.valueOf( lroads.get(15));
+                    target_structure = (lroads.get(15)).toString();
                     Road r = lroads.get(15);
                     path.add(String.valueOf(r));
                     pathTo(target_structure, board_state);
@@ -565,11 +561,8 @@ public class CatanDice {
                 break;
         }
 
-        if(path.size()==1&&path.get(0)=="R0")
-            path.remove(0);
-
         String[] s = board_state.split(",");
-        ArrayList<String> bs= new ArrayList<String>(
+        List<String> bs= new ArrayList<String>(
                 Arrays.asList(s));
 
         for (int i = 0; i < path.size(); i++) {
@@ -577,10 +570,9 @@ public class CatanDice {
                 if (path.get(i).equals(bs.get(j))) {path.remove(path.get(i));}
             }
         }
-
         String[] a5 = new String[path.size()];
         a5 = path.toArray(a5);
-        return a5;
+        return null;
 
 //        String a1 = "";
 //        if (target_structure.equals("RO")) {a1 = "";}
@@ -629,6 +621,10 @@ public class CatanDice {
 
         // FIXME: Task #13
     }
+
+
+
+
 
 
     /**
