@@ -501,7 +501,7 @@ public class CatanDice {
         HashMap<Integer, Road> lroads = b.getRoads();
         int end=target_structure.length();
         int num=0;
-        for (int i =0; i<target_structure.length();i++){
+        for (int i =0; i<target_structure.length();i++) {
             if (Character.isDigit(target_structure.charAt(i))) {
                 String position = target_structure.substring(i, end);
                 num = Integer.parseInt(position);
@@ -580,6 +580,7 @@ public class CatanDice {
 
         String[] a5 = new String[path.size()];
         a5 = path.toArray(a5);
+        return a5;
 
 //        String a1 = "";
 //        if (target_structure.equals("RO")) {a1 = "";}
@@ -625,7 +626,7 @@ public class CatanDice {
 //        }
 //        String[] a5 = new String[a4.size()];
 //        a5 = a4.toArray(a5);
-        return a5;
+
         // FIXME: Task #13
     }
 
