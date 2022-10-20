@@ -353,14 +353,40 @@ public class CatanDice {
                 return (s.length == 2 && resource_state[5] >= 2) ? true : false;
 
             case ("swap"):
-                Knight k = new Knight(-1);
-                return (s.length == 3 && (k.swap(action, board_state))) ? true : false;
+                Board b=new Board();
+                return (s.length == 3 && (swap(action, board_state))) ? true : false;
 
             default:
                 return false;
         }// FIXME: Task #9
     }
+    public static boolean swap (String action, String board_state) {
+            if (!action.contains("swap")) {
+                return false;
+            }
+            if (action.contains("swap")) {
+                switch (action.charAt(7)) {
+                    case ('0'):
+                        return (board_state.contains("J1") || board_state.contains("J6")) ? true:false;
 
+                    case ('1'):
+                        return (board_state.contains("J2") || board_state.contains("J6")) ? true:false;
+
+                    case ('2'):
+                        return (board_state.contains("J3") || board_state.contains("J6")) ? true:false;
+
+                    case ('3'):
+                        return (board_state.contains("J4") || board_state.contains("J6")) ? true:false;
+
+                    case ('4'):
+                        return (board_state.contains("J5") || board_state.contains("J6")) ? true:false;
+
+                    case ('5'):
+                        return (board_state.contains("J6")) ? true:false;
+                }
+            }
+            return false;
+        }
     /**
      * Check if the specified sequence of player actions is executable
      * from the given board and resource state.
@@ -375,16 +401,11 @@ public class CatanDice {
                                         String board_state,
                                         int[] resource_state) {
         int[] temp = resource_state.clone();
-        for (int resource : resource_state) {
-            System.out.println(resource);
-        }
-        System.out.println("-----------------------");
         Boolean q = true;
         for (String action : actions) {
             String[] s = action.split(" ");
             ArrayList<String> argument = new ArrayList<String>(Arrays.asList(s));
             String playaction = argument.get(0);
-            System.out.println(canDoAction(action, board_state, temp));
             if (canDoAction(action, board_state, temp)) {
                 switch (playaction) {
                     case ("build"):
@@ -475,50 +496,126 @@ public class CatanDice {
      */
     public static String[] pathTo(String target_structure,
                                   String board_state) {
-        String a1 = "";
-        if (target_structure.equals("RO")) {a1 = "";}
-        else if (target_structure.equals("R1")) {a1 = "R0";}
-        else if (target_structure.equals("R2")) {a1 = "R0";}
-        else if (target_structure.equals("R3")) {a1 = "R0,R2";}
-        else if (target_structure.equals("R4")) {a1 = "R0,R2,R3";}
-        else if (target_structure.equals("R5")) {a1 = "R0,R2,R3";}
-        else if (target_structure.equals("R6")) {a1 = "R0,R2,R3,R5";}
-        else if (target_structure.equals("R7")) {a1 = "R0,R2,R3,R5,R6";}
-        else if (target_structure.equals("R8")) {a1 = "R0,R2,R3,R5,R6,R7";}
-        else if (target_structure.equals("R9")) {a1 = "R0,R2,R3,R5,R6,R7,R8";}
-        else if (target_structure.equals("R10")) {a1 = "R0,R2,R3,R5,R6,R7,R8,R9";}
-        else if (target_structure.equals("R11")) {a1 = "R0,R2,R3,R5,R6,R7,R8,R9,R10";}
-        else if (target_structure.equals("R12")) {a1 = "R0,R2,R3,R5,R6,R7";}
-        else if (target_structure.equals("R13")) {a1 = "R0,R2,R3,R5,R6,R7,R12";}
-        else if (target_structure.equals("R14")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13";}
-        else if (target_structure.equals("R15")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
+        ArrayList<String> path = new ArrayList<>();
+        Board b = new Board();
+        HashMap<Integer, Road> lroads = b.getRoads();
+        switch (target_structure.charAt(0)) {
+            case ('R'):
+                if (target_structure.charAt(1) == 0) {
+                    path.add("R0");
+                } else {
+                    if (target_structure.charAt(1) != 0) {
+                        if (target_structure.charAt(1) == 1 || target_structure.charAt(1) == 2) {
+                            path.add("R0");
+                        } else {
+                            Road r = lroads.get(target_structure.charAt(1));
+                            path.add((String.valueOf( r.getLastBuildableStructure())));
+                            target_structure = String.valueOf(r.getLastBuildableStructure());
+                            pathTo(target_structure, board_state);
+                        }
+                    }
+                }
+                break;
 
-        else if (target_structure.equals("S3")) {a1 = "";}
-        else if (target_structure.equals("S4")) {a1 = "R0,R2";}
-        else if (target_structure.equals("S5")) {a1 = "R0,R2,R3,R5";}
-        else if (target_structure.equals("S7")) {a1 = "R0,R2,R3,R5,R6,R7";}
-        else if (target_structure.equals("S9")) {a1 = "R0,R2,R3,R5,R6,R7,R9";}
-        else if (target_structure.equals("S11")) {a1 = "R0,R2,R3,R5,R6,R7,R8,R9,R10,R11";}
+            case ('S'):
+                if (target_structure.charAt(1) == 3) {
+                    path.add(null);
+                } else if (target_structure.charAt(1) == 4) {
+                    path.add("R2");
+                    path.add("R0");
+                } else {
+                    target_structure = String.valueOf( lroads.get(target_structure.charAt(1)));
+                    Road r = lroads.get(target_structure.charAt(1));
+                    path.add((String.valueOf(r)));
+                    pathTo(target_structure, board_state);
+                }
+                break;
 
-        else if (target_structure.equals("C7")) {a1 = "R0,R1";}
-        else if (target_structure.equals("C12")) {a1 = "R0,R2,R3,R4";}
-        else if (target_structure.equals("C20")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13";}
-        else if (target_structure.equals("C30")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14,R15";}
+            case ('C'):
+                if (target_structure.charAt(1) == 7) {
+                    target_structure = String.valueOf( lroads.get(1));
+                    Road r = lroads.get(1);
+                    path.add((String.valueOf(r)));
+                    pathTo(target_structure, board_state);
+                } else if (target_structure.charAt(1) == 12) {
+                    target_structure = String.valueOf(lroads.get(4));
+                    Road r = lroads.get(4);
+                    path.add((String.valueOf( r)));
+                    pathTo(target_structure, board_state);
+                } else if (target_structure.charAt(1) == 20) {
+                    target_structure = String.valueOf( lroads.get(13));
+                    Road r = lroads.get(13);
+                    path.add((String.valueOf(r)));
+                    pathTo(target_structure, board_state);
+                } else if (target_structure.charAt(1) == 30) {
+                    target_structure = String.valueOf( lroads.get(15));
+                    Road r = lroads.get(15);
+                    path.add(String.valueOf(r));
+                    pathTo(target_structure, board_state);
+                }
+                break;
+        }
 
-        String[] a2 = a1.split(",");
-        List<String> a3 = Arrays.asList(a2);
-        List<String> a4 = new ArrayList<>(a3);
+        if(path.size()==1&&path.get(0)=="R0")
+            path.remove(0);
 
-        String[] b = board_state.split(",");
-        List<String> b3 = Arrays.asList(b);
+        String[] s = board_state.split(",");
+        ArrayList<String> bs= new ArrayList<String>(
+                Arrays.asList(s));
 
-        for (int i = 0; i < a3.size(); i++) {
-            for (int j = 0; j < b3.size(); j++) {
-                if (a3.get(i).equals(b3.get(j))) {a4.remove(a3.get(i));}
+        for (int i = 0; i < path.size(); i++) {
+            for (int j = 0; j < bs.size(); j++) {
+                if (path.get(i).equals(bs.get(j))) {path.remove(path.get(i));}
             }
         }
-        String[] a5 = new String[a4.size()];
-        a5 = a4.toArray(a5);
+
+        String[] a5 = new String[path.size()];
+        a5 = path.toArray(a5);
+
+//        String a1 = "";
+//        if (target_structure.equals("RO")) {a1 = "";}
+//        else if (target_structure.equals("R1")) {a1 = "R0";}
+//        else if (target_structure.equals("R2")) {a1 = "R0";}
+//        else if (target_structure.equals("R3")) {a1 = "R0,R2";}
+//        else if (target_structure.equals("R4")) {a1 = "R0,R2,R3";}
+//        else if (target_structure.equals("R5")) {a1 = "R0,R2,R3";}
+//        else if (target_structure.equals("R6")) {a1 = "R0,R2,R3,R5";}
+//        else if (target_structure.equals("R7")) {a1 = "R0,R2,R3,R5,R6";}
+//        else if (target_structure.equals("R8")) {a1 = "R0,R2,R3,R5,R6,R7";}
+//        else if (target_structure.equals("R9")) {a1 = "R0,R2,R3,R5,R6,R7,R8";}
+//        else if (target_structure.equals("R10")) {a1 = "R0,R2,R3,R5,R6,R7,R8,R9";}
+//        else if (target_structure.equals("R11")) {a1 = "R0,R2,R3,R5,R6,R7,R8,R9,R10";}
+//        else if (target_structure.equals("R12")) {a1 = "R0,R2,R3,R5,R6,R7";}
+//        else if (target_structure.equals("R13")) {a1 = "R0,R2,R3,R5,R6,R7,R12";}
+//        else if (target_structure.equals("R14")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13";}
+//        else if (target_structure.equals("R15")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14";}
+//
+//        else if (target_structure.equals("S3")) {a1 = "";}
+//        else if (target_structure.equals("S4")) {a1 = "R0,R2";}
+//        else if (target_structure.equals("S5")) {a1 = "R0,R2,R3,R5";}
+//        else if (target_structure.equals("S7")) {a1 = "R0,R2,R3,R5,R6,R7";}
+//        else if (target_structure.equals("S9")) {a1 = "R0,R2,R3,R5,R6,R7,R8,R9";}
+//        else if (target_structure.equals("S11")) {a1 = "R0,R2,R3,R5,R6,R7,R8,R9,R10,R11";}
+//
+//        else if (target_structure.equals("C7")) {a1 = "R0,R1";}
+//        else if (target_structure.equals("C12")) {a1 = "R0,R2,R3,R4";}
+//        else if (target_structure.equals("C20")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13";}
+//        else if (target_structure.equals("C30")) {a1 = "R0,R2,R3,R5,R6,R7,R12,R13,R14,R15";}
+//
+//        String[] a2 = a1.split(",");
+//        List<String> a3 = Arrays.asList(a2);
+//        List<String> a4 = new ArrayList<>(a3);
+//
+//        String[] b = board_state.split(",");
+//        List<String> b3 = Arrays.asList(b);
+//
+//        for (int i = 0; i < a3.size(); i++) {
+//            for (int j = 0; j < b3.size(); j++) {
+//                if (a3.get(i).equals(b3.get(j))) {a4.remove(a3.get(i));}
+//            }
+//        }
+//        String[] a5 = new String[a4.size()];
+//        a5 = a4.toArray(a5);
         return a5;
         // FIXME: Task #13
     }
