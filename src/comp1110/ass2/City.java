@@ -1,7 +1,7 @@
 package comp1110.ass2;
 
 /**
- * @author
+ * @author Ziling Ruan(u7505884)
  */
 public class City extends BuildableStructures{
     public City(int index) {//only used for the first city C7

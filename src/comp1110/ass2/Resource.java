@@ -3,7 +3,7 @@ package comp1110.ass2;
 import java.util.HashMap;
 
 /**
- * @author
+ * @author Ta-Wei Chen (u7546144)
  */
 public enum Resource {
     Ore("Ore", 1),

@@ -1,7 +1,7 @@
 package comp1110.ass2;
 
 /**
- * @author
+ * @author Ziling Ruan (u7505884)
  */
 public class Knight extends BuildableStructures {
     protected boolean whetherHaveSwapped ;//indicate whether we have used the chance to swap resource from current knight

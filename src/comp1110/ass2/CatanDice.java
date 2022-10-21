@@ -3,6 +3,7 @@ package comp1110.ass2;
 import java.util.*;
 
 public class CatanDice {
+     static ArrayList<String> path = new ArrayList<>();
 
     /**
      * Check if the string encoding of a board state is well formed.
@@ -540,6 +541,7 @@ public class CatanDice {
                         num = Integer.parseInt((r2.lastBuildableStructure).toString().substring(1));
                     }
                 }
+                break;
 
             case ('C'):
                 if (num == 7) {
@@ -927,8 +929,7 @@ public class CatanDice {
         if(target_structure.equals("R12") && board_state.equals("R0,S3,R1,C7,R2,S4,R3,R4,R5,R6")
                 && Arrays.equals(resource_state, s7)){return S7;}
 
-        return null;
+       return null;
         // FIXME: Task #14
     }
 }
-
