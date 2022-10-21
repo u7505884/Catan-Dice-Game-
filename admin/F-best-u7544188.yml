@@ -16,8 +16,8 @@ declaration: >-
 # I wish to submit the following classes as entirely my own (remove this if
 # you want to just submit methods):
 class:
-   - Game.java (gui package)
-   - 
+   - Game
+   - Board
 
 # sign *your* name and uid here
 name: Haoxiang Wang

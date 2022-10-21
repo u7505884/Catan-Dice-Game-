@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 /**
- * @author
+ * @author Haoxiang(u7544188)
  */
 public class Board {
     protected final HashMap<Integer, Road> roads = new HashMap<>(); //All roads contained in the board

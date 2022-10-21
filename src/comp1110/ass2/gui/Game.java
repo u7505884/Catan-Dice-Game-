@@ -41,7 +41,7 @@ import static javafx.scene.text.TextAlignment.CENTER;
 import static javafx.scene.text.TextAlignment.LEFT;
 
 /**
- * @author
+ * @author Haoxiang(u7544188)
  */
 public class Game extends Application {
 

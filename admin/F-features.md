@@ -16,16 +16,26 @@ specification that you have added, if any.
 
 Tips:
 
-1. For a resource that you want to reroll, left-click it and it will automatically move to the reroll region. On the contrary, right-click it to cancel it from the reroll region and it will automatically move back to its original position.
+Add Multiple Players
 
-2. You can choose 0~6 items to reroll. After rerolling twice, begin doing "build, trade, or swap" using your current 6 resources.
+	Players can only add multiple new players at the beginning of the game. (If we add a new player when any player has started their game,  the process will lost.)
 
-3. Build: Considering the resource you have, the system will automatically give you hints about which structure(s) is(are) able to be built at this moment, which will shine with light green.
+Roll Dice
 
-4. Settlement, City, and Knight must be built in order of increasing points value.
+	1. For a resource that you want to reroll, drag it into the dice roller. Or left-click then it will automatically move to the reroll region. 
 
-5. If you build NO structure during a turn, you will get a penalty of -2 points for that turn, added to the running score.
+	2. On the contrary, if we want to remove the dices that have been placed in the roller, we just need to right-click it and it will automatically move back to its original position.
 
-6. Trade: 2 golds for 1 other resource.
+Build Structures
 
-7. Swap: A Knight can be used only one time during the whole game. The knight which is built and unused will be shining yellow; The knight which is already exhausted will be fixed dark red.
+	1. The system will automatically give you hints about which structure(s) is(are) able to be built at this moment, which will shine in yellow.
+
+	2. To build structures, click the board's components directly. 
+
+Swap
+
+	1. The knight which is built and unused will be shining red
+
+	2. The knight which is already used will be fixed green.
+
+	3. Click the shining red knight if you want to swap with them.
