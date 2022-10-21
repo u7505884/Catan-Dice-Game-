@@ -17,7 +17,9 @@ declaration: >-
 # you want to just submit classes):
 method:
    - public static boolean canDoAction(String action, String board_state, int[] resource_state) (Task 9)
-   - 
+   - public static boolean canDoSequence(String[] actions, String board_state, int[] resource_state)(Task 11)
+   - public static boolean checkResourcesWithTradeAndSwap(String structure, String board_state,int[] resource_state)(Task 12)
+
 
 # sign *your* name and uid here
 name: Ziling Ruan
