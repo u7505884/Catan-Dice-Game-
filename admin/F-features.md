@@ -1,4 +1,3 @@
-
 # Features
 
 In addition to the features that are auto-tested, the graphical user interface
@@ -15,10 +14,18 @@ specification that you have added, if any.
 
 ## Player instructions
 
-Use this section of the file to write any necessary instructions on
-how to play your implementation of the game. You can assume the player
-knows the game rules; the purpose of this section is to document how
-to use any parts of your game GUI that are not intuitively obvious
-(and not documented in the GUI itself).
+Tips:
 
-This section is optional.
+1. For a resource that you want to reroll, left-click it and it will automatically move to the reroll region. On the contrary, right-click it to cancel it from the reroll region and it will automatically move back to its original position.
+
+2. You can choose 0~6 items to reroll. After rerolling twice, begin doing "build, trade, or swap" using your current 6 resources.
+
+3. Build: Considering the resource you have, the system will automatically give you hints about which structure(s) is(are) able to be built at this moment, which will shine with light green.
+
+4. Settlement, City, and Knight must be built in order of increasing points value.
+
+5. If you build NO structure during a turn, you will get a penalty of -2 points for that turn, added to the running score.
+
+6. Trade: 2 golds for 1 other resource.
+
+7. Swap: A Knight can be used only one time during the whole game. The knight which is built and unused will be shining yellow; The knight which is already exhausted will be fixed dark red.
