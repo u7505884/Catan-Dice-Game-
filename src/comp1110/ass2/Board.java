@@ -16,6 +16,7 @@ public class Board {
     private int[] scoresRecorder = new int[15];//record scores we have gotten or lost in each previous round
     protected int[] currentResource = new int[6];//record current resource we have
     private final static Dice dice = new Dice();
+    private int rollTime = 1;
     /**
      * Constructor
      */
@@ -30,6 +31,14 @@ public class Board {
 
     public HashMap<Integer, Knight> getKnights() {
         return knights;
+    }
+
+    public int getRollTime() {
+        return rollTime;
+    }
+
+    public void setRollTime(int rollTime) {
+        rollTime = rollTime;
     }
 
     public HashMap<Integer, Settlement> getSettlements() {
@@ -145,6 +154,7 @@ public class Board {
      *                         E.g.we want to re-roll two ore, then it should be {2,0,0,0,0,0}
      */
     public void roll(int[] dicesWeWantToRoll){
+        rollTime++;
         int sum = Arrays.stream(dicesWeWantToRoll).sum();
         int[] newRes = dice.rollDice(sum);
         for(int i = 0; i < 6; i++){
@@ -380,6 +390,7 @@ public class Board {
             scoresRecorder[round] -= 2;
         }
         round++;
+        rollTime = 1;
         if(round>=15){
             System.out.println("Final score " + calculateCurrentFinalScore());
             return;

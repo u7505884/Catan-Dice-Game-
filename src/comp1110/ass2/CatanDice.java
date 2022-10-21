@@ -494,16 +494,16 @@ public class CatanDice {
      * path.
      * @author Ta-Wei Chen (u7546144)
      */
+    static ArrayList<String> path = new ArrayList<>();
     public static String[] pathTo(String target_structure,
                                   String board_state) {
-        ArrayList<String> path = new ArrayList<>();
+
         Board b = new Board();
         HashMap<Integer, Road> lroads = b.getRoads();
         int end=target_structure.length();
         int num=0;
         String position = target_structure.substring(1, end);
         num = Integer.parseInt(position);
-
         switch (target_structure.charAt(0)) {
             case ('R'):
                 if (num == 0) {
@@ -512,11 +512,13 @@ public class CatanDice {
                     if (num != 0) {
                         if (num == 1 || num== 2) {
                             path.add("R0");
+                            System.out.println("5--------------"+path);
                         } else {
                             Road r = lroads.get(num);
                             path.add((r.lastBuildableStructure).toString());
                             target_structure = (r.lastBuildableStructure).toString();
                             pathTo(target_structure, board_state);
+                            System.out.println("6--------------"+path);
                         }
                     }
                 }
@@ -529,10 +531,16 @@ public class CatanDice {
                     path.add("R2");
                     path.add("R0");
                 } else {
+                    System.out.println("-------------------start-----------------------");
                     target_structure = (lroads.get(num)).toString();
+                    System.out.println("1--------------"+path);
                     Road r = lroads.get(num);
+                    System.out.println("2--------------"+path);
                     path.add(r.toString());
+                    System.out.println("3--------------"+path);
                     pathTo(target_structure, board_state);
+                    System.out.println("4--------------"+path);
+                    System.out.println("-------------------end-----------------------");
                 }
                 break;
 
@@ -570,11 +578,14 @@ public class CatanDice {
                 if (path.get(i).equals(bs.get(j))) {path.remove(path.get(i));}
             }
         }
+
         String[] a5 = new String[path.size()];
         a5 = path.toArray(a5);
-        for(int i=0;i<a5.length;i++){
-            System.out.println(a5[i]);
-        }
+        Arrays.sort(a5);
+//        for(int i=0;i<a5.length;i++){
+//            System.out.println(a5[i]);
+//        }
+
         return a5;
 
 //        String a1 = "";

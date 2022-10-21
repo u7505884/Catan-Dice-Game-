@@ -45,7 +45,7 @@ import static javafx.scene.text.TextAlignment.LEFT;
  */
 public class Game extends Application {
 
-    private static final Board board = new Board();
+    private static Board board = new Board();
     private static final Game game = new Game();
 
     private static final int WINDOW_WIDTH = 1200;
@@ -110,17 +110,18 @@ public class Game extends Application {
     private static final double EXIT_LOCATION_HEIGHT_ADAPTION = 35;
     private static final double XOfExit = 400;
     private static final double YOfExit = 590;
+    //multiple
+    private static final double XOfMulipleBoards = 500;
+    private static final double YOfMulipleBoards = 30;
 
     private static final Group boardRoot = new Group();// basic group of board interface
     private static final Group startRoot = new Group();// basic group of start interface
-    private static final Group endRoot = new Group();// basic group of end interface
     private static final Group basicBoard = new Group();
     private static final Group roads = new Group();
     private static final Group settlements = new Group();
     private static final Group cities = new Group();
     private static final Group knights = new Group();
     private static final Group resourceTable = new Group();
-    private static final Group controls = new Group();
     private static final Group recorder = new Group();
     private static final Group draggableResources = new Group();
     private static final HBox resourcesAndText = new HBox();
@@ -129,9 +130,7 @@ public class Game extends Application {
     private static final Group diceRoller = new Group();
     private static final Group nextRoundButton = new Group();
     private static final Group menuButton = new Group();
-
-    private TextField playerTextField;
-    private TextField boardTextField;
+    private static final HBox multipleBoards = new HBox();
 
     static Map<Integer, hexagon> hexagonsMap = new HashMap<>();
     static Map<Integer, road> roadsMap = new HashMap<>();
@@ -141,9 +140,9 @@ public class Game extends Application {
     static ArrayList<Circle> circles = new ArrayList<>();
     static ArrayList<Circle> currentCircles =  new ArrayList<>();
     static int[] resourcesNeedToBeRolled = new int[6];
-    static int[] numberOfRollInEachRound = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
     static ArrayList<BuildableStructures> buildableStructures = new ArrayList<>();
     static Resource[] resourceType = {Resource.Ore, Resource.Grain, Resource.Wool, Resource.Timber, Resource.Brick, Resource.Gold};
+    HashMap<String, Board> accounts = new HashMap<>();
 
     /**
      * use for create elements of boundary
@@ -216,7 +215,7 @@ public class Game extends Application {
                 highlight();
             }
             road.setOnMouseClicked(event -> {
-                if(buildableStructures.contains(this.roadObject) && numberOfRollInEachRound[board.getRound()]==3){
+                if(buildableStructures.contains(this.roadObject) && board.getRollTime()==3){
                     board.build(roadObject);
                     highlight();
                     refreshDices(false);
@@ -264,7 +263,7 @@ public class Game extends Application {
                 highlight();
             }
             settlement.setOnMouseClicked(event -> {
-                if(buildableStructures.contains(this.settlementObject) && numberOfRollInEachRound[board.getRound()]==3){
+                if(buildableStructures.contains(this.settlementObject) && board.getRollTime()==3){
                     board.build(settlementObject);
                     highlight();
                     refreshDices(false);
@@ -315,7 +314,7 @@ public class Game extends Application {
                 highlight();
             }
             city.setOnMouseClicked(event -> {
-                if(buildableStructures.contains(this.cityObject)&&numberOfRollInEachRound[board.getRound()]==3){
+                if(buildableStructures.contains(this.cityObject)&&board.getRollTime()==3){
                     board.build(cityObject);
                     highlight();
                     refreshDices(false);
@@ -384,11 +383,11 @@ public class Game extends Application {
                 }
             }
             knight.setOnMouseClicked(event -> {
-                if (!knightObject.getWhetherHaveSwapped()&&knightObject.getWhetherHaveBuilt()&&numberOfRollInEachRound[board.getRound()]==3){//what we want when we click a built knight
+                if (!knightObject.getWhetherHaveSwapped()&&knightObject.getWhetherHaveBuilt()&&board.getRollTime()==3){//what we want when we click a built knight
                     openSwapStage(knightObject);
                     refreshBoard();
                 }
-                if(buildableStructures.contains(this.knightObject)&&numberOfRollInEachRound[board.getRound()]==3){//what we want when we click an un-built knight
+                if(buildableStructures.contains(this.knightObject)&&board.getRollTime()==3){//what we want when we click an un-built knight
                     board.build(knightObject);
                     highlightJ();
                 }
@@ -875,7 +874,7 @@ public class Game extends Application {
         buttons.add(timberButton);
         buttons.add(brickButton);
         for(Button button:buttons){
-            if(numberOfRollInEachRound[board.getRound()]<3){
+            if(board.getRollTime()<3){
                 button.setDisable(true);
             }
             tradeButtons.getChildren().add(button);
@@ -939,7 +938,7 @@ public class Game extends Application {
         button.setAlignment(Pos.CENTER);
         button.setMinSize(DICE_ROLLER_WIDTH, 30);
         button.setFont(Font.font(15));
-        if(numberOfRollInEachRound[board.getRound()]<3) {
+        if(board.getRollTime()<3) {
             button.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
@@ -959,6 +958,7 @@ public class Game extends Application {
      */
     private void makeNextRoundButton(){
         Button button = new Button("NEXT ROUND");
+
         button.setAlignment(Pos.CENTER);
         button.setLayoutX(XOfNextRoundButton);
         button.setLayoutY(YOfNextRoundButton);
@@ -967,14 +967,18 @@ public class Game extends Application {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                System.out.println("Round "+ (board.getRound()+1) +" Ended!");
+                if(board.getRound() == 14){
+                    button.setDisable(true);
+                }
                 board.nextRound();
-                System.out.println("Round"+ board.getRound() +" Ended!");
                 refreshDices(false);
                 refreshRecorder();
                 refreshBoard();
             }
         });
         nextRoundButton.getChildren().add(button);
+
     }
 
     /**
@@ -994,6 +998,40 @@ public class Game extends Application {
             }
         });
         menuButton.getChildren().add(button);
+    }
+
+    /**
+     * create a comboBox to switch to different player
+     */
+    private void makeMultipleBoards(){
+        ComboBox comboBox = new ComboBox<>();
+        for(String account:accounts.keySet()){
+            comboBox.getItems().add(account);
+        }
+        comboBox.getSelectionModel().select(0);
+        comboBox.getItems().add("Add A New Player");
+
+        Button button = new Button("Go");
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if(comboBox.getValue().equals("Add A New Player")){
+                    openAddNewPlayerStage();
+                }else{
+                    board = accounts.get(comboBox.getValue());
+                    refreshBoard();
+                    refreshDices(false);
+                    refreshRecorder();
+                }
+            }
+        });
+        button.setFont(Font.font(11));
+
+        multipleBoards.getChildren().addAll(comboBox, button);
+        multipleBoards.setAlignment(Pos.CENTER);
+        multipleBoards.setSpacing(30);
+        multipleBoards.setLayoutX(XOfMulipleBoards);
+        multipleBoards.setLayoutY(YOfMulipleBoards);
     }
 
     /**
@@ -1141,11 +1179,20 @@ public class Game extends Application {
         boardRoot.getChildren().add(console);
     }
 
+
+    /**
+     * create a new console window
+     */
+    void initializeMultipleBoards() {
+        boardRoot.getChildren().add(multipleBoards);
+        makeMultipleBoards();
+    }
+
     /**
      * highlight all buildable structures in board
      */
     public void highlightBuildableStructures(){
-        if(numberOfRollInEachRound[board.getRound()]<3){
+        if(board.getRollTime()<3){
             return;
         }
         for (int index: roadsMap.keySet()){
@@ -1228,7 +1275,7 @@ public class Game extends Application {
         currentCircles = new ArrayList<>();
         circles = new ArrayList<>();
         if(whetherHaveRolled)
-            numberOfRollInEachRound[board.getRound()]++;
+            board.setRollTime(board.getRollTime()+1);
 
         makeDiceRoller();
         makeResourcesAndText();
@@ -1272,11 +1319,60 @@ public class Game extends Application {
      * open a new stage to have the action of swap
      */
     public void openSwapStage(Knight knight){
+//        Stage swapStage = new Stage();
+//        swapStage.setTitle("Swap Action");
+//
+//        Text swapText = new Text(220, 50, "What do you want to swapped out?");
+//        swapText.setFont(new Font(20));
+//
+//        ComboBox<String> resourceSwapOut = new ComboBox<>();
+//        for(int indexOfResource = 1; indexOfResource<=6; indexOfResource++){
+//            if(board.getCurrentResource()[indexOfResource-1] >= 1 && knight.getScores()!=indexOfResource){
+//                resourceSwapOut.getItems().add(resourceType[indexOfResource-1].getName());
+//            }
+//        }
+//
+//        Button button = new Button("Swap Out");
+//        button.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent e) {
+//                boolean whetherHaveCorrectChoice = true;
+//                try{
+//                    switch (resourceSwapOut.getValue()){
+//                        case("Ore")->board.swap(resourceType[0], resourceType[knight.getScores()-1]);
+//                        case("Grain")->board.swap(resourceType[1], resourceType[knight.getScores()-1]);
+//                        case("Wool")->board.swap(resourceType[2], resourceType[knight.getScores()-1]);
+//                        case("Timber")->board.swap(resourceType[3], resourceType[knight.getScores()-1]);
+//                        case("Brick")->board.swap(resourceType[4], resourceType[knight.getScores()-1]);
+//                        case("Gold")->board.swap(resourceType[5], resourceType[knight.getScores()-1]);
+//                        default -> whetherHaveCorrectChoice = false;
+//                    }
+//                }catch (NullPointerException ex){
+//                    whetherHaveCorrectChoice = false;
+//                }
+//                refreshDices(false);
+//                refreshRecorder();
+//                refreshBoard();
+//                if(whetherHaveCorrectChoice){
+//                    swapStage.close();
+//                }
+//            }
+//        });
+//        button.setFont(Font.font(15));
+//
+//        VBox swapRoot = new VBox(swapText, resourceSwapOut, button);
+//        swapRoot.setAlignment(Pos.CENTER);
+//        swapRoot.setSpacing(70);
+//        Scene swapScene = new Scene(swapRoot, 600, 300);
+//        swapStage.setScene(swapScene);
+//        swapStage.show();
+
         Stage swapStage = new Stage();
         swapStage.setTitle("Swap Action");
 
-        Text swapText = new Text(220, 50, "What do you want to swapped out?");
-        swapText.setFont(new Font(20));
+        HBox swapRoot = new HBox();
+        Text swapOutText = new Text(220, 50, "What do you want to swapped out?");
+        swapOutText.setFont(new Font(13));
 
         ComboBox<String> resourceSwapOut = new ComboBox<>();
         for(int indexOfResource = 1; indexOfResource<=6; indexOfResource++){
@@ -1285,19 +1381,21 @@ public class Game extends Application {
             }
         }
 
-        Button button = new Button("Swap Out");
-        button.setOnAction(new EventHandler<ActionEvent>() {
+        Button swapOutButton = new Button("Swap Out");
+        final Resource[] swapOutResource = {Resource.Ore};
+        swapOutButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 boolean whetherHaveCorrectChoice = true;
                 try{
+
                     switch (resourceSwapOut.getValue()){
-                        case("Ore")->board.swap(Resource.Ore, resourceType[knight.getScores()-1]);
-                        case("Grain")->board.swap(Resource.Grain, resourceType[knight.getScores()-1]);
-                        case("Wool")->board.swap(Resource.Wool, resourceType[knight.getScores()-1]);
-                        case("Timber")->board.swap(Resource.Timber, resourceType[knight.getScores()-1]);
-                        case("Brick")->board.swap(Resource.Brick, resourceType[knight.getScores()-1]);
-                        case("Gold")->board.swap(Resource.Gold, resourceType[knight.getScores()-1]);
+                        case("Ore")->board.swap(resourceType[0], resourceType[knight.getScores()-1]);
+                        case("Grain")->board.swap(resourceType[1], resourceType[knight.getScores()-1]);
+                        case("Wool")->board.swap(resourceType[2], resourceType[knight.getScores()-1]);
+                        case("Timber")->board.swap(resourceType[3], resourceType[knight.getScores()-1]);
+                        case("Brick")->board.swap(resourceType[4], resourceType[knight.getScores()-1]);
+                        case("Gold")->board.swap(resourceType[5], resourceType[knight.getScores()-1]);
                         default -> whetherHaveCorrectChoice = false;
                     }
                 }catch (NullPointerException ex){
@@ -1311,12 +1409,122 @@ public class Game extends Application {
                 }
             }
         });
-        button.setFont(Font.font(15));
+        swapOutButton.setFont(Font.font(13));
+        VBox swapOutRoot = new VBox(swapOutText, resourceSwapOut, swapOutButton);
+        swapOutRoot.setAlignment(Pos.CENTER);
+        swapOutRoot.setSpacing(50);
 
-        VBox swapRoot = new VBox(swapText, resourceSwapOut, button);
+
+        Text swapForText = new Text(220, 50, "What do you want to swapped for?");
+        swapForText.setFont(new Font(13));
+        Button swapForButton = new Button("Swap");
+
+        ComboBox<String> resourceSwapFor = new ComboBox<>();
+        for(int indexOfResource = 1; indexOfResource<=6; indexOfResource++){
+                resourceSwapFor.getItems().add(resourceType[indexOfResource-1].getName());
+        }
+        final Resource[] swapForResource = new Resource[1];
+        swapForButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                boolean whetherHaveCorrectChoice = true;
+                try{
+                    switch (resourceSwapOut.getValue()){
+                        case("Ore")->{
+                            switch (resourceSwapFor.getValue()){
+                                case("Ore")-> board.swap(resourceType[0],resourceType[0]);
+                                case("Grain")-> board.swap(resourceType[0],resourceType[1]);
+                                case("Wool")-> board.swap(resourceType[0],resourceType[2]);
+                                case("Timber")-> board.swap(resourceType[0],resourceType[3]);
+                                case("Brick")-> board.swap(resourceType[0],resourceType[4]);
+                                case("Gold")-> board.swap(resourceType[0],resourceType[5]);
+                                default-> whetherHaveCorrectChoice = false;
+                            }
+                        }
+                        case("Grain")->{
+                            switch (resourceSwapFor.getValue()){
+                                case("Ore")-> board.swap(resourceType[1],resourceType[0]);
+                                case("Grain")-> board.swap(resourceType[1],resourceType[1]);
+                                case("Wool")-> board.swap(resourceType[1],resourceType[2]);
+                                case("Timber")-> board.swap(resourceType[1],resourceType[3]);
+                                case("Brick")-> board.swap(resourceType[1],resourceType[4]);
+                                case("Gold")-> board.swap(resourceType[1],resourceType[5]);
+                                default-> whetherHaveCorrectChoice = false;
+                            }
+                        }
+                        case("Wool")->{
+                            switch (resourceSwapFor.getValue()){
+                                case("Ore")-> board.swap(resourceType[2],resourceType[0]);
+                                case("Grain")-> board.swap(resourceType[2],resourceType[1]);
+                                case("Wool")-> board.swap(resourceType[2],resourceType[2]);
+                                case("Timber")-> board.swap(resourceType[2],resourceType[3]);
+                                case("Brick")-> board.swap(resourceType[2],resourceType[4]);
+                                case("Gold")-> board.swap(resourceType[2],resourceType[5]);
+                                default-> whetherHaveCorrectChoice = false;
+                            }
+                        }
+                        case("Timber")->{
+                            switch (resourceSwapFor.getValue()){
+                                case("Ore")-> board.swap(resourceType[3],resourceType[0]);
+                                case("Grain")-> board.swap(resourceType[3],resourceType[1]);
+                                case("Wool")-> board.swap(resourceType[3],resourceType[2]);
+                                case("Timber")-> board.swap(resourceType[3],resourceType[3]);
+                                case("Brick")-> board.swap(resourceType[3],resourceType[4]);
+                                case("Gold")-> board.swap(resourceType[3],resourceType[5]);
+                                default-> whetherHaveCorrectChoice = false;
+                            }
+                        }
+                        case("Brick")->{
+                            switch (resourceSwapFor.getValue()){
+                                case("Ore")-> board.swap(resourceType[4],resourceType[0]);
+                                case("Grain")-> board.swap(resourceType[4],resourceType[1]);
+                                case("Wool")-> board.swap(resourceType[4],resourceType[2]);
+                                case("Timber")-> board.swap(resourceType[4],resourceType[3]);
+                                case("Brick")-> board.swap(resourceType[4],resourceType[4]);
+                                case("Gold")-> board.swap(resourceType[4],resourceType[5]);
+                                default-> whetherHaveCorrectChoice = false;
+                            }
+                        }
+                        case("Gold")->{
+                            switch (resourceSwapFor.getValue()){
+                                case("Ore")-> board.swap(resourceType[5],resourceType[0]);
+                                case("Grain")-> board.swap(resourceType[5],resourceType[1]);
+                                case("Wool")-> board.swap(resourceType[5],resourceType[2]);
+                                case("Timber")-> board.swap(resourceType[5],resourceType[3]);
+                                case("Brick")-> board.swap(resourceType[5],resourceType[4]);
+                                case("Gold")-> board.swap(resourceType[5],resourceType[5]);
+                                default-> whetherHaveCorrectChoice = false;
+                            }
+                        }
+                        default -> whetherHaveCorrectChoice = false;
+                    }
+                }catch (NullPointerException ex){
+                    whetherHaveCorrectChoice = false;
+                }
+                refreshDices(false);
+                refreshRecorder();
+                refreshBoard();
+                if(whetherHaveCorrectChoice){
+                    swapStage.close();
+                }
+            }
+        });
+        swapForButton.setFont(Font.font(13));
+        VBox swapForRoot = new VBox(swapForText, resourceSwapFor, swapForButton);
+        swapForRoot.setAlignment(Pos.CENTER);
+        swapForRoot.setSpacing(50);
+        if(knight.getScores() == 6){
+            swapOutRoot.getChildren().remove(swapOutButton);
+            swapForRoot.getChildren().remove(swapForButton);
+            swapRoot.getChildren().addAll(swapOutRoot,swapForRoot, swapForButton);
+            swapRoot.setSpacing(30);
+        }else {
+            swapRoot.getChildren().addAll(swapOutRoot);
+        }
+
         swapRoot.setAlignment(Pos.CENTER);
         swapRoot.setSpacing(70);
-        Scene swapScene = new Scene(swapRoot, 600, 300);
+        Scene swapScene = new Scene(swapRoot, 800, 300);
         swapStage.setScene(swapScene);
         swapStage.show();
     }
@@ -1330,10 +1538,9 @@ public class Game extends Application {
 
         Button continueButton = new Button("Continue");
         Button restartButton = new Button("Restart");
-        Button backButton = new Button("Back to Main Menu");
         Button helpButton = new Button("Help");
         Button exitButton = new Button("Exit");
-        Button[] buttons = {continueButton, restartButton, backButton, helpButton, exitButton};
+        Button[] buttons = {continueButton, restartButton, helpButton, exitButton};
         for(Button button: buttons){
             button.setFont(Font.font(15));
             button.setPrefSize(180, 50);
@@ -1349,7 +1556,7 @@ public class Game extends Application {
             board.setRound(0);
             board.initializeBoard();
             board.setScoresRecorder(new int[15]);
-            numberOfRollInEachRound = new int[] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+            board.setRollTime(1);
             refreshBoard();
             refreshDices(false);
             refreshRecorder();
@@ -1364,7 +1571,7 @@ public class Game extends Application {
         });
 
 
-        VBox menuRoot = new VBox(continueButton, restartButton, backButton, helpButton, exitButton);
+        VBox menuRoot = new VBox(continueButton, restartButton, helpButton, exitButton);
         menuRoot.setAlignment(Pos.CENTER);
         menuRoot.setSpacing(10);
         Scene menuScene = new Scene(menuRoot, 250, 400);
@@ -1372,6 +1579,9 @@ public class Game extends Application {
         menuStage.show();
     }
 
+    /**
+     * open a new stage to call help menu
+     */
     public void openHelpStage(){
         Stage helpStage = new Stage();
         helpStage.setTitle("HELP");
@@ -1382,7 +1592,7 @@ public class Game extends Application {
             String help = new String(in.readAllBytes());
             Text text = new Text(help);
             VBox helpRoot = new VBox(text);
-            Scene menuScene = new Scene(helpRoot, 250, 400);
+            Scene menuScene = new Scene(helpRoot, 1000, 600);
             helpStage.setScene(menuScene);
         } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -1392,20 +1602,106 @@ public class Game extends Application {
         helpStage.show();
     }
 
+    /**
+     * openAddNewPlayerStage
+     */
+    public void openAddNewPlayerStage(){
+        Stage addNewPlayerStage = new Stage();
+        addNewPlayerStage.setTitle("Create A New Player");
+        VBox newAccount = new VBox();
+        HBox newPlayer = new HBox();
+        newAccount.getChildren().add(newPlayer);
+        Label boardLabel = new Label("Type the name of new player:");
+        TextField newPlayerTextField = new TextField();
+        newPlayerTextField.setPrefWidth(500);
+        Button addButton = new Button("Add");
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if(!accounts.keySet().contains(newPlayerTextField.getText())){//create a new account
+                    accounts.put(newPlayerTextField.getText(), new Board());
+                    boardRoot.getChildren().clear();
+                    basicBoard.getChildren().clear();
+                    roads.getChildren().clear();
+                    settlements.getChildren().clear();
+                    cities.getChildren().clear();
+                    knights.getChildren().clear();
+                    resourceTable.getChildren().clear();
+                    recorder.getChildren().clear();
+                    draggableResources.getChildren().clear();
+                    resourcesAndText.getChildren().clear();
+                    tradeButtons.getChildren().clear();
+                    nameLabels.getChildren().clear();
+                    diceRoller.getChildren().clear();
+                    nextRoundButton.getChildren().clear();
+                    menuButton.getChildren().clear();
+                    multipleBoards.getChildren().clear();
+//                    hexagonsMap = new HashMap<>();
+//                    roadsMap = new HashMap<>();
+//                    settlementsMap = new HashMap<>();
+//                    citiesMap = new HashMap<>();
+//                    knightsMap = new HashMap<>();
+//                    circles = new ArrayList<>();
+//                    currentCircles =  new ArrayList<>();
+//                    resourcesNeedToBeRolled = new int[6];
+//                    numberOfRollInEachRound = new int[]{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+//                    buildableStructures = new ArrayList<>();
+//                    accounts = new HashMap<>();
+                    initializeBackground();
+                    initializeResourceTable();
+                    initializeCatan();
+                    initializeBoard();
+                    initializeRecorder();
+                    initializeDiceRoller();
+                    initializeResourcesAndText();
+                    initializeDraggableResources();
+                    initializeNextRoundButton();
+                    initializeMenuButton();
+                    initializeConsole();
+                    initializeMultipleBoards();
+                    refreshRecorder();
+                    refreshDices(false);
+                    refreshBoard();
+                    addNewPlayerStage.close();
+                    openSwapStage(knightsMap.get(4).knightObject);
+                }else{//error message will be given
+                    Text errorText = new Text("This player has already existed!");
+                    newAccount.getChildren().add(errorText);
+                }
+
+            }
+        });
+        newPlayer.getChildren().addAll(boardLabel, newPlayerTextField, addButton);
+        newPlayer.setSpacing(10);
+        newPlayer.setAlignment(Pos.CENTER);
+        newAccount.setAlignment(Pos.CENTER);
+        newAccount.setSpacing(50);
+        Scene newPlayerScene = new Scene(newAccount, 800, 300);
+        addNewPlayerStage.setScene(newPlayerScene);
+        addNewPlayerStage.show();
+    }
+
+    /**
+     * switch scene to game interface
+     * @return boardScene: a well-loaded game interface
+     */
     public Scene boardInterface(){
         Scene boardScene = new Scene(this.boardRoot, WINDOW_WIDTH, WINDOW_HEIGHT);
-        //add different part of the game into stage
-        initializeBackground();
-        initializeResourceTable();
-        initializeCatan();
-        initializeBoard();
-        initializeRecorder();
-        initializeDiceRoller();
-        initializeResourcesAndText();
-        initializeDraggableResources();
-        initializeNextRoundButton();
-        initializeMenuButton();
-        initializeConsole();
+        if(!accounts.isEmpty()){
+            //add different part of the game into stage
+            initializeBackground();
+            initializeResourceTable();
+            initializeCatan();
+            initializeBoard();
+            initializeRecorder();
+            initializeDiceRoller();
+            initializeResourcesAndText();
+            initializeDraggableResources();
+            initializeNextRoundButton();
+            initializeMenuButton();
+            initializeConsole();
+            initializeMultipleBoards();
+        }
         return boardScene;
     }
     @Override
@@ -1436,6 +1732,7 @@ public class Game extends Application {
         playView.setFitHeight(PLAY_LOCATION_HEIGHT_ADAPTION);
         playView.setOnMouseClicked(mouseEvent -> {
             Stage.setScene(boardInterface());
+            openAddNewPlayerStage();
         });
         playView.setOnMouseEntered(mouseEvent -> {
             playView.setFitWidth(PLAY_LOCATION_WIDTH_ADAPTION*1.3);
@@ -1450,7 +1747,6 @@ public class Game extends Application {
             playView.setFitHeight(PLAY_LOCATION_HEIGHT_ADAPTION);
         });
         startRoot.getChildren().add(playView);
-
         //exit
         Image exitImage = new Image(Viewer.class.getResource(URI_BASE + "Exit.png").toString());
         ImageView exitView = new ImageView(exitImage);
