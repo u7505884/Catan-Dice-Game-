@@ -37,7 +37,7 @@ code:
 # I wish to submit the following classes as entirely my own (remove this if
 # you want to just submit methods):
 class:
-   - 
+   - Game.java (gui package)
    - 
 
 # I wish to submit the following methods as entirely my own (remove this if
@@ -47,5 +47,5 @@ method:
    - 
 
 # sign *your* name and uid here
-name:
-uid:
+name: Haoxiang Wang
+uid: u7544188
