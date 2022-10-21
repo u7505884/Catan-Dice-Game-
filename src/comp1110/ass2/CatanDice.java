@@ -643,7 +643,7 @@ public class CatanDice {
     public static String[] buildPlan(String target_structure,
                                      String board_state,
                                      int[] resource_state) {
-
+        //FIXME: hard to encoding
 
         // Trivial : 8
         int[] t1 = new int[]{1,1,1,0,0,3};

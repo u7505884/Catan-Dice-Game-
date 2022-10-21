@@ -818,7 +818,7 @@ public class Game extends Application {
         Text goldLabel = new Text("Gold");
         goldLabel.setStyle("-fx-font-weight:bold");
         nameLabels.getChildren().addAll(oreLabel, grainLabel, woolLabel, timberLabel, brickLabel, goldLabel);
-        nameLabels.setSpacing(0.9*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
+        nameLabels.setSpacing(0.7*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
         nameLabels.setLayoutX(XOfResource - 4.6*RESOURCE_HORIZONTAL_SPACE_ADAPTION-RESOURCE_RADIUS);
         nameLabels.setLayoutY(YOfResource - 2*RESOURCE_RADIUS);
         //make trade buttons
@@ -879,7 +879,7 @@ public class Game extends Application {
             }
             tradeButtons.getChildren().add(button);
         }
-        tradeButtons.setSpacing(0.39*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
+        tradeButtons.setSpacing(0.17*RESOURCE_HORIZONTAL_SPACE_ADAPTION);
         tradeButtons.setLayoutX(XOfResource - 5*RESOURCE_HORIZONTAL_SPACE_ADAPTION-RESOURCE_RADIUS);
         tradeButtons.setLayoutY(YOfResource + 1.2*RESOURCE_RADIUS);
 
@@ -1636,17 +1636,6 @@ public class Game extends Application {
                     nextRoundButton.getChildren().clear();
                     menuButton.getChildren().clear();
                     multipleBoards.getChildren().clear();
-//                    hexagonsMap = new HashMap<>();
-//                    roadsMap = new HashMap<>();
-//                    settlementsMap = new HashMap<>();
-//                    citiesMap = new HashMap<>();
-//                    knightsMap = new HashMap<>();
-//                    circles = new ArrayList<>();
-//                    currentCircles =  new ArrayList<>();
-//                    resourcesNeedToBeRolled = new int[6];
-//                    numberOfRollInEachRound = new int[]{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-//                    buildableStructures = new ArrayList<>();
-//                    accounts = new HashMap<>();
                     initializeBackground();
                     initializeResourceTable();
                     initializeCatan();
@@ -1663,7 +1652,6 @@ public class Game extends Application {
                     refreshDices(false);
                     refreshBoard();
                     addNewPlayerStage.close();
-                    openSwapStage(knightsMap.get(4).knightObject);
                 }else{//error message will be given
                     Text errorText = new Text("This player has already existed!");
                     newAccount.getChildren().add(errorText);
