@@ -39,8 +39,8 @@ assets:
     licence: free
 assets:
   -comment: Background of start page
-  url: https://adventuretime.fandom.com/wiki/Don%27t_Look
-  licence:  free
+    url: https://adventuretime.fandom.com/wiki/Don%27t_Look
+    licence:  free
  
 
 # Sign *your* name and uids here. (Remove entries if you have fewer
